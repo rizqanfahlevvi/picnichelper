@@ -8,7 +8,7 @@ export function Home() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">PICNIC Helper</h1>
-        <p className="text-sm text-muted-foreground">Pediatric ER &amp; Intensive Care Companion</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Pediatric ER &amp; Intensive Care Companion</p>
       </div>
 
       <Link to="/kalkulator" className="block">
@@ -16,7 +16,7 @@ export function Home() {
           <CardContent className="pt-4 flex items-center justify-between">
             <div>
               <div className="font-semibold text-primary">Kalkulator ETT</div>
-              <p className="text-sm text-muted-foreground mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                 Ukuran endotracheal tube berdasarkan usia / berat.
               </p>
             </div>

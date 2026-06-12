@@ -23,7 +23,7 @@ export function EttCalculator() {
     <div className="space-y-4">
       <div>
         <h2 className="text-xl font-bold">Kalkulator Ukuran ETT</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Internal diameter (mm) berdasarkan {category === 'anak' ? 'usia' : 'berat badan'}.
         </p>
       </div>
@@ -78,7 +78,7 @@ function ChildResult({ age }: { age: string }) {
             note="usia/4 + 4"
           />
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           AHA PALS 2020 lebih menyukai cuffed pada bayi &amp; anak{' '}
           <Cite source="pals2020" />. Selalu sediakan ukuran ± 0.5 mm.
         </p>
@@ -126,7 +126,7 @@ function NeonateResult({ weight }: { weight: string }) {
             note={row.gestation}
           />
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           Berdasarkan tabel berat NRP 8th ed. <Cite source="nrp8" />
         </p>
       </CardContent>
@@ -148,16 +148,16 @@ function ResultTile({
   preferred?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface-container dark:bg-surface-high p-4 text-center space-y-1.5 elevation-1 dark:shadow-none">
-      <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 text-center space-y-1.5">
+      <div className="flex items-center justify-center gap-1 text-sm text-slate-500 dark:text-slate-400">
         {label} <Cite source={cite} />
         {preferred && <Badge variant="default" className="text-[10px] h-4 px-1.5">PALS</Badge>}
       </div>
-      <div className="text-3xl font-bold text-primary">
+      <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
         {value.toFixed(1)}{' '}
-        <span className="text-base font-normal text-muted-foreground">mm</span>
+        <span className="text-base font-normal text-slate-500 dark:text-slate-400">mm</span>
       </div>
-      <div className="font-mono text-xs text-muted-foreground">{note}</div>
+      <div className="font-mono text-xs text-slate-400 dark:text-slate-500">{note}</div>
     </div>
   );
 }
@@ -166,7 +166,7 @@ function EmptyHint({ text }: { text: string }) {
   return (
     <Card>
       <CardContent className="pt-4">
-        <p className="text-sm text-muted-foreground">{text}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">{text}</p>
       </CardContent>
     </Card>
   );
@@ -180,7 +180,7 @@ function ReferenceFootnotes() {
         <CardTitle className="text-sm">Referensi</CardTitle>
       </CardHeader>
       <CardContent>
-        <ol className="space-y-2 text-xs text-muted-foreground">
+        <ol className="space-y-2 text-xs text-slate-500 dark:text-slate-400">
           {used.map((key) => (
             <li key={key}>
               <span className="font-semibold text-foreground">[{REFERENCES[key].id}]</span>{' '}

@@ -1,211 +1,104 @@
 @import "tailwindcss";
 
 /*
- * ═══════════════════════════════════════════════════════════════════════════
- * PICNIC Helper — Design Token System
- * Prinsip: Google Material Design 3 + Apple Human Interface Guidelines
+ * PICNIC Helper — Design Tokens
+ * Philosophy: Apple HIG (deference, clarity, depth) + clinical ergonomics
  *
- * ELEVASI LIGHT MODE  → Box shadow (material depth)
- * ELEVASI DARK MODE   → Tonal surface (warna makin terang = makin "tinggi")
- *                        TIDAK ADA shadow putih di dark mode.
- * ═══════════════════════════════════════════════════════════════════════════
+ * Light: slate-50 bg / white cards / slate-200 borders
+ * Dark : slate-950 bg / slate-900 cards / slate-800 borders
+ * Accent: blue-600 (light) / blue-400 (dark)
+ * Touch targets: min 48 × 48 px everywhere
  */
 
 @layer base {
-
-  /* ── Light Mode (default) ─────────────────────────────────────── */
   :root {
     color-scheme: light;
 
-    /* Primary — Medical Blue, WCAG AA compliant */
-    --primary:            221 83% 45%;   /* #1355C8 */
-    --primary-container:  221 100% 92%;  /* #D8E4FF */
-    --on-primary:         0 0% 100%;
-    --on-primary-container: 221 100% 17%;
+    /* Backgrounds */
+    --background:   248 250 252;   /* slate-50  */
+    --surface:      255 255 255;   /* white     */
 
-    /* Surface ladder — light: putih bersih, beda lewat shadow */
-    --surface-dim:              240 18% 94%;  /* #EEEDF6 — latar redup */
-    --surface:                  240 20% 99%;  /* #FAFAFF — background utama */
-    --surface-container-lowest: 0 0% 100%;    /* #FFFFFF — card tertinggi */
-    --surface-container-low:    240 18% 97%;  /* #F4F4FB — card biasa */
-    --surface-container:        240 14% 94%;  /* #EEEDF5 — nav bar, chip */
-    --surface-container-high:   240 12% 91%;  /* #E8E8EF — elevated chip */
-    --surface-container-highest:240 10% 88%;  /* #E2E1EA — modal, sheet */
+    /* Borders */
+    --border:       226 232 240;   /* slate-200 */
 
-    /* On-surface (teks) */
-    --on-surface:         240 14% 11%;   /* #191920 */
-    --on-surface-variant: 245  5% 30%;   /* #46464F */
+    /* Text */
+    --fg-primary:   15 23 42;      /* slate-900 */
+    --fg-secondary: 100 116 139;   /* slate-500 */
+    --fg-disabled:  148 163 184;   /* slate-400 */
 
-    /* Outline */
-    --outline:            245  3% 47%;   /* #777680 */
-    --outline-variant:    240  8% 82%;   /* #C8C6D2 */
+    /* Accent (Apple system blue) */
+    --accent:       37  99 235;    /* blue-600  */
+    --accent-fg:    255 255 255;
 
     /* Semantic */
-    --error:              0 84% 47%;     /* #D32F2F */
-    --on-error:           0 0% 100%;
-    --warning:            38 92% 40%;    /* #C77700 */
-    --success:            142 60% 30%;   /* #1E7E34 */
-
-    /* Elevasi shadow (HANYA light mode — dark pakai tonal) */
-    --shadow-color:       240 14% 11%;
-
-    /* shadcn compat aliases */
-    --background:         var(--surface);
-    --foreground:         var(--on-surface);
-    --card:               var(--surface-container-lowest);
-    --card-foreground:    var(--on-surface);
-    --popover:            var(--surface-container-lowest);
-    --popover-foreground: var(--on-surface);
-    --secondary:          var(--surface-container);
-    --secondary-foreground: var(--on-surface);
-    --muted:              var(--surface-container);
-    --muted-foreground:   var(--on-surface-variant);
-    --accent:             var(--surface-container-high);
-    --accent-foreground:  var(--on-surface);
-    --destructive:        var(--error);
-    --border:             var(--outline-variant);
-    --input:              var(--surface-container-high);
-    --ring:               var(--primary);
-    --radius:             1rem;          /* 16dp — M3 "large" shape */
+    --destructive:  220 38 38;     /* red-600   */
+    --warning-bg:   254 243 199;   /* amber-100 */
+    --warning-text: 146 64  14;    /* amber-800 */
   }
 
-  /* ── Dark Mode ────────────────────────────────────────────────── */
-  /*
-   * Setiap level lebih terang dari level bawahnya.
-   * Ini satu-satunya cara menciptakan elevasi di dark mode (M3 spec).
-   * TIDAK ADA shadow di dark mode.
-   */
   .dark {
     color-scheme: dark;
 
-    /* Primary — lebih terang agar kontras di latar gelap */
-    --primary:            224 100% 80%;  /* #ADC6FF */
-    --primary-container:  224 100% 29%;  /* #003EA6 */
-    --on-primary:         224 100% 18%;  /* #002978 */
-    --on-primary-container: 224 100% 92%;
+    --background:   2   6  23;     /* slate-950 */
+    --surface:      15 23 42;      /* slate-900 */
+    --border:       30 41 59;      /* slate-800 */
 
-    /* Surface ladder — dark: TIDAK ADA shadow, beda warna = beda elevasi */
-    --surface-dim:              240 12%  6%;   /* #0F0F16 — paling gelap */
-    --surface:                  240 12%  8%;   /* #131318 — background */
-    --surface-container-lowest: 240 14%  6%;   /* #0E0E13 — terdalam */
-    --surface-container-low:    240 12% 12%;   /* #1A1A21 — card dasar */
-    --surface-container:        240 10% 15%;   /* #202028 — nav, input */
-    --surface-container-high:   240  9% 19%;   /* #2A2A32 — chip, badge */
-    --surface-container-highest:240  8% 23%;   /* #353540 — sheet, modal */
+    --fg-primary:   248 250 252;   /* slate-50  */
+    --fg-secondary: 148 163 184;   /* slate-400 */
+    --fg-disabled:  100 116 139;   /* slate-500 */
 
-    /* On-surface */
-    --on-surface:         270  7% 90%;   /* #E5E1EA */
-    --on-surface-variant: 240  8% 80%;   /* #C7C5D1 */
+    --accent:       96 165 250;    /* blue-400  */
+    --accent-fg:    15  23 42;     /* slate-900 */
 
-    /* Outline */
-    --outline:            245  4% 58%;   /* #929098 */
-    --outline-variant:    240  5% 28%;   /* #434349 */
-
-    /* Semantic */
-    --error:              0 100% 74%;    /* #FF8080 */
-    --on-error:           0 100% 18%;
-    --warning:            38 100% 72%;   /* #FFCA5C */
-    --success:            142 60% 60%;   /* #52C77A */
-
-    /* shadcn compat aliases */
-    --background:         var(--surface);
-    --foreground:         var(--on-surface);
-    --card:               var(--surface-container-low);
-    --card-foreground:    var(--on-surface);
-    --popover:            var(--surface-container-highest);
-    --popover-foreground: var(--on-surface);
-    --secondary:          var(--surface-container);
-    --secondary-foreground: var(--on-surface);
-    --muted:              var(--surface-container);
-    --muted-foreground:   var(--on-surface-variant);
-    --accent:             var(--surface-container-high);
-    --accent-foreground:  var(--on-surface);
-    --destructive:        var(--error);
-    --border:             var(--outline-variant);
-    --input:              var(--surface-container);
-    --ring:               var(--primary);
-    --radius:             1rem;
+    --destructive:  248 113 113;   /* red-400   */
+    --warning-bg:   30  27 20;     /* dark amber surface */
+    --warning-text: 252 211 77;    /* amber-300 */
   }
 }
 
-/* ── Tailwind custom tokens ────────────────────────────────────────────── */
+/* ── Tailwind token mapping ─────────────────────────────────────────────── */
 @theme inline {
-  /* Peta M3 surface ladder ke utility Tailwind */
-  --color-surface-dim:              hsl(var(--surface-dim));
-  --color-surface:                  hsl(var(--surface));
-  --color-surface-lowest:           hsl(var(--surface-container-lowest));
-  --color-surface-low:              hsl(var(--surface-container-low));
-  --color-surface-container:        hsl(var(--surface-container));
-  --color-surface-high:             hsl(var(--surface-container-high));
-  --color-surface-highest:          hsl(var(--surface-container-highest));
+  --color-background: rgb(var(--background));
+  --color-surface:    rgb(var(--surface));
+  --color-border:     rgb(var(--border));
+  --color-fg-primary:   rgb(var(--fg-primary));
+  --color-fg-secondary: rgb(var(--fg-secondary));
+  --color-fg-disabled:  rgb(var(--fg-disabled));
+  --color-accent:    rgb(var(--accent));
+  --color-accent-fg: rgb(var(--accent-fg));
+  --color-destructive: rgb(var(--destructive));
 
-  /* shadcn compat */
-  --color-background:               hsl(var(--background));
-  --color-foreground:               hsl(var(--foreground));
-  --color-card:                     hsl(var(--card));
-  --color-card-foreground:          hsl(var(--card-foreground));
-  --color-primary:                  hsl(var(--primary));
-  --color-primary-container:        hsl(var(--primary-container));
-  --color-primary-foreground:       hsl(var(--on-primary));
-  --color-secondary:                hsl(var(--secondary));
-  --color-secondary-foreground:     hsl(var(--secondary-foreground));
-  --color-muted:                    hsl(var(--muted));
-  --color-muted-foreground:         hsl(var(--muted-foreground));
-  --color-accent:                   hsl(var(--accent));
-  --color-accent-foreground:        hsl(var(--accent-foreground));
-  --color-destructive:              hsl(var(--destructive));
-  --color-border:                   hsl(var(--border));
-  --color-input:                    hsl(var(--input));
-  --color-ring:                     hsl(var(--ring));
-  --color-error:                    hsl(var(--error));
-  --color-warning:                  hsl(var(--warning));
-  --color-success:                  hsl(var(--success));
-
-  /* Radius (M3 shape scale) */
-  --radius-xs:  0.25rem;   /*  4dp — extra-small */
-  --radius-sm:  0.5rem;    /*  8dp — small */
-  --radius-md:  0.75rem;   /* 12dp — medium */
-  --radius-lg:  1rem;      /* 16dp — large (default card) */
-  --radius-xl:  1.75rem;   /* 28dp — extra-large (bottom sheet, FAB) */
-  --radius-full: 9999px;   /* full (chip, badge, nav indicator) */
+  /* shadcn compat aliases */
+  --color-card:             rgb(var(--surface));
+  --color-card-foreground:  rgb(var(--fg-primary));
+  --color-foreground:       rgb(var(--fg-primary));
+  --color-primary:          rgb(var(--accent));
+  --color-primary-foreground: rgb(var(--accent-fg));
+  --color-muted:            rgb(var(--surface));
+  --color-muted-foreground: rgb(var(--fg-secondary));
+  --color-secondary:        rgb(var(--surface));
+  --color-secondary-foreground: rgb(var(--fg-primary));
+  --color-accent:           rgb(var(--surface));
+  --color-accent-foreground:rgb(var(--fg-primary));
+  --color-input:            rgb(var(--surface));
+  --color-ring:             rgb(var(--accent));
+  --color-popover:          rgb(var(--surface));
+  --color-popover-foreground: rgb(var(--fg-primary));
+  --radius: 0.75rem;
 }
 
-/* ── Base ──────────────────────────────────────────────────────────────── */
+/* ── Base ────────────────────────────────────────────────────────────────── */
 html, body, #root { height: 100%; }
 
 body {
   margin: 0;
-  background-color: hsl(var(--surface-dim));
-  color: hsl(var(--on-surface));
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: rgb(var(--background));
+  color: rgb(var(--fg-primary));
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+               Roboto, sans-serif;
   -webkit-tap-highlight-color: transparent;
-  /* smooth theme transition */
-  transition: background-color 0.2s ease, color 0.1s ease;
+  transition: background-color 0.2s ease;
 }
 
-/* Minimum touch target 44pt (Apple HIG) / 48dp (M3) */
-button, a, input, select { touch-action: manipulation; }
-
-/*
- * ── Elevasi Light Mode: Box Shadow ─────────────────────────────────────
- * Hanya berlaku di light mode. Di dark mode: overridden ke none.
- */
-.elevation-1 {
-  box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.06),
-              0 1px 3px hsl(var(--shadow-color) / 0.10);
-}
-.elevation-2 {
-  box-shadow: 0 2px 4px hsl(var(--shadow-color) / 0.06),
-              0 4px 8px hsl(var(--shadow-color) / 0.10);
-}
-.elevation-3 {
-  box-shadow: 0 4px 8px  hsl(var(--shadow-color) / 0.06),
-              0 8px 16px hsl(var(--shadow-color) / 0.10);
-}
-
-/* Dark mode: tidak ada shadow, biarkan tonal surface yang berbicara */
-.dark .elevation-1,
-.dark .elevation-2,
-.dark .elevation-3 {
-  box-shadow: none;
-}
+/* Touch target minimum 48 × 48 px (clinical ergonomics) */
+button, a[role], input, select { touch-action: manipulation; }

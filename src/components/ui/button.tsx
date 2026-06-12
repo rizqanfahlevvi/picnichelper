@@ -1,10 +1,6 @@
 /*
- * Button — M3 button variants
- * filled       → primary bg (default CTA)
- * tonal        → primary-container bg (secondary CTA, M3 "filled tonal")
- * outlined     → transparent bg + border (tertiary)
- * ghost        → transparent (icon button, list item)
- * destructive  → error bg
+ * Button — Apple HIG style
+ * Touch target: min 48 × 48 px (clinical ergonomics requirement)
  */
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
@@ -13,44 +9,34 @@ import { cn } from './cn';
 
 const buttonVariants = cva(
   [
-    /* Base */
     'inline-flex items-center justify-center gap-2 whitespace-nowrap',
-    'font-medium transition-colors select-none',
-    /* Shape — M3 "full" untuk button (pill) */
-    'rounded-full',
-    /* Focus ring */
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-    /* Disabled */
-    'disabled:pointer-events-none disabled:opacity-38',
+    'font-semibold rounded-xl transition-all select-none',
+    /* Min 48 × 48 px touch target */
+    'min-h-[48px] min-w-[48px]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+    'disabled:pointer-events-none disabled:opacity-40',
+    'active:scale-[0.97]',
   ].join(' '),
   {
     variants: {
       variant: {
-        /* M3 Filled Button */
         filled:
-          'bg-primary text-primary-foreground hover:opacity-90 active:opacity-80 elevation-1 dark:shadow-none',
-        /* M3 Filled Tonal Button */
+          'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400',
         tonal:
-          'bg-primary-container text-[hsl(var(--on-primary-container))] hover:opacity-90 active:opacity-80',
-        /* M3 Outlined Button */
+          'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900',
         outlined:
-          'border border-border bg-transparent text-primary hover:bg-primary/8 active:bg-primary/12',
-        /* M3 Text Button */
+          'border border-slate-200 bg-transparent text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800',
         ghost:
-          'bg-transparent text-primary hover:bg-primary/8 active:bg-primary/12',
-        /* Destructive */
+          'bg-transparent text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
         destructive:
-          'bg-destructive text-white hover:opacity-90 active:opacity-80',
-        /* Secondary action */
-        secondary:
-          'bg-surface-container text-foreground hover:bg-surface-high active:bg-surface-high',
+          'bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400',
       },
       size: {
-        default: 'h-11 px-6 text-sm',
-        sm:      'h-9  px-4 text-xs',
-        lg:      'h-12 px-8 text-base',
-        icon:    'h-11 w-11',
-        'icon-sm': 'h-9 w-9',
+        default: 'h-12 px-6 text-sm',
+        sm:      'h-10 px-4 text-xs',
+        lg:      'h-14 px-8 text-base',
+        icon:    'h-12 w-12 rounded-full',
+        'icon-sm': 'h-10 w-10 rounded-full',
       },
     },
     defaultVariants: {

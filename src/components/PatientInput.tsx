@@ -48,7 +48,7 @@ export function PatientInput() {
             placeholder="mis. 16"
           />
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           Data dipakai bersama oleh semua kalkulator.
         </p>
       </CardContent>

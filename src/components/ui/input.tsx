@@ -1,9 +1,7 @@
 /*
- * Input — M3 "Filled Text Field" style
- * - Background: surface-container (level 2 elevation)
- * - Rounded top corners, flat bottom dengan underline
- * - Focus: underline tebal berwarna primary
- * - Minimum height 44pt (Apple HIG) / 56dp (M3 spec)
+ * Input — Apple HIG text field
+ * Touch target: min 48px height (clinical ergonomics — thumb + stethoscope)
+ * Rounded, generous padding, clear focus ring
  */
 import * as React from 'react';
 import { cn } from './cn';
@@ -14,19 +12,22 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
       type={type}
       ref={ref}
       className={cn(
-        /* Layout */
-        'flex h-14 w-full px-4 py-2 text-base',
-        /* M3 Filled Field shape — rounded top, flat bottom */
-        'rounded-t-md rounded-b-none',
-        /* Surface & border */
-        'bg-surface-container border-0 border-b-2 border-outline',
-        'text-foreground placeholder:text-muted-foreground',
-        /* Transitions */
-        'transition-colors',
-        /* Focus — underline jadi primary */
-        'focus:border-primary focus:outline-none',
+        /* Layout — min 48px height */
+        'flex w-full min-h-[48px] px-4 py-3 text-base',
+        /* Shape */
+        'rounded-xl',
+        /* Surface */
+        'bg-white border border-slate-200 text-slate-900',
+        'placeholder:text-slate-400',
+        /* Dark */
+        'dark:bg-slate-800 dark:border-slate-700 dark:text-slate-50',
+        'dark:placeholder:text-slate-500',
+        /* Focus */
+        'transition-colors focus:outline-none',
+        'focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+        'dark:focus:border-blue-400 dark:focus:ring-blue-400/20',
         /* Disabled */
-        'disabled:opacity-38 disabled:cursor-not-allowed',
+        'disabled:opacity-40 disabled:cursor-not-allowed',
         className,
       )}
       {...props}

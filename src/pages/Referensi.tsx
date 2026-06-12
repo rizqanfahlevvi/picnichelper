@@ -12,7 +12,7 @@ export function Referensi() {
           <CardTitle className="text-base">Daftar Pustaka</CardTitle>
         </CardHeader>
         <CardContent>
-          <ol className="space-y-3 text-sm text-muted-foreground">
+          <ol className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
             {refs.map((r) => (
               <li key={r.id} id={`ref-${r.id}`} className="flex gap-2">
                 <span className="font-semibold text-foreground shrink-0">[{r.id}]</span>

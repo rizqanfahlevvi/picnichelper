@@ -6,7 +6,7 @@ export function Placeholder({ title }: { title: string }) {
       <h1 className="text-2xl font-bold">{title}</h1>
       <Card>
         <CardContent className="pt-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Modul ini belum tersedia pada MVP Fase 1. Akan dikerjakan pada sesi berikutnya.
           </p>
         </CardContent>

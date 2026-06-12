@@ -1,13 +1,12 @@
 /*
- * AppLayout — M3 Adaptive Navigation + Apple HIG Top App Bar
+ * AppLayout — Apple HIG Adaptive Layout
  *
- * Mobile  (<md): M3 Navigation Bar (bottom) + M3 Top App Bar (sticky)
- * Desktop (≥md): M3 Navigation Drawer (side) + content area
+ * Mobile  (<md): iOS-style Tab Bar (bottom, translucent blur)
+ *                + iOS-style Navigation Bar (top, translucent blur)
+ * Desktop (≥md): Navigation sidebar + content area
  *
- * ELEVASI:
- *  Light  → shadow pada bar/card
- *  Dark   → bar menggunakan surface-container (level 2), lebih terang dari
- *            background surface (level 0) — TANPA shadow
+ * Touch targets: every tappable element min 48 × 48 px
+ * Background: slate-50 (light) / slate-950 (dark)
  */
 import { NavLink, Outlet } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../components/ui/sheet';
@@ -18,48 +17,42 @@ import type { NavItem } from './navItems';
 
 export function AppLayout() {
   return (
-    <div className="flex h-full bg-surface-dim text-foreground">
+    <div className="flex h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50">
 
-      {/* ══════════════════════════════════════════════════
-          DESKTOP: Navigation Drawer (M3)
-          Surface: surface-container (level 2) — lebih terang dari bg
-      ══════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════
+          DESKTOP: Sidebar
+      ══════════════════════════════════════════ */}
       <aside className={cn(
         'hidden md:flex w-64 shrink-0 flex-col',
-        /* Light: bg putih + shadow lateral; Dark: tonal level-2, no shadow */
-        'bg-surface-lowest dark:bg-surface-container',
-        'border-r border-border',
-        'elevation-1 dark:shadow-none',
+        'bg-white dark:bg-slate-900',
+        'border-r border-slate-200 dark:border-slate-800',
       )}>
-        {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
           <Brand />
           <ThemeToggle />
         </div>
-
-        {/* Nav items */}
         <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
           {[...BOTTOM_PRIMARY, ...SHEET_ITEMS].map((item) => (
-            <DrawerNavItem key={item.to} item={item} />
+            <SidebarNavItem key={item.to} item={item} />
           ))}
         </nav>
       </aside>
 
-      {/* ══════════════════════════════════════════════════
-          Content area
-      ══════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════
+          CONTENT AREA
+      ══════════════════════════════════════════ */}
       <div className="flex min-w-0 flex-1 flex-col">
 
-        {/* M3 Top App Bar — mobile only
-            Light: bg putih + shadow bottom
-            Dark : surface-container (level 2) + no shadow */}
+        {/* ── iOS Navigation Bar (mobile) ──
+            Translucent blur, white/slate-950 tinted background
+            Height: 56 px (iOS standard navigation bar) */}
         <header className={cn(
           'md:hidden sticky top-0 z-10',
-          'flex items-center justify-between px-4',
-          'h-14 min-h-[56px]',
-          'bg-surface-lowest dark:bg-surface-container',
-          'border-b border-border',
-          'elevation-1 dark:shadow-none',
+          'flex items-center justify-between',
+          'h-14 px-2',
+          /* iOS translucent effect */
+          'bg-white/80 backdrop-blur-md dark:bg-slate-950/80',
+          'border-b border-slate-200/70 dark:border-slate-800/70',
         )}>
           <Brand />
           <ThemeToggle />
@@ -67,39 +60,43 @@ export function AppLayout() {
 
         {/* Scrollable content */}
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-2xl px-4 py-5 pb-28 md:pb-8">
+          <div className="mx-auto w-full max-w-2xl px-4 py-5 pb-32 md:pb-8">
             <Outlet />
           </div>
         </main>
       </div>
 
-      {/* ══════════════════════════════════════════════════
-          MOBILE: M3 Navigation Bar (bottom)
-          Height: 80dp (56dp bar + 16dp safe area / padding)
-          Light : bg putih + border-t + shadow top
-          Dark  : surface-container-high (level 3) — NO shadow
-      ══════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════
+          MOBILE: iOS-style Tab Bar (bottom)
+          Height: 83 px (49px bar + 34px safe area)
+          Translucent: bg-white/80 + backdrop-blur-md (light)
+                       bg-slate-950/80 + backdrop-blur-md (dark)
+          Top border: subtle 1px slate-200/slate-800
+          Touch targets: min 48 × 48 px per item
+      ══════════════════════════════════════════ */}
       <nav className={cn(
         'md:hidden fixed inset-x-0 bottom-0 z-20',
         'flex items-stretch',
-        'bg-surface-lowest dark:bg-surface-high',
-        'border-t border-border',
-        'elevation-2 dark:shadow-none',
-        'pb-4',   /* safe-area approximation */
+        /* iOS translucent tab bar */
+        'bg-white/80 backdrop-blur-md dark:bg-slate-950/80',
+        'border-t border-slate-200 dark:border-slate-800',
+        /* Safe area for modern phones (swipe indicator) */
+        'pb-4',
       )}>
         {BOTTOM_PRIMARY.map((item) => (
-          <BottomNavItem key={item.to} item={item} />
+          <TabBarItem key={item.to} item={item} />
         ))}
 
-        {/* Tombol "Menu" → M3 Bottom Sheet */}
+        {/* "Menu" — Sheet untuk rute tambahan */}
         <Sheet>
           <SheetTrigger asChild>
             <button className={cn(
               'flex flex-1 flex-col items-center justify-center gap-1',
-              'min-h-[56px] pt-3 pb-1',
-              'text-muted-foreground hover:text-foreground transition-colors',
+              'min-h-[48px] pt-2',
+              /* Inactive state */
+              'text-slate-400 dark:text-slate-500',
+              'transition-colors',
             )}>
-              {/* No indicator for menu button */}
               <MenuIcon size={24} strokeWidth={1.75} />
               <span className="text-[10px] font-medium tracking-wide">Menu</span>
             </button>
@@ -108,7 +105,7 @@ export function AppLayout() {
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <div className="grid grid-cols-2 gap-2.5 px-5 pb-6 pt-2">
+            <div className="grid grid-cols-2 gap-2.5 px-5 pb-6 pt-1">
               {SHEET_ITEMS.map((item) => (
                 <SheetNavItem key={item.to} item={item} />
               ))}
@@ -120,22 +117,23 @@ export function AppLayout() {
   );
 }
 
-/* ── Sub-komponen ──────────────────────────────────────────────────────── */
+/* ── Sub-komponen ─────────────────────────────────────────────────────── */
 
 function Brand() {
   return (
     <div className="flex items-center gap-3">
       <div className={cn(
-        'flex h-9 w-9 items-center justify-center',
-        'rounded-xl bg-primary text-primary-foreground',
-        'text-sm font-black tracking-tight',
-        'elevation-1',
+        'flex h-9 w-9 items-center justify-center rounded-xl',
+        'bg-blue-600 text-white dark:bg-blue-500',
+        'text-sm font-black',
       )}>
         P
       </div>
       <div className="leading-tight">
-        <div className="text-sm font-semibold tracking-tight text-foreground">PICNIC</div>
-        <div className="text-[10px] font-medium text-muted-foreground tracking-wide">
+        <div className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+          PICNIC
+        </div>
+        <div className="text-[10px] text-slate-500 dark:text-slate-400 tracking-wide">
           ER &amp; Intensive Care
         </div>
       </div>
@@ -143,29 +141,25 @@ function Brand() {
   );
 }
 
-/* Drawer nav item — M3 "Navigation Drawer Item"
-   Active: indicator pill di belakang, teks + ikon primary */
-function DrawerNavItem({ item }: { item: NavItem }) {
+/* Sidebar nav item */
+function SidebarNavItem({ item }: { item: NavItem }) {
   const Icon = item.icon;
   return (
     <NavLink
       to={item.to}
       end={item.to === '/'}
       className={({ isActive }) => cn(
-        'group flex items-center gap-3 rounded-full px-4 min-h-[44px] text-sm font-medium',
-        'transition-colors',
+        'flex items-center gap-3 rounded-xl px-3 min-h-[44px] text-sm font-medium transition-colors',
         isActive
-          /* Active: M3 indicator — primary-container bg */
-          ? 'bg-primary-container text-[hsl(var(--on-primary-container))]'
-          : 'text-muted-foreground hover:bg-surface-high hover:text-foreground',
+          ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400'
+          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-50',
       )}
     >
       {({ isActive }) => (
         <>
           <Icon
-            size={20}
+            size={18}
             strokeWidth={isActive ? 2.25 : 1.75}
-            className={isActive ? 'text-[hsl(var(--on-primary-container))]' : ''}
           />
           {item.label}
         </>
@@ -174,42 +168,37 @@ function DrawerNavItem({ item }: { item: NavItem }) {
   );
 }
 
-/* Bottom nav item — M3 Navigation Bar dengan active indicator pill */
-function BottomNavItem({ item }: { item: NavItem }) {
+/*
+ * iOS Tab Bar item
+ * Active : icon + label in blue-600 (light) / blue-400 (dark)
+ * Inactive: icon + label in slate-400 (light) / slate-500 (dark)
+ * Touch target: min-h-[48px]
+ */
+function TabBarItem({ item }: { item: NavItem }) {
   const Icon = item.icon;
   return (
     <NavLink
       to={item.to}
       end={item.to === '/'}
-      className="flex flex-1 flex-col items-center justify-start pt-3 pb-1 min-h-[56px] transition-colors"
+      className="flex flex-1 flex-col items-center justify-center gap-1 min-h-[48px] pt-2 transition-colors"
     >
       {({ isActive }) => (
         <>
-          {/* M3 active indicator — pill di belakang ikon */}
-          <div className={cn(
-            'flex items-center justify-center',
-            'w-16 h-8 rounded-full transition-colors',
-            isActive
-              ? 'bg-primary-container'
-              : 'bg-transparent group-hover:bg-surface-high',
-          )}>
-            <Icon
-              size={22}
-              strokeWidth={isActive ? 2.5 : 1.75}
-              className={cn(
-                'transition-colors',
-                isActive
-                  ? 'text-[hsl(var(--on-primary-container))]'
-                  : 'text-muted-foreground',
-              )}
-            />
-          </div>
-          {/* Label */}
+          <Icon
+            size={24}
+            strokeWidth={isActive ? 2.5 : 1.75}
+            className={cn(
+              'transition-colors',
+              isActive
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-slate-400 dark:text-slate-500',
+            )}
+          />
           <span className={cn(
-            'mt-1 text-[10px] font-medium tracking-wide transition-colors',
+            'text-[10px] font-medium tracking-wide transition-colors',
             isActive
-              ? 'text-[hsl(var(--on-primary-container))] dark:text-primary'
-              : 'text-muted-foreground',
+              ? 'text-blue-600 dark:text-blue-400'
+              : 'text-slate-400 dark:text-slate-500',
           )}>
             {item.label}
           </span>
@@ -226,11 +215,10 @@ function SheetNavItem({ item }: { item: NavItem }) {
     <NavLink
       to={item.to}
       className={({ isActive }) => cn(
-        'flex items-center gap-3 min-h-[52px] rounded-2xl px-4 text-sm font-medium',
-        'border transition-colors',
+        'flex items-center gap-3 min-h-[52px] rounded-xl border px-4 text-sm font-medium transition-colors',
         isActive
-          ? 'border-primary/30 bg-primary-container text-[hsl(var(--on-primary-container))]'
-          : 'border-border bg-surface-container text-foreground hover:bg-surface-high',
+          ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400'
+          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700',
       )}
     >
       {({ isActive }) => (
@@ -238,7 +226,7 @@ function SheetNavItem({ item }: { item: NavItem }) {
           <Icon
             size={18}
             strokeWidth={isActive ? 2.25 : 1.75}
-            className={isActive ? 'text-[hsl(var(--on-primary-container))]' : 'text-muted-foreground'}
+            className={isActive ? '' : 'text-slate-400 dark:text-slate-500'}
           />
           {item.label}
         </>

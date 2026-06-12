@@ -1,7 +1,3 @@
-/*
- * Field — M3 "Filled Text Field" dengan label mengambang
- * Menggunakan Input (filled style) + Label di atasnya.
- */
 import type { InputHTMLAttributes } from 'react';
 import { Input } from './input';
 import { Label } from './label';
@@ -19,8 +15,10 @@ export function Field({ label, unit, hint, className, id, ...rest }: FieldProps)
       <Label
         htmlFor={id}
         className={cn(
-          'text-xs font-medium',
-          hint?.tone === 'danger' ? 'text-destructive' : 'text-muted-foreground',
+          'text-sm font-medium',
+          hint?.tone === 'danger'
+            ? 'text-red-600 dark:text-red-400'
+            : 'text-slate-700 dark:text-slate-300',
         )}
       >
         {label}
@@ -30,14 +28,19 @@ export function Field({ label, unit, hint, className, id, ...rest }: FieldProps)
           id={id}
           inputMode="decimal"
           className={cn(
-            hint?.tone === 'danger' && 'border-destructive',
-            hint?.tone === 'warn'   && 'border-warning',
+            hint?.tone === 'danger' && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
+            hint?.tone === 'warn'   && 'border-amber-500 focus:border-amber-500 focus:ring-amber-500/20',
             className,
           )}
           {...rest}
         />
         {unit && (
-          <span className="flex h-14 items-center rounded-t-md rounded-b-none border-b-2 border-outline bg-surface-container px-3 text-sm text-muted-foreground">
+          /* Unit tag — same height as Input (min 48px), rounded to match */
+          <span className={cn(
+            'flex min-h-[48px] items-center rounded-xl border px-3 text-sm font-medium',
+            'bg-slate-50 border-slate-200 text-slate-500',
+            'dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400',
+          )}>
             {unit}
           </span>
         )}
@@ -45,7 +48,9 @@ export function Field({ label, unit, hint, className, id, ...rest }: FieldProps)
       {hint && (
         <p className={cn(
           'text-xs',
-          hint.tone === 'danger' ? 'text-destructive' : 'text-[hsl(var(--warning))]',
+          hint.tone === 'danger'
+            ? 'text-red-600 dark:text-red-400'
+            : 'text-amber-700 dark:text-amber-300',
         )}>
           {hint.text}
         </p>
