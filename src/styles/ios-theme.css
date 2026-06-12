@@ -242,7 +242,7 @@ body {
   box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.15);
 }
 .ios-row-icon > svg { width: 18px; height: 18px; }
-.ios-row-text { flex: 1; min-width: 0; }
+.ios-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .ios-row-label { font: var(--type-body); letter-spacing: -0.022em; color: var(--label-primary); }
 .ios-row-sub { font: var(--type-footnote); color: var(--label-secondary); margin-top: 1px; line-height: 1.25; }
 .ios-chevron { color: var(--label-tertiary); flex-shrink: 0; }
