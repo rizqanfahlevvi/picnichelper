@@ -1,110 +1,88 @@
+@import "./styles/ios-theme.css";
 @import "tailwindcss";
 
-/*
- * Tailwind v4: dark: variant pakai class .dark di <html> (next-themes),
- * bukan prefers-color-scheme. Satu baris ini yang menghubungkan keduanya.
- */
+/* Tailwind v4: dark: variant pakai class .dark di <html> (next-themes). */
 @custom-variant dark (&:is(.dark *));
 
-/*
- * PICNIC Helper — Design Tokens
- * Philosophy: Apple HIG (deference, clarity, depth) + clinical ergonomics
- *
- * Light: slate-50 bg / white cards / slate-200 borders
- * Dark : slate-950 bg / slate-900 cards / slate-800 borders
- * Accent: blue-600 (light) / blue-400 (dark)
- * Touch targets: min 48 × 48 px everywhere
- */
-
+/* ── shadcn bridge — petakan token shadcn ke nilai iOS ──────────────────── */
 @layer base {
   :root {
-    color-scheme: light;
-
-    /* Backgrounds */
-    --background:   248 250 252;   /* slate-50  */
-    --surface:      255 255 255;   /* white     */
-
-    /* Borders */
-    --border:       226 232 240;   /* slate-200 */
-
-    /* Text */
-    --fg-primary:   15 23 42;      /* slate-900 */
-    --fg-secondary: 100 116 139;   /* slate-500 */
-    --fg-disabled:  148 163 184;   /* slate-400 */
-
-    /* Accent (Apple system blue) */
-    --accent:       37  99 235;    /* blue-600  */
-    --accent-fg:    255 255 255;
-
-    /* Semantic */
-    --destructive:  220 38 38;     /* red-600   */
-    --warning-bg:   254 243 199;   /* amber-100 */
-    --warning-text: 146 64  14;    /* amber-800 */
+    --background:         240 5.9% 96.1%;   /* #F2F2F7 */
+    --foreground:         0 0% 0%;
+    --card:               0 0% 100%;         /* #FFFFFF */
+    --card-foreground:    0 0% 0%;
+    --popover:            0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary:            211 100% 50%;      /* #007AFF */
+    --primary-foreground: 0 0% 100%;
+    --secondary:          240 5.9% 96.1%;
+    --secondary-foreground: 0 0% 0%;
+    --muted:              240 5.9% 96.1%;
+    --muted-foreground:   240 3.8% 46.1%;
+    --accent:             240 5.9% 96.1%;
+    --accent-foreground:  0 0% 0%;
+    --destructive:        4 86% 58%;         /* #FF3B30 */
+    --destructive-foreground: 0 0% 100%;
+    --border:             240 5.9% 90%;
+    --input:              240 5.9% 90%;
+    --ring:               211 100% 50%;      /* #007AFF */
+    --radius:             14px;
   }
 
   .dark {
-    color-scheme: dark;
-
-    --background:   2   6  23;     /* slate-950 */
-    --surface:      15 23 42;      /* slate-900 */
-    --border:       30 41 59;      /* slate-800 */
-
-    --fg-primary:   248 250 252;   /* slate-50  */
-    --fg-secondary: 148 163 184;   /* slate-400 */
-    --fg-disabled:  100 116 139;   /* slate-500 */
-
-    --accent:       96 165 250;    /* blue-400  */
-    --accent-fg:    15  23 42;     /* slate-900 */
-
-    --destructive:  248 113 113;   /* red-400   */
-    --warning-bg:   30  27 20;     /* dark amber surface */
-    --warning-text: 252 211 77;    /* amber-300 */
+    --background:         0 0% 0%;           /* #000000 */
+    --foreground:         0 0% 100%;
+    --card:               240 3.7% 11%;      /* #1C1C1E */
+    --card-foreground:    0 0% 100%;
+    --popover:            240 3.7% 11%;
+    --popover-foreground: 0 0% 100%;
+    --primary:            211 100% 51%;      /* #0A84FF */
+    --primary-foreground: 0 0% 0%;
+    --secondary:          240 3.7% 11%;
+    --secondary-foreground: 0 0% 100%;
+    --muted:              240 3.7% 11%;
+    --muted-foreground:   240 5% 64.9%;
+    --accent:             240 3.7% 11%;
+    --accent-foreground:  0 0% 100%;
+    --destructive:        3 86% 60%;         /* #FF453A */
+    --destructive-foreground: 0 0% 100%;
+    --border:             240 3.7% 34%;
+    --input:              240 3.7% 34%;
+    --ring:               211 100% 51%;      /* #0A84FF */
   }
 }
 
-/* ── Tailwind token mapping ─────────────────────────────────────────────── */
+/* ── Tailwind token mapping ──────────────────────────────────────────────── */
 @theme inline {
-  --color-background: rgb(var(--background));
-  --color-surface:    rgb(var(--surface));
-  --color-border:     rgb(var(--border));
-  --color-fg-primary:   rgb(var(--fg-primary));
-  --color-fg-secondary: rgb(var(--fg-secondary));
-  --color-fg-disabled:  rgb(var(--fg-disabled));
-  --color-accent:    rgb(var(--accent));
-  --color-accent-fg: rgb(var(--accent-fg));
-  --color-destructive: rgb(var(--destructive));
+  --color-background:        hsl(var(--background));
+  --color-foreground:        hsl(var(--foreground));
+  --color-card:              hsl(var(--card));
+  --color-card-foreground:   hsl(var(--card-foreground));
+  --color-primary:           hsl(var(--primary));
+  --color-primary-foreground:hsl(var(--primary-foreground));
+  --color-muted:             hsl(var(--muted));
+  --color-muted-foreground:  hsl(var(--muted-foreground));
+  --color-destructive:       hsl(var(--destructive));
+  --color-border:            hsl(var(--border));
+  --color-input:             hsl(var(--input));
+  --color-ring:              hsl(var(--ring));
+  --color-accent:            hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover:           hsl(var(--popover));
+  --color-popover-foreground:hsl(var(--popover-foreground));
 
-  /* shadcn compat aliases */
-  --color-card:             rgb(var(--surface));
-  --color-card-foreground:  rgb(var(--fg-primary));
-  --color-foreground:       rgb(var(--fg-primary));
-  --color-primary:          rgb(var(--accent));
-  --color-primary-foreground: rgb(var(--accent-fg));
-  --color-muted:            rgb(var(--surface));
-  --color-muted-foreground: rgb(var(--fg-secondary));
-  --color-secondary:        rgb(var(--surface));
-  --color-secondary-foreground: rgb(var(--fg-primary));
-  --color-accent:           rgb(var(--surface));
-  --color-accent-foreground:rgb(var(--fg-primary));
-  --color-input:            rgb(var(--surface));
-  --color-ring:             rgb(var(--accent));
-  --color-popover:          rgb(var(--surface));
-  --color-popover-foreground: rgb(var(--fg-primary));
-  --radius: 0.75rem;
+  /* Alias lama yang masih dipakai komponen */
+  --color-surface:           hsl(var(--card));
+  --color-fg-primary:        hsl(var(--foreground));
+  --color-fg-secondary:      hsl(var(--muted-foreground));
+  --color-fg-disabled:       hsl(var(--muted-foreground));
+  --color-accent-fg:         hsl(var(--primary-foreground));
 }
 
 /* ── Base ────────────────────────────────────────────────────────────────── */
 html, body, #root { height: 100%; }
-
-body {
-  margin: 0;
-  background-color: rgb(var(--background));
-  color: rgb(var(--fg-primary));
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
-               Roboto, sans-serif;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.2s ease;
-}
-
-/* Touch target minimum 48 × 48 px (clinical ergonomics) */
+body { margin: 0; -webkit-tap-highlight-color: transparent; }
 button, a[role], input, select { touch-action: manipulation; }
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
