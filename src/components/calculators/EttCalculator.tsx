@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
+import { AlertTriangle } from 'lucide-react';
 import { Cite } from '../Citation';
 import { Disclaimer } from '../Disclaimer';
 import { usePatientStore } from '../../store/patientStore';
@@ -20,10 +19,10 @@ export function EttCalculator() {
   const { category, ageYears, weightKg } = usePatientStore();
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">Kalkulator Ukuran ETT</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">Kalkulator Ukuran ETT</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>
           Internal diameter (mm) berdasarkan {category === 'anak' ? 'usia' : 'berat badan'}.
         </p>
       </div>
@@ -38,108 +37,84 @@ export function EttCalculator() {
 
 function ChildResult({ age }: { age: string }) {
   if (age.trim() === '') {
-    return <EmptyHint text="Masukkan usia pasien di atas untuk menghitung." />;
+    return <EmptyHint text="Masukkan usia pasien untuk menghitung." />;
   }
 
   const ageNum = Number(age);
   const invalid = validateAge(ageNum);
   if (invalid?.tone === 'danger') {
     return (
-      <Card>
-        <CardContent className="pt-4">
-          <p className="text-sm text-destructive">{invalid.text}</p>
-        </CardContent>
-      </Card>
+      <div className="ios-warn ios-warn--danger">
+        <AlertTriangle size={15} />
+        <span>{invalid.text}</span>
+      </div>
     );
   }
 
   const { cuffed, uncuffed } = ettSizeByAge(ageNum);
 
   return (
-    <Card>
-      <CardContent className="pt-4 space-y-4">
-        {invalid?.tone === 'warn' && (
-          <div className="rounded-lg bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 text-sm text-yellow-400">
-            {invalid.text}
-          </div>
-        )}
-        <div className="grid grid-cols-2 gap-3">
-          <ResultTile
-            label="Cuffed"
-            cite="duracher2008"
-            value={cuffed}
-            note="usia/4 + 3.5"
-            preferred
-          />
-          <ResultTile
-            label="Uncuffed"
-            cite="cole1957"
-            value={uncuffed}
-            note="usia/4 + 4"
-          />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {invalid?.tone === 'warn' && (
+        <div className="ios-warn">
+          <AlertTriangle size={15} />
+          <span>{invalid.text}</span>
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+      )}
+      <div className="ios-card">
+        <div className="ios-result-grid">
+          <ResultTile label="Cuffed" cite="duracher2008" value={cuffed} note="usia/4 + 3.5" preferred />
+          <ResultTile label="Uncuffed" cite="cole1957" value={uncuffed} note="usia/4 + 4" />
+        </div>
+        <p style={{ padding: '10px 14px 12px', font: 'var(--type-footnote)', color: 'var(--label-secondary)', borderTop: '0.5px solid var(--separator)' }}>
           AHA PALS 2020 lebih menyukai cuffed pada bayi &amp; anak{' '}
           <Cite source="pals2020" />. Selalu sediakan ukuran ± 0.5 mm.
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function NeonateResult({ weight }: { weight: string }) {
   if (weight.trim() === '') {
-    return <EmptyHint text="Masukkan berat badan pasien di atas untuk menghitung." />;
+    return <EmptyHint text="Masukkan berat badan pasien untuk menghitung." />;
   }
 
   const grams = Number(weight) * 1000;
   const v = validateNeonateWeight(grams);
   if (v?.tone === 'danger') {
     return (
-      <Card>
-        <CardContent className="pt-4">
-          <p className="text-sm text-destructive">{v.text}</p>
-        </CardContent>
-      </Card>
+      <div className="ios-warn ios-warn--danger">
+        <AlertTriangle size={15} />
+        <span>{v.text}</span>
+      </div>
     );
   }
 
   const row = ettSizeNeonate(grams);
   if (!row) {
     return (
-      <Card>
-        <CardContent className="pt-4">
-          <p className="text-sm text-destructive">Berat di luar rentang tabel.</p>
-        </CardContent>
-      </Card>
+      <div className="ios-warn ios-warn--danger">
+        <AlertTriangle size={15} />
+        <span>Berat di luar rentang tabel.</span>
+      </div>
     );
   }
 
   return (
-    <Card>
-      <CardContent className="pt-4 space-y-4">
-        <div className="grid grid-cols-1 gap-3">
-          <ResultTile
-            label="ETT uncuffed"
-            cite="nrp8"
-            value={row.sizeMm}
-            note={row.gestation}
-          />
-        </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Berdasarkan tabel berat NRP 8th ed. <Cite source="nrp8" />
-        </p>
-      </CardContent>
-    </Card>
+    <div className="ios-card">
+      <div className="ios-result-grid">
+        <ResultTile label="ETT Uncuffed" cite="nrp8" value={row.sizeMm} note={row.gestation} />
+      </div>
+      <p style={{ padding: '10px 14px 12px', font: 'var(--type-footnote)', color: 'var(--label-secondary)', borderTop: '0.5px solid var(--separator)' }}>
+        Berdasarkan tabel berat NRP 8th ed. <Cite source="nrp8" />
+      </p>
+    </div>
   );
 }
 
 function ResultTile({
-  label,
-  cite,
-  value,
-  note,
-  preferred,
+  label, cite, value, note, preferred,
 }: {
   label: string;
   cite: keyof typeof REFERENCES;
@@ -148,51 +123,51 @@ function ResultTile({
   preferred?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 text-center space-y-1.5">
-      <div className="flex items-center justify-center gap-1 text-sm text-slate-500 dark:text-slate-400">
+    <div className="ios-result tint-resp">
+      <div className="ios-result-label">
         {label} <Cite source={cite} />
-        {preferred && <Badge variant="default" className="text-[10px] h-4 px-1.5">PALS</Badge>}
+        {preferred && (
+          <span style={{
+            marginLeft: 6, font: 'var(--type-caption-2)', fontWeight: 700,
+            color: 'var(--accent)', background: 'var(--accent-tint)',
+            padding: '2px 6px', borderRadius: 'var(--r-pill)',
+          }}>PALS</span>
+        )}
       </div>
-      <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-        {value.toFixed(1)}{' '}
-        <span className="text-base font-normal text-slate-500 dark:text-slate-400">mm</span>
+      <div>
+        <span className="ios-result-value">{value.toFixed(1)}</span>
+        <span className="ios-result-unit">mm</span>
       </div>
-      <div className="font-mono text-xs text-slate-400 dark:text-slate-500">{note}</div>
+      <div className="ios-result-note ios-mono">{note}</div>
     </div>
   );
 }
 
 function EmptyHint({ text }: { text: string }) {
   return (
-    <Card>
-      <CardContent className="pt-4">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{text}</p>
-      </CardContent>
-    </Card>
+    <div className="ios-card" style={{ padding: '14px 16px' }}>
+      <p className="ios-footnote">{text}</p>
+    </div>
   );
 }
 
 function ReferenceFootnotes() {
   const used = ['cole1957', 'duracher2008', 'pals2020', 'nrp8'] as const;
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm">Referensi</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ol className="space-y-2 text-xs text-slate-500 dark:text-slate-400">
-          {used.map((key) => (
-            <li key={key}>
-              <span className="font-semibold text-foreground">[{REFERENCES[key].id}]</span>{' '}
-              {REFERENCES[key].citation}
-              {!REFERENCES[key].verified && (
-                <span className="text-yellow-500"> (perlu konfirmasi)</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </CardContent>
-    </Card>
+    <div className="ios-card" style={{ padding: '12px 14px' }}>
+      <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
+      <ol style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {used.map((key) => (
+          <li key={key} style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+            <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[key].id}]</span>{' '}
+            {REFERENCES[key].citation}
+            {!REFERENCES[key].verified && (
+              <span style={{ color: 'var(--warning)' }}> (perlu konfirmasi)</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 

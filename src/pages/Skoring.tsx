@@ -17,29 +17,39 @@ export function Skoring() {
   const [activeTab, setActiveTab] = useState<SkoringTab>('downes');
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Skoring Klinis</h1>
+    <div className="ios-screen pb-6">
+      <div style={{ padding: '24px 20px 8px' }}>
+        <h1 className="ios-large-title">Skoring Klinis</h1>
+      </div>
 
-      <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+      <div style={{
+        display: 'flex', gap: 6, overflowX: 'auto', padding: '8px 16px',
+        scrollbarWidth: 'none',
+      }}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === tab.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-            }`}
+            style={{
+              flexShrink: 0, padding: '7px 18px', borderRadius: 'var(--r-pill)',
+              border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+              font: 'var(--type-subheadline)', fontWeight: activeTab === tab.id ? 600 : 400,
+              background: activeTab === tab.id ? 'var(--tint-score)' : 'var(--fill-secondary)',
+              color: activeTab === tab.id ? '#fff' : 'var(--label-primary)',
+              transition: 'all var(--dur-fast)',
+            }}
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      {activeTab === 'downes' && <DownesScore />}
-      {activeTab === 'pelod2' && <Pelod2Score />}
-      {activeTab === 'psofa'  && <PsofaScore />}
-      {activeTab === 'cribii' && <CribIIScore />}
+      <div style={{ marginTop: 8 }}>
+        {activeTab === 'downes' && <DownesScore />}
+        {activeTab === 'pelod2' && <Pelod2Score />}
+        {activeTab === 'psofa'  && <PsofaScore />}
+        {activeTab === 'cribii' && <CribIIScore />}
+      </div>
     </div>
   );
 }

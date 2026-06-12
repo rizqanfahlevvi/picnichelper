@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { Card, CardContent } from '../ui/card';
-import { Field } from '../ui/field';
 import { Disclaimer } from '../Disclaimer';
 import { usePatientStore } from '../../store/patientStore';
 import {
@@ -53,130 +51,139 @@ export function SyringePumpCalculator() {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">Syringe Pump</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Kecepatan infus kontinu (mL/jam).
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">Syringe Pump</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>Kecepatan infus kontinu (mL/jam).</p>
       </div>
 
       {/* Drug presets */}
-      <Card>
-        <CardContent className="pt-4 space-y-2">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Preset obat</p>
-          <div className="flex flex-wrap gap-2">
-            {SYRINGE_PUMP_DRUGS.map((d) => (
+      <div style={{ padding: '0 16px', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {SYRINGE_PUMP_DRUGS.map((d) => (
+          <button
+            key={d.name}
+            onClick={() => applyDrugPreset(d.name)}
+            style={{
+              padding: '6px 14px', borderRadius: 'var(--r-pill)', border: 'none', cursor: 'pointer',
+              font: 'var(--type-footnote)', fontWeight: selectedDrug === d.name ? 600 : 400,
+              background: selectedDrug === d.name ? 'var(--tint-drug)' : 'var(--fill-secondary)',
+              color: selectedDrug === d.name ? '#fff' : 'var(--label-primary)',
+              transition: 'all var(--dur-fast)',
+            }}
+          >
+            {d.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Inputs */}
+      <div className="ios-card" style={{ padding: '2px 0' }}>
+        <InputRow label="Berat pasien" unit="kg" value={weightKg} readOnly placeholder="dari input pasien" />
+        <div style={{ height: '0.5px', background: 'var(--separator)' }} />
+        <InputRow
+          label="Konsentrasi" unit="mcg/mL"
+          value={concentration} onChange={setConcentration}
+          placeholder="mis. 1600" type="number"
+        />
+        <div style={{ height: '0.5px', background: 'var(--separator)' }} />
+
+        {/* Dose + unit toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', minHeight: 'var(--hit)' }}>
+          <span style={{ flex: 1, font: 'var(--type-subheadline)', color: 'var(--label-primary)' }}>Dosis</span>
+          <input
+            type="number" min="0" value={dose}
+            onChange={(e) => setDose(e.target.value)}
+            placeholder="mis. 5"
+            style={{
+              width: 70, textAlign: 'right', borderRadius: 'var(--r-sm)',
+              border: 'none', outline: 'none',
+              background: 'var(--fill-tertiary)', color: 'var(--label-primary)',
+              font: 'var(--type-body)', padding: '4px 10px', minHeight: 36,
+            }}
+          />
+          <div style={{
+            display: 'flex', borderRadius: 'var(--r-sm)', overflow: 'hidden',
+            border: '0.5px solid var(--separator)',
+          }}>
+            {(['per_minute', 'per_hour'] as DoseTimeUnit[]).map((u) => (
               <button
-                key={d.name}
-                onClick={() => applyDrugPreset(d.name)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  selectedDrug === d.name
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                }`}
+                key={u}
+                onClick={() => setTimeUnit(u)}
+                style={{
+                  padding: '6px 10px', border: 'none', cursor: 'pointer',
+                  font: 'var(--type-caption-1)', fontWeight: timeUnit === u ? 600 : 400,
+                  background: timeUnit === u ? 'var(--accent)' : 'transparent',
+                  color: timeUnit === u ? '#fff' : 'var(--label-secondary)',
+                  transition: 'all var(--dur-fast)',
+                }}
               >
-                {d.name}
+                {u === 'per_minute' ? 'mcg/kg/mnt' : 'mcg/kg/jam'}
               </button>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Inputs */}
-      <Card>
-        <CardContent className="pt-4 space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <Field
-              label="Berat pasien"
-              unit="kg"
-              id="sp-weight"
-              value={weightKg}
-              readOnly
-              placeholder="dari input pasien"
-            />
-            <Field
-              label="Konsentrasi"
-              unit="mcg/mL"
-              id="sp-conc"
-              value={concentration}
-              onChange={(e) => setConcentration(e.target.value)}
-              placeholder="mis. 1600"
-              type="number"
-              min="0"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              Dosis
-            </label>
-            <div className="flex gap-2">
-              <input
-                id="sp-dose"
-                type="number"
-                min="0"
-                value={dose}
-                onChange={(e) => setDose(e.target.value)}
-                placeholder="mis. 5"
-                className="flex-1 min-h-[48px] rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                {(['per_minute', 'per_hour'] as DoseTimeUnit[]).map((unit) => (
-                  <button
-                    key={unit}
-                    onClick={() => setTimeUnit(unit)}
-                    className={`px-3 min-h-[48px] text-xs font-medium transition-colors ${
-                      timeUnit === unit
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
-                    }`}
-                  >
-                    {unit === 'per_minute' ? 'mcg/kg/mnt' : 'mcg/kg/jam'}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Result */}
+      {/* Error */}
       {error && (
-        <Card>
-          <CardContent className="pt-4">
-            <p className="text-sm text-destructive">{error}</p>
-          </CardContent>
-        </Card>
+        <div className="ios-warn ios-warn--danger">
+          <span>{error}</span>
+        </div>
       )}
 
+      {/* Result */}
       {result && (
-        <div className="rounded-2xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 p-5 space-y-3">
-          <div className="flex items-baseline gap-2">
-            <span className="text-5xl font-bold text-blue-600 dark:text-blue-400">
-              {result.ratePerHour.toFixed(2)}
-            </span>
-            <span className="text-lg text-slate-500 dark:text-slate-400">mL/jam</span>
-          </div>
-          <div className="text-sm text-slate-600 dark:text-slate-300">
-            Dosis absolut:{' '}
-            <span className="font-semibold">
-              {result.absoluteDosePerTime.toFixed(2)} mcg/
-              {result.timeUnit === 'per_minute' ? 'mnt' : 'jam'}
-            </span>
-          </div>
-          <div className="text-xs font-mono text-slate-400 dark:text-slate-500">
-            {doseNum} × {weightNum} {timeUnit === 'per_minute' ? '× 60' : ''} ÷ {concNum}
+        <div className="ios-card tint-drug">
+          <div style={{ padding: '16px 16px 12px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 48, fontWeight: 700, color: 'var(--tint, var(--accent))', letterSpacing: '-0.02em' }}>
+                {result.ratePerHour.toFixed(2)}
+              </span>
+              <span style={{ font: 'var(--type-title-3)', color: 'var(--label-secondary)' }}>mL/jam</span>
+            </div>
+            <p style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)', marginTop: 4 }}>
+              Dosis absolut:{' '}
+              <span style={{ fontWeight: 600, color: 'var(--label-primary)' }}>
+                {result.absoluteDosePerTime.toFixed(2)} mcg/{result.timeUnit === 'per_minute' ? 'mnt' : 'jam'}
+              </span>
+            </p>
+            <p style={{ fontFamily: 'var(--font-mono)', font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginTop: 6 }}>
+              {doseNum} × {weightNum} {timeUnit === 'per_minute' ? '× 60' : ''} ÷ {concNum}
+            </p>
           </div>
         </div>
       )}
 
-      {/* Dose range hints */}
-      {selectedDrug && (
-        <DoseRangeHint drugName={selectedDrug} />
-      )}
+      {/* Dose range hint */}
+      {selectedDrug && <DoseRangeHint drugName={selectedDrug} />}
 
       <Disclaimer />
+    </div>
+  );
+}
+
+function InputRow({ label, unit, value, onChange, placeholder, type, readOnly }: {
+  label: string; unit: string; value: string;
+  onChange?: (v: string) => void;
+  placeholder: string; type?: string; readOnly?: boolean;
+}) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', minHeight: 'var(--hit)' }}>
+      <div style={{ flex: 1 }}>
+        <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-primary)' }}>{label}</span>
+        <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginLeft: 6 }}>({unit})</span>
+      </div>
+      <input
+        type={type ?? 'text'} value={value} readOnly={readOnly} placeholder={placeholder}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+        style={{
+          width: 100, textAlign: 'right', borderRadius: 'var(--r-sm)',
+          border: 'none', outline: 'none',
+          background: readOnly ? 'transparent' : 'var(--fill-tertiary)',
+          color: readOnly ? 'var(--label-secondary)' : 'var(--label-primary)',
+          font: 'var(--type-body)', padding: '4px 10px', minHeight: 36,
+        }}
+      />
     </div>
   );
 }
@@ -185,14 +192,16 @@ function DoseRangeHint({ drugName }: { drugName: string }) {
   const drug = SYRINGE_PUMP_DRUGS.find((d) => d.name === drugName);
   if (!drug) return null;
   return (
-    <Card>
-      <CardContent className="pt-4 text-xs text-slate-500 dark:text-slate-400 space-y-1">
-        <p className="font-medium text-foreground">{drug.name} — rentang dosis referensi</p>
-        <p>
-          {drug.minDose}–{drug.maxDose} mcg/kg/{drug.unit === 'per_minute' ? 'mnt' : 'jam'}
-        </p>
-        <p>Konsentrasi umum: {drug.commonConcentrations.join(', ')} mcg/mL</p>
-      </CardContent>
-    </Card>
+    <div className="ios-card" style={{ padding: '12px 14px' }}>
+      <p style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', marginBottom: 6 }}>
+        {drug.name} — rentang dosis referensi
+      </p>
+      <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)' }}>
+        {drug.minDose}–{drug.maxDose} mcg/kg/{drug.unit === 'per_minute' ? 'mnt' : 'jam'}
+      </p>
+      <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', marginTop: 2 }}>
+        Konsentrasi umum: {drug.commonConcentrations.join(', ')} mcg/mL
+      </p>
+    </div>
   );
 }

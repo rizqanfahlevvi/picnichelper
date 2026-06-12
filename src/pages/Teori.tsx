@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent } from '../components/ui/card';
+import { ChevronRight } from 'lucide-react';
 import { THEORY_ENTRIES, CATEGORY_LABELS, CATEGORY_ORDER, type TheoryCategory } from '../data/theory';
 
 export function Teori() {
@@ -16,18 +16,19 @@ export function Teori() {
   }, {} as Record<TheoryCategory, typeof THEORY_ENTRIES>);
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Teori & Klinis</h1>
+    <div className="ios-screen pb-6">
+      <div style={{ padding: '24px 20px 8px' }}>
+        <h1 className="ios-large-title">Teori & Klinis</h1>
+      </div>
 
-      {/* Category filter */}
-      <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-        <FilterChip
-          label="Semua"
-          active={activeCategory === 'semua'}
-          onClick={() => setActiveCategory('semua')}
-        />
+      {/* Category filter pills */}
+      <div style={{
+        display: 'flex', gap: 6, overflowX: 'auto', padding: '8px 16px',
+        scrollbarWidth: 'none',
+      }}>
+        <FilterPill label="Semua" active={activeCategory === 'semua'} onClick={() => setActiveCategory('semua')} />
         {CATEGORY_ORDER.map((cat) => (
-          <FilterChip
+          <FilterPill
             key={cat}
             label={CATEGORY_LABELS[cat]}
             active={activeCategory === cat}
@@ -36,54 +37,64 @@ export function Teori() {
         ))}
       </div>
 
-      {/* Content */}
       {CATEGORY_ORDER.map((cat) => {
         const entries = grouped[cat];
         if (!entries.length) return null;
         return (
-          <section key={cat} className="space-y-2">
+          <section key={cat}>
             {activeCategory === 'semua' && (
-              <h2 className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide px-1">
-                {CATEGORY_LABELS[cat]}
-              </h2>
+              <div className="ios-section">
+                <span className="label">{CATEGORY_LABELS[cat]}</span>
+              </div>
             )}
-            {entries.map((entry) => (
-              <Card key={entry.id}>
-                <button
-                  className="w-full text-left"
-                  onClick={() => setExpanded(expanded === entry.id ? null : entry.id)}
-                >
-                  <CardContent className="pt-4 pb-4">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <div className="font-semibold text-sm">{entry.title}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                          {entry.subtitle}
-                        </div>
-                      </div>
-                      <span className={`text-slate-400 dark:text-slate-500 transition-transform shrink-0 ${
-                        expanded === entry.id ? 'rotate-180' : ''
-                      }`}>
-                        ▾
-                      </span>
+            <div className="ios-list" style={{ margin: activeCategory === 'semua' ? undefined : '8px 16px 0' }}>
+              {entries.map((entry) => (
+                <div key={entry.id}>
+                  <button
+                    onClick={() => setExpanded(expanded === entry.id ? null : entry.id)}
+                    style={{
+                      width: '100%', textAlign: 'left',
+                      display: 'flex', alignItems: 'center', gap: 12,
+                      padding: '10px 14px', minHeight: 'var(--hit)',
+                      background: 'transparent', border: 'none', cursor: 'pointer',
+                      borderTop: '0.5px solid var(--separator)',
+                    }}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="ios-row-label">{entry.title}</div>
+                      <div className="ios-row-sub">{entry.subtitle}</div>
                     </div>
-                  </CardContent>
-                </button>
+                    <ChevronRight
+                      size={16}
+                      className="ios-chevron"
+                      style={{
+                        transform: expanded === entry.id ? 'rotate(90deg)' : 'none',
+                        transition: 'transform var(--dur-fast)',
+                      }}
+                    />
+                  </button>
 
-                {expanded === entry.id && (
-                  <CardContent className="pb-4 pt-0 border-t border-slate-100 dark:border-slate-800">
-                    <ul className="space-y-2 mt-3">
-                      {entry.points.map((point, i) => (
-                        <li key={i} className="flex gap-2 text-sm text-slate-600 dark:text-slate-300">
-                          <span className="text-blue-500 shrink-0 mt-0.5">•</span>
-                          <span>{point.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                )}
-              </Card>
-            ))}
+                  {expanded === entry.id && (
+                    <div style={{
+                      padding: '10px 14px 14px 14px',
+                      borderTop: '0.5px solid var(--separator)',
+                      background: 'var(--fill-tertiary)',
+                    }}>
+                      <ul style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {entry.points.map((point, i) => (
+                          <li key={i} style={{ display: 'flex', gap: 8 }}>
+                            <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }}>•</span>
+                            <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>
+                              {point.text}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         );
       })}
@@ -91,15 +102,18 @@ export function Teori() {
   );
 }
 
-function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+function FilterPill({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-        active
-          ? 'bg-blue-600 text-white'
-          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-      }`}
+      style={{
+        flexShrink: 0, padding: '7px 16px', borderRadius: 'var(--r-pill)',
+        border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+        font: 'var(--type-subheadline)', fontWeight: active ? 600 : 400,
+        background: active ? 'var(--tint-theory)' : 'var(--fill-secondary)',
+        color: active ? '#fff' : 'var(--label-primary)',
+        transition: 'all var(--dur-fast)',
+      }}
     >
       {label}
     </button>

@@ -13,27 +13,27 @@ export function Monitoring() {
   const [activeTab, setActiveTab] = useState<MonitoringTab>('vital');
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Monitoring & Weaning</h1>
+    <div className="ios-screen pb-6">
+      <div style={{ padding: '24px 20px 8px' }}>
+        <h1 className="ios-large-title">Monitoring & Weaning</h1>
+      </div>
 
-      <div className="flex gap-1">
-        {TABS.map(tab => (
+      <div className="ios-segmented" style={{ margin: '8px 16px 0' }}>
+        {TABS.map((tab) => (
           <button
             key={tab.id}
+            aria-selected={activeTab === tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeTab === tab.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-            }`}
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      {activeTab === 'vital'   && <VitalSignsChecker />}
-      {activeTab === 'weaning' && <WeaningChecklist />}
+      <div style={{ marginTop: 16 }}>
+        {activeTab === 'vital'   && <VitalSignsChecker />}
+        {activeTab === 'weaning' && <WeaningChecklist />}
+      </div>
     </div>
   );
 }

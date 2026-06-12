@@ -1,4 +1,4 @@
-import { Card, CardContent } from '../ui/card';
+import { AlertTriangle } from 'lucide-react';
 import { Cite } from '../Citation';
 import { Disclaimer } from '../Disclaimer';
 import { usePatientStore } from '../../store/patientStore';
@@ -19,26 +19,20 @@ export function EttDepthCalculator() {
   const noInput = !ageYears.trim() && !weightKg.trim();
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">Kedalaman Insersi ETT</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Jarak bibir ke ujung tube (cm).
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">Kedalaman Insersi ETT</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>Jarak bibir ke ujung tube (cm).</p>
       </div>
 
       {noInput && (
-        <Card>
-          <CardContent className="pt-4">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              Masukkan usia atau berat pasien untuk menghitung.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="ios-card" style={{ padding: '14px 16px' }}>
+          <p className="ios-footnote">Masukkan usia atau berat pasien untuk menghitung.</p>
+        </div>
       )}
 
       {(byAge || byWeight) && (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="ios-card">
           {byAge && (
             <DepthTile
               label="Formula usia (bibir)"
@@ -48,6 +42,7 @@ export function EttDepthCalculator() {
               note={`${ageNum} tahun`}
             />
           )}
+          {byAge && byWeight && <div style={{ height: '0.5px', background: 'var(--separator)' }} />}
           {byWeight && (
             <DepthTile
               label="Formula berat (neonatus)"
@@ -61,14 +56,13 @@ export function EttDepthCalculator() {
       )}
 
       {ageYears.trim() && Number.isFinite(ageNum) && ageNum < ETT_DEPTH_AGE_MIN_YEARS && category === 'anak' && (
-        <Card>
-          <CardContent className="pt-4">
-            <p className="text-sm text-yellow-500">
-              Formula usia/2+12 berlaku mulai ≥{ETT_DEPTH_AGE_MIN_YEARS} tahun.
-              Gunakan kategori Neonatus dan masukkan berat badan.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="ios-warn">
+          <AlertTriangle size={15} />
+          <span>
+            Formula usia/2+12 berlaku mulai ≥{ETT_DEPTH_AGE_MIN_YEARS} tahun.
+            Gunakan kategori Neonatus dan masukkan berat badan.
+          </span>
+        </div>
       )}
 
       <TubeIdSection />
@@ -80,40 +74,40 @@ export function EttDepthCalculator() {
 
 function TubeIdSection() {
   return (
-    <Card>
-      <CardContent className="pt-4 space-y-3">
-        <p className="text-sm font-medium">Formula ID tube (berlaku semua usia)</p>
-        <p className="font-mono text-xs text-slate-500 dark:text-slate-400">
-          kedalaman (cm) = ID tube (mm) × 3
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="ios-section" style={{ paddingTop: 8 }}>
+        <span className="label">Formula ID Tube</span>
+      </div>
+      <div className="ios-card" style={{ padding: '12px 14px' }}>
+        <p className="ios-footnote" style={{ marginBottom: 10 }}>
+          Kedalaman (cm) = ID tube (mm) × 3{' '}<Cite source="pals2020" />
         </p>
-        <div className="grid grid-cols-3 gap-2">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
           {[3.0, 3.5, 4.0, 4.5, 5.0, 5.5].map((id) => (
             <div
               key={id}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-3 text-center"
+              style={{
+                background: 'var(--fill-tertiary)', borderRadius: 10,
+                padding: '8px 6px', textAlign: 'center',
+              }}
             >
-              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">ID {id} mm</div>
-              <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                {ettDepthByTubeId(id)}{' '}
-                <span className="text-xs font-normal text-slate-400">cm</span>
+              <div style={{ font: 'var(--type-caption-2)', color: 'var(--label-secondary)', marginBottom: 3 }}>
+                ID {id} mm
+              </div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 20, fontWeight: 700, color: 'var(--tint-resp)' }}>
+                {ettDepthByTubeId(id)}
+                <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--label-secondary)', marginLeft: 2 }}>cm</span>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          <Cite source="pals2020" /> Berlaku untuk semua usia.
-        </p>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function DepthTile({
-  label,
-  formula,
-  cite,
-  value,
-  note,
+  label, formula, cite, value, note,
 }: {
   label: string;
   formula: string;
@@ -122,16 +116,20 @@ function DepthTile({
   note: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 flex items-center justify-between">
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', minHeight: 'var(--hit)' }}>
       <div>
-        <div className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+        <div style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)', display: 'flex', alignItems: 'center', gap: 2 }}>
           {label} <Cite source={cite} />
         </div>
-        <div className="font-mono text-xs text-slate-400 dark:text-slate-500">{formula} · {note}</div>
+        <div style={{ fontFamily: 'var(--font-mono)', font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginTop: 2 }}>
+          {formula} · {note}
+        </div>
       </div>
-      <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-        {value}
-        <span className="text-base font-normal text-slate-500 dark:text-slate-400 ml-1">cm</span>
+      <div>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 36, fontWeight: 700, color: 'var(--tint-resp)' }}>
+          {value}
+        </span>
+        <span style={{ font: 'var(--type-body)', color: 'var(--label-secondary)', marginLeft: 4 }}>cm</span>
       </div>
     </div>
   );
@@ -140,17 +138,16 @@ function DepthTile({
 function ReferenceFootnotes() {
   const used = ['pals2020', 'nrp8'] as const;
   return (
-    <Card>
-      <CardContent className="pt-4">
-        <ol className="space-y-2 text-xs text-slate-500 dark:text-slate-400">
-          {used.map((key) => (
-            <li key={key}>
-              <span className="font-semibold text-foreground">[{REFERENCES[key].id}]</span>{' '}
-              {REFERENCES[key].citation}
-            </li>
-          ))}
-        </ol>
-      </CardContent>
-    </Card>
+    <div className="ios-card" style={{ padding: '12px 14px' }}>
+      <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
+      <ol style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {used.map((key) => (
+          <li key={key} style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+            <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[key].id}]</span>{' '}
+            {REFERENCES[key].citation}
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }

@@ -3,10 +3,15 @@ import { FluidCalculator } from '../components/drugsfluid/FluidCalculator';
 
 export function DrugsFluid() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Drugs & Fluids</h1>
+    <div className="ios-screen pb-6">
+      <div style={{ padding: '24px 20px 8px' }}>
+        <h1 className="ios-large-title">Drugs & Fluids</h1>
+      </div>
+      <div className="ios-section"><span className="label">Data Pasien</span></div>
       <PatientInput />
-      <FluidCalculator />
+      <div style={{ marginTop: 16 }}>
+        <FluidCalculator />
+      </div>
     </div>
   );
 }

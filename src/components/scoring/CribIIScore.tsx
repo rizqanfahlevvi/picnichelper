@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent } from '../ui/card';
+import { AlertTriangle } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { calculateCribII, type CribIIInput, type CribIISex } from '../../utils/cribii';
@@ -13,11 +13,11 @@ const DEFAULT: CribIIInput = {
   baseExcess: 0,
 };
 
-const RISK_STYLE = {
-  rendah:        'bg-green-500/10 border-green-500/30 text-green-500',
-  sedang:        'bg-yellow-500/10 border-yellow-500/30 text-yellow-500',
-  tinggi:        'bg-orange-500/10 border-orange-500/30 text-orange-500',
-  'sangat tinggi': 'bg-red-500/10 border-red-500/30 text-red-500',
+const RISK_TINT = {
+  'rendah':        'var(--sys-green)',
+  'sedang':        'var(--sys-orange)',
+  'tinggi':        'var(--sys-red)',
+  'sangat tinggi': 'var(--sys-red)',
 };
 
 export function CribIIScore() {
@@ -42,91 +42,76 @@ export function CribIIScore() {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">CRIB-II</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Clinical Risk Index for Babies II <Cite source="parry2003" />.
-          Untuk neonatus prematur ≤ 32 minggu.
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">CRIB-II</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>
+          Clinical Risk Index for Babies II <Cite source="parry2003" />. Neonatus prematur ≤ 32 minggu.
         </p>
       </div>
 
-      <Card>
-        <CardContent className="pt-4 space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <NF label="Usia gestasi" unit="minggu" value={v.gestationalAgeWeeks}
-              onChange={(x) => num('gestationalAgeWeeks', x)} min={22} max={32} />
-            <NF label="Berat lahir" unit="gram" value={v.birthWeightGrams}
-              onChange={(x) => num('birthWeightGrams', x)} />
-          </div>
+      <div className="ios-card" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <NF label="Usia gestasi" unit="minggu" value={v.gestationalAgeWeeks}
+            onChange={(x) => num('gestationalAgeWeeks', x)} min={22} max={32} />
+          <NF label="Berat lahir" unit="gram" value={v.birthWeightGrams}
+            onChange={(x) => num('birthWeightGrams', x)} />
+        </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Jenis Kelamin</label>
-            <div className="grid grid-cols-2 gap-2">
-              {(['male', 'female'] as CribIISex[]).map((sex) => (
-                <button key={sex} onClick={() => setSex(sex)}
-                  className={`min-h-[48px] rounded-xl border text-sm font-medium transition-colors ${
-                    v.sex === sex
-                      ? 'border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}>
-                  {sex === 'male' ? 'Laki-laki' : 'Perempuan'}
-                </button>
-              ))}
-            </div>
+        <div>
+          <label style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-secondary)', display: 'block', marginBottom: 8 }}>
+            Jenis Kelamin
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            {(['male', 'female'] as CribIISex[]).map((sex) => (
+              <button key={sex} onClick={() => setSex(sex)}
+                style={optionStyle(v.sex === sex)}>
+                {sex === 'male' ? 'Laki-laki' : 'Perempuan'}
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <NF label="Suhu masuk" unit="°C" value={v.admissionTemperatureC}
-              onChange={(x) => num('admissionTemperatureC', x)} step="0.1" />
-            <NF label="Base Excess" unit="mmol/L" value={v.baseExcess}
-              onChange={(x) => num('baseExcess', x)} step="0.1" />
-          </div>
-        </CardContent>
-      </Card>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <NF label="Suhu masuk" unit="°C" value={v.admissionTemperatureC}
+            onChange={(x) => num('admissionTemperatureC', x)} step="0.1" />
+          <NF label="Base Excess" unit="mmol/L" value={v.baseExcess}
+            onChange={(x) => num('baseExcess', x)} step="0.1" />
+        </div>
+      </div>
 
       {error && (
-        <Card><CardContent className="pt-4"><p className="text-sm text-destructive">{error}</p></CardContent></Card>
+        <div className="ios-warn ios-warn--danger">
+          <AlertTriangle size={15} /><span>{error}</span>
+        </div>
       )}
 
       {result && (
         <>
-          <div className={`rounded-2xl border p-5 space-y-3 ${RISK_STYLE[result.riskCategory]}`}>
-            <div className="flex items-baseline gap-3">
-              <span className="text-5xl font-bold">{result.total}</span>
-              <span className="text-sm opacity-75">poin</span>
-            </div>
-            <p className="text-base font-semibold capitalize">Risiko {result.riskCategory}</p>
-            <p className="text-sm">
-              Estimasi mortalitas:{' '}
-              <span className="font-bold">~{result.estimatedMortalityPercent}%</span>
-              <span className="text-xs opacity-60 ml-1">(tabel Parry 2003)</span>
-            </p>
-          </div>
-
-          <Card>
-            <CardContent className="pt-4 space-y-2">
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Subskor</p>
-              {result.subscores.map((s) => (
-                <div key={s.label} className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-300">{s.label}</span>
-                  <span className={`font-bold ${s.score > 0 ? 'text-red-500' : 'text-green-500'}`}>{s.score}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          <ScoreResult
+            total={result.total} tint={RISK_TINT[result.riskCategory]}
+            label={`Risiko ${result.riskCategory}`}
+            sub={`Estimasi mortalitas: ~${result.estimatedMortalityPercent}% (tabel Parry 2003)`}
+          />
+          <OrganBreakdown items={result.subscores.map(s => ({ organ: s.label, detail: '', score: s.score }))} />
         </>
       )}
 
       <Disclaimer />
-      <Card>
-        <CardContent className="pt-4 text-xs text-slate-500 dark:text-slate-400">
-          <span className="font-semibold text-foreground">[{REFERENCES.parry2003.id}]</span>{' '}
-          {REFERENCES.parry2003.citation}
-        </CardContent>
-      </Card>
+      <RefCard refKey="parry2003" />
     </div>
   );
+}
+
+function optionStyle(active: boolean): React.CSSProperties {
+  return {
+    minHeight: 'var(--hit)', borderRadius: 10, border: 'none', cursor: 'pointer',
+    font: 'var(--type-subheadline)', fontWeight: active ? 600 : 400,
+    background: active ? 'color-mix(in srgb, var(--tint-score) 15%, var(--bg-tertiary))' : 'var(--fill-tertiary)',
+    color: active ? 'var(--tint-score)' : 'var(--label-secondary)',
+    outline: active ? '1.5px solid var(--tint-score)' : 'none',
+    transition: 'all var(--dur-fast)',
+  };
 }
 
 function NF({ label, unit, value, onChange, step, min, max }: {
@@ -134,13 +119,76 @@ function NF({ label, unit, value, onChange, step, min, max }: {
   onChange: (v: string) => void; step?: string; min?: number; max?: number;
 }) {
   return (
-    <div className="space-y-1">
-      <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
-        {label}{unit && <span className="text-slate-400 ml-1">({unit})</span>}
+    <div>
+      <label style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-secondary)', display: 'block', marginBottom: 6 }}>
+        {label}{unit && <span style={{ fontWeight: 400, color: 'var(--label-tertiary)' }}> ({unit})</span>}
       </label>
       <input type="number" value={value} onChange={(e) => onChange(e.target.value)}
         step={step ?? '1'} min={min} max={max}
-        className="w-full min-h-[48px] rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        style={{
+          width: '100%', minHeight: 40, borderRadius: 'var(--r-sm)',
+          border: '0.5px solid var(--separator)', outline: 'none',
+          background: 'var(--fill-tertiary)', color: 'var(--label-primary)',
+          font: 'var(--type-body)', padding: '0 10px', boxSizing: 'border-box',
+        }} />
+    </div>
+  );
+}
+
+function ScoreResult({ total, tint, label, sub }: { total: number; tint: string; label: string; sub?: string }) {
+  return (
+    <div className="ios-card" style={{ overflow: 'hidden' }}>
+      <div style={{
+        padding: '14px 16px',
+        background: `color-mix(in srgb, ${tint} 10%, var(--bg-tertiary))`,
+        borderBottom: '0.5px solid var(--separator)',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <span style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>Total</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 40, fontWeight: 700, color: tint, lineHeight: 1 }}>{total}</span>
+        </div>
+        <p style={{ font: 'var(--type-headline)', color: tint, fontWeight: 700, marginTop: 4, textTransform: 'capitalize' }}>{label}</p>
+      </div>
+      {sub && (
+        <div style={{ padding: '10px 16px' }}>
+          <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)' }}>{sub}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function OrganBreakdown({ items }: { items: { organ: string; detail: string; score: number }[] }) {
+  return (
+    <div className="ios-list">
+      {items.map((o, i) => (
+        <div key={o.organ} style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '10px 14px', minHeight: 40,
+          borderTop: i === 0 ? 'none' : '0.5px solid var(--separator)',
+          background: 'var(--bg-tertiary)',
+        }}>
+          <div>
+            <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-primary)' }}>{o.organ}</span>
+            {o.detail && <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 1 }}>{o.detail}</p>}
+          </div>
+          <span style={{
+            fontFamily: 'var(--font-mono)', fontSize: 18, fontWeight: 700,
+            color: o.score > 0 ? 'var(--sys-red)' : 'var(--sys-green)',
+          }}>{o.score}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RefCard({ refKey }: { refKey: keyof typeof REFERENCES }) {
+  return (
+    <div className="ios-card" style={{ padding: '12px 14px' }}>
+      <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+        <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[refKey].id}]</span>{' '}
+        {REFERENCES[refKey].citation}
+      </p>
     </div>
   );
 }

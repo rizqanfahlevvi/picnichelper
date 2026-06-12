@@ -8,11 +8,7 @@ import { REFERENCES } from '../data/references';
 export function Cite({ source }: { source: keyof typeof REFERENCES }) {
   const ref = REFERENCES[source];
   return (
-    <Link
-      to="/referensi"
-      title={ref.citation}
-      className="align-super text-xs font-semibold text-[var(--color-primary)] hover:underline"
-    >
+    <Link to="/referensi" title={ref.citation} className="ios-cite">
       [{ref.id}]
     </Link>
   );

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
+import { ChevronRight } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
 import { WEANING_CRITERIA, type WeaningCriterion } from '../../utils/vitalSigns';
 
@@ -36,102 +35,144 @@ export function WeaningChecklist() {
     {} as Record<WeaningCriterion['category'], WeaningCriterion[]>,
   );
 
+  const progressColor = ready ? 'var(--sys-green)' : 'var(--accent)';
+
   return (
-    <div className="space-y-4">
-      {/* Progress */}
-      <div className={`rounded-2xl border p-5 space-y-3 ${
-        ready
-          ? 'border-green-400 dark:border-green-700 bg-green-50 dark:bg-green-950/20'
-          : 'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/20'
-      }`}>
-        <div className="flex items-center justify-between">
-          <span className={`text-lg font-bold ${ready ? 'text-green-500' : 'text-blue-600 dark:text-blue-400'}`}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {/* Progress card */}
+      <div className="ios-card" style={{ padding: '14px 16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+          <span style={{ font: 'var(--type-headline)', color: progressColor }}>
             {ticked}/{total} kriteria terpenuhi
           </span>
-          <Badge variant={ready ? 'default' : 'secondary'}>
+          <span style={{
+            font: 'var(--type-caption-2)', fontWeight: 700,
+            color: ready ? 'var(--sys-green)' : 'var(--accent)',
+            background: ready
+              ? 'color-mix(in srgb, var(--sys-green) 12%, transparent)'
+              : 'var(--accent-tint)',
+            padding: '3px 10px', borderRadius: 'var(--r-pill)',
+          }}>
             {ready ? 'Siap weaning' : `${percent}%`}
-          </Badge>
+          </span>
         </div>
-        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-300 ${ready ? 'bg-green-500' : 'bg-blue-500'}`}
-            style={{ width: `${percent}%` }}
-          />
+        <div style={{ height: 6, borderRadius: 'var(--r-pill)', background: 'var(--fill-secondary)', overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', borderRadius: 'var(--r-pill)',
+            background: progressColor,
+            width: `${percent}%`,
+            transition: 'width 300ms var(--ease-out)',
+          }} />
         </div>
         {ready && (
-          <p className="text-sm text-green-500 font-medium">
+          <p style={{ font: 'var(--type-footnote)', color: 'var(--sys-green)', marginTop: 8, fontWeight: 500 }}>
             Semua kriteria terpenuhi — pertimbangkan SBT (Spontaneous Breathing Trial).
           </p>
         )}
       </div>
 
-      {/* Checklist per kategori */}
+      {/* Checklist per category */}
       {CATEGORY_ORDER.map(cat => (
-        <section key={cat} className="space-y-2">
-          <h3 className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide px-1">
-            {CATEGORY_LABELS[cat]}
-          </h3>
-          {grouped[cat].map(criterion => (
-            <Card key={criterion.id}
-              className={checked[criterion.id] ? 'border-green-300 dark:border-green-800' : ''}>
-              <CardContent className="pt-0 pb-0">
-                {/* Main row */}
-                <div className="flex items-center gap-3 py-3">
+        <section key={cat}>
+          <div className="ios-section" style={{ paddingTop: 6 }}>
+            <span className="label">{CATEGORY_LABELS[cat]}</span>
+          </div>
+          <div className="ios-list">
+            {grouped[cat].map((criterion, i) => (
+              <div key={criterion.id}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '10px 14px', minHeight: 'var(--hit)',
+                  borderTop: i === 0 ? 'none' : '0.5px solid var(--separator)',
+                  background: checked[criterion.id] ? 'color-mix(in srgb, var(--sys-green) 6%, var(--bg-tertiary))' : 'var(--bg-tertiary)',
+                  transition: 'background var(--dur-fast)',
+                }}>
+                  {/* Checkbox */}
                   <button
                     onClick={() => toggle(criterion.id)}
-                    className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                      checked[criterion.id]
-                        ? 'bg-green-500 border-green-500 text-white'
-                        : 'border-slate-300 dark:border-slate-600'
-                    }`}
+                    style={{
+                      width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+                      border: checked[criterion.id] ? 'none' : '2px solid var(--separator)',
+                      background: checked[criterion.id] ? 'var(--sys-green)' : 'transparent',
+                      display: 'grid', placeItems: 'center', cursor: 'pointer',
+                      color: '#fff', font: 'var(--type-caption-1)', fontWeight: 700,
+                      transition: 'all var(--dur-fast)',
+                    }}
                   >
-                    {checked[criterion.id] && <span className="text-xs leading-none">✓</span>}
+                    {checked[criterion.id] && '✓'}
                   </button>
+
+                  {/* Text */}
                   <button
                     onClick={() => setExpanded(expanded === criterion.id ? null : criterion.id)}
-                    className="flex-1 text-left"
+                    style={{
+                      flex: 1, textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer',
+                    }}
                   >
-                    <span className={`text-sm ${checked[criterion.id] ? 'text-slate-400 line-through dark:text-slate-600' : 'text-slate-700 dark:text-slate-200'}`}>
+                    <span style={{
+                      font: 'var(--type-body)', letterSpacing: '-0.022em',
+                      color: checked[criterion.id] ? 'var(--label-tertiary)' : 'var(--label-primary)',
+                      textDecoration: checked[criterion.id] ? 'line-through' : 'none',
+                    }}>
                       {criterion.text}
                     </span>
                   </button>
-                  <button
+
+                  <ChevronRight
+                    size={16}
+                    className="ios-chevron"
+                    style={{
+                      transform: expanded === criterion.id ? 'rotate(90deg)' : 'none',
+                      transition: 'transform var(--dur-fast)',
+                    }}
                     onClick={() => setExpanded(expanded === criterion.id ? null : criterion.id)}
-                    className="shrink-0 text-slate-400 text-xs"
-                  >
-                    {expanded === criterion.id ? '▴' : '▾'}
-                  </button>
+                  />
                 </div>
 
-                {/* Detail */}
                 {expanded === criterion.id && (
-                  <div className="pb-3 pl-9 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2">
+                  <div style={{
+                    padding: '10px 14px 12px 52px',
+                    borderTop: '0.5px solid var(--separator)',
+                    background: 'var(--fill-tertiary)',
+                    font: 'var(--type-footnote)', color: 'var(--label-secondary)',
+                  }}>
                     {criterion.detail}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            ))}
+          </div>
         </section>
       ))}
 
       {/* SBT protocol */}
-      <Card>
-        <CardContent className="pt-4 space-y-2">
-          <p className="text-sm font-semibold">Protokol SBT</p>
+      <div>
+        <div className="ios-section" style={{ paddingTop: 6 }}>
+          <span className="label">Protokol SBT</span>
+        </div>
+        <div className="ios-list">
           {[
             'Set mode CPAP 5 cmH₂O atau T-piece.',
             'Observasi 30–120 menit.',
             'Gagal bila: RR > 35×/mnt, SpO₂ < 90%, HR ↑/↓ > 20%, retraksi berat, atau agitasi.',
             'Ekstubasi bila SBT berhasil dan proteksi jalan napas adekuat.',
           ].map((step, i) => (
-            <div key={i} className="flex gap-2 text-sm text-slate-600 dark:text-slate-300">
-              <span className="shrink-0 font-bold text-blue-500">{i + 1}.</span>
-              <span>{step}</span>
+            <div key={i} style={{
+              display: 'flex', gap: 12, padding: '10px 14px', minHeight: 'var(--hit)',
+              borderTop: i === 0 ? 'none' : '0.5px solid var(--separator)',
+              background: 'var(--bg-tertiary)',
+            }}>
+              <span style={{
+                fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700,
+                color: 'var(--accent)', flexShrink: 0, marginTop: 2,
+              }}>
+                {i + 1}.
+              </span>
+              <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>{step}</span>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <Disclaimer />
     </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent } from '../ui/card';
+import { AlertTriangle } from 'lucide-react';
 import { Cite } from '../Citation';
 import {
   VITAL_RANGES,
@@ -8,16 +8,20 @@ import {
   type VitalStatus,
 } from '../../utils/vitalSigns';
 
-const STATUS_STYLE: Record<VitalStatus, string> = {
-  normal: 'text-green-500',
-  low:    'text-red-500',
-  high:   'text-orange-500',
+const STATUS_COLOR: Record<VitalStatus, string> = {
+  normal: 'var(--sys-green)',
+  low:    'var(--sys-red)',
+  high:   'var(--sys-orange)',
 };
 
 const STATUS_LABEL: Record<VitalStatus, string> = {
   normal: '✓',
-  low:    '↓ Rendah',
-  high:   '↑ Tinggi',
+  low:    '↓',
+  high:   '↑',
+};
+
+const FIELD_LABELS: Record<string, string> = {
+  hr: 'HR', rr: 'RR', sbp: 'Sistolik', dbp: 'Diastolik', map: 'MAP', spo2: 'SpO₂',
 };
 
 export function VitalSignsChecker() {
@@ -41,99 +45,107 @@ export function VitalSignsChecker() {
   };
   const result = checkVitals(range, inputMap);
 
+  const hasAbnormal = Object.values(result).some(v => v !== null && v !== 'normal');
+
   return (
-    <div className="space-y-4">
-      {/* Age group selector */}
-      <Card>
-        <CardContent className="pt-4 space-y-2">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Kelompok Usia</p>
-          <div className="flex flex-wrap gap-2">
-            {VITAL_RANGES.map(r => (
-              <button
-                key={r.ageGroup}
-                onClick={() => setAgeGroup(r.ageGroup)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  ageGroup === r.ageGroup
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                }`}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {/* Age group pills */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '0 16px' }}>
+        {VITAL_RANGES.map(r => (
+          <button
+            key={r.ageGroup}
+            onClick={() => setAgeGroup(r.ageGroup)}
+            style={{
+              padding: '6px 14px', borderRadius: 'var(--r-pill)', border: 'none', cursor: 'pointer',
+              font: 'var(--type-footnote)', fontWeight: ageGroup === r.ageGroup ? 600 : 400,
+              background: ageGroup === r.ageGroup ? 'var(--tint-vital)' : 'var(--fill-secondary)',
+              color: ageGroup === r.ageGroup ? '#fff' : 'var(--label-primary)',
+              transition: 'all var(--dur-fast)',
+            }}
+          >
+            {r.label}
+          </button>
+        ))}
+      </div>
 
       {/* Normal range reference */}
-      <Card>
-        <CardContent className="pt-4 space-y-1">
-          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mb-2">
-            Rentang Normal — {range.label} <Cite source="pals2020" />
-          </p>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-            <span>HR: {range.hrMin}–{range.hrMax} bpm</span>
-            <span>RR: {range.rrMin}–{range.rrMax} ×/mnt</span>
-            <span>Sistolik: {range.sbpMin}–{range.sbpMax} mmHg</span>
-            <span>Diastolik: {range.dbpMin}–{range.dbpMax} mmHg</span>
-            <span>MAP: {range.mapMin}–{range.mapMax} mmHg</span>
-            <span>SpO₂: 95–100%</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="ios-card" style={{ padding: '12px 14px' }}>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>
+          Rentang Normal — {range.label} <Cite source="pals2020" />
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3px 16px' }}>
+          {[
+            `HR: ${range.hrMin}–${range.hrMax} bpm`,
+            `RR: ${range.rrMin}–${range.rrMax} ×/mnt`,
+            `Sistolik: ${range.sbpMin}–${range.sbpMax} mmHg`,
+            `Diastolik: ${range.dbpMin}–${range.dbpMax} mmHg`,
+            `MAP: ${range.mapMin}–${range.mapMax} mmHg`,
+            'SpO₂: ≥ 95%',
+          ].map((s) => (
+            <span key={s} style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)' }}>{s}</span>
+          ))}
+        </div>
+      </div>
 
-      {/* Input vitals */}
-      <Card>
-        <CardContent className="pt-4 space-y-3">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-            Input nilai — kosongkan bila tidak tersedia
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <VF label="HR" unit="bpm"  value={hr}   onChange={setHr}   status={result.hr} />
-            <VF label="RR" unit="×/mnt" value={rr}  onChange={setRr}   status={result.rr} />
-            <VF label="Sistolik" unit="mmHg" value={sbp} onChange={setSbp} status={result.sbp} />
-            <VF label="Diastolik" unit="mmHg" value={dbp} onChange={setDbp} status={result.dbp} />
-            <VF label="MAP" unit="mmHg" value={map}  onChange={setMap}  status={result.map} />
-            <VF label="SpO₂" unit="%" value={spo2}   onChange={setSpo2} status={result.spo2} />
-          </div>
-        </CardContent>
-      </Card>
+      {/* Input grid */}
+      <div className="ios-card" style={{ padding: '2px 0' }}>
+        <p style={{ padding: '10px 14px 4px', font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>
+          Kosongkan bila tidak tersedia
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+          {[
+            { label: 'HR',       unit: 'bpm',   value: hr,   onChange: setHr,   key: 'hr'   },
+            { label: 'RR',       unit: '×/mnt', value: rr,   onChange: setRr,   key: 'rr'   },
+            { label: 'Sistolik', unit: 'mmHg',  value: sbp,  onChange: setSbp,  key: 'sbp'  },
+            { label: 'Diastolik',unit: 'mmHg',  value: dbp,  onChange: setDbp,  key: 'dbp'  },
+            { label: 'MAP',      unit: 'mmHg',  value: map,  onChange: setMap,  key: 'map'  },
+            { label: 'SpO₂',    unit: '%',     value: spo2, onChange: setSpo2, key: 'spo2' },
+          ].map(({ label, unit, value, onChange, key }) => (
+            <VFField
+              key={key}
+              label={label} unit={unit} value={value} onChange={onChange}
+              status={result[key as keyof typeof result]}
+            />
+          ))}
+        </div>
+      </div>
 
-      {/* Summary */}
-      {Object.values(result).some(v => v !== null && v !== 'normal') && (
-        <div className="rounded-2xl border border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/20 p-4 space-y-2">
-          <p className="text-sm font-semibold text-orange-500">Perhatian — nilai di luar rentang normal:</p>
-          {(Object.entries(result) as [keyof typeof result, VitalStatus | null][])
-            .filter(([, v]) => v === 'low' || v === 'high')
-            .map(([key, v]) => (
-              <div key={key} className="text-sm text-orange-400">
-                • {FIELD_LABELS[key]}: {v === 'low' ? 'Di bawah normal' : 'Di atas normal'}
-              </div>
-            ))}
+      {/* Abnormal summary */}
+      {hasAbnormal && (
+        <div className="ios-warn">
+          <AlertTriangle size={15} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <span style={{ fontWeight: 600 }}>Nilai di luar rentang normal:</span>
+            {(Object.entries(result) as [keyof typeof result, VitalStatus | null][])
+              .filter(([, v]) => v === 'low' || v === 'high')
+              .map(([key, v]) => (
+                <span key={key}>
+                  {FIELD_LABELS[key]}: {v === 'low' ? 'Di bawah normal' : 'Di atas normal'}
+                </span>
+              ))}
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-const FIELD_LABELS: Record<string, string> = {
-  hr: 'HR', rr: 'RR', sbp: 'Sistolik', dbp: 'Diastolik', map: 'MAP', spo2: 'SpO₂',
-};
-
-function VF({
-  label, unit, value, onChange, status,
-}: {
+function VFField({ label, unit, value, onChange, status }: {
   label: string; unit: string; value: string;
   onChange: (v: string) => void; status: VitalStatus | null;
 }) {
+  const borderColor = status
+    ? STATUS_COLOR[status]
+    : 'var(--separator)';
+
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
-          {label} <span className="text-slate-400">({unit})</span>
+    <div style={{ padding: '8px 12px', borderTop: '0.5px solid var(--separator)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+        <label style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-secondary)' }}>
+          {label} <span style={{ color: 'var(--label-tertiary)', fontWeight: 400 }}>({unit})</span>
         </label>
         {status && (
-          <span className={`text-xs font-semibold ${STATUS_STYLE[status]}`}>
+          <span style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: STATUS_COLOR[status] }}>
             {STATUS_LABEL[status]}
           </span>
         )}
@@ -143,12 +155,16 @@ function VF({
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder="—"
-        className={`w-full min-h-[48px] rounded-xl border px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-900 ${
-          status === 'normal' ? 'border-green-400 dark:border-green-700' :
-          status === 'low'    ? 'border-red-400 dark:border-red-700' :
-          status === 'high'   ? 'border-orange-400 dark:border-orange-700' :
-          'border-slate-200 dark:border-slate-700'
-        }`}
+        style={{
+          width: '100%', minHeight: 40, borderRadius: 'var(--r-sm)',
+          border: `1.5px solid ${borderColor}`,
+          outline: 'none',
+          background: 'var(--fill-tertiary)',
+          color: 'var(--label-primary)',
+          font: 'var(--type-body)',
+          padding: '0 10px', boxSizing: 'border-box',
+          transition: 'border-color var(--dur-fast)',
+        }}
       />
     </div>
   );

@@ -1,5 +1,3 @@
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Disclaimer } from '../Disclaimer';
 import { usePatientStore } from '../../store/patientStore';
 import { calculateDose, EMERGENCY_DRUGS, type CalculatedDose } from '../../utils/emergencyDrugs';
@@ -12,81 +10,85 @@ export function EmergencyDrugsCalculator() {
   const valid = weightKg.trim() !== '' && Number.isFinite(weightNum) && weightNum > 0;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">Dosis Obat Emergensi</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">Dosis Obat Emergensi</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>
           PALS 2020 <Cite source="pals2020" /> · Berdasarkan berat pasien.
         </p>
       </div>
 
       {!valid ? (
-        <Card>
-          <CardContent className="pt-4">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              Masukkan berat badan pasien untuk menghitung dosis.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="ios-card" style={{ padding: '14px 16px' }}>
+          <p className="ios-footnote">Masukkan berat badan pasien untuk menghitung dosis.</p>
+        </div>
       ) : (
-        <div className="space-y-3">
-          {EMERGENCY_DRUGS.map((drug) => {
+        <div className="ios-list">
+          {EMERGENCY_DRUGS.map((drug, i) => {
             const result = calculateDose(drug, weightNum);
-            return <DrugRow key={drug.id} result={result} />;
+            return <DrugRow key={drug.id} result={result} first={i === 0} />;
           })}
         </div>
       )}
 
       <Disclaimer />
 
-      <Card>
-        <CardContent className="pt-4 text-xs text-slate-500 dark:text-slate-400">
-          <span className="font-semibold text-foreground">[{REFERENCES.pals2020.id}]</span>{' '}
+      <div className="ios-card" style={{ padding: '12px 14px' }}>
+        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+          <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES.pals2020.id}]</span>{' '}
           {REFERENCES.pals2020.citation}
-        </CardContent>
-      </Card>
+        </p>
+      </div>
     </div>
   );
 }
 
-function DrugRow({ result }: { result: CalculatedDose }) {
+function DrugRow({ result, first }: { result: CalculatedDose; first: boolean }) {
   const { drug, rawDose, clampedDose, unit, isClamped, clampReason } = result;
 
   return (
-    <Card>
-      <CardContent className="pt-4 space-y-2">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <div className="font-semibold">{drug.name}</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">{drug.indication}</div>
-          </div>
-          <div className="text-right shrink-0">
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+    <div style={{
+      display: 'flex', alignItems: 'flex-start', gap: 12,
+      padding: '10px 14px', minHeight: 'var(--hit)',
+      background: 'var(--bg-tertiary)',
+      borderTop: first ? 'none' : '0.5px solid var(--separator)',
+    }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+          <span style={{ font: 'var(--type-body)', fontWeight: 600, color: 'var(--label-primary)' }}>
+            {drug.name}
+          </span>
+          <span style={{ flexShrink: 0 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 22, fontWeight: 700, color: 'var(--tint-drug)' }}>
               {clampedDose.toFixed(2).replace(/\.?0+$/, '')}
             </span>
-            <span className="text-sm text-slate-500 dark:text-slate-400 ml-1">{unit}</span>
-          </div>
+            <span style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', marginLeft: 4 }}>{unit}</span>
+          </span>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="text-slate-400 dark:text-slate-500">
-            {drug.dosePerKg} {unit}/kg
-            {drug.dosePerKgMax ? `–${drug.dosePerKgMax}` : ''} · via {drug.route}
+        <div style={{ marginTop: 2, display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
+          <span style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)' }}>
+            {drug.indication} · {drug.dosePerKg}{drug.dosePerKgMax ? `–${drug.dosePerKgMax}` : ''} {unit}/kg · {drug.route}
           </span>
           {isClamped && (
-            <Badge variant="secondary" className="text-[10px] h-4 px-1.5">
-              {clampReason === 'max' ? `max ${drug.maxDose} ${unit}` : `min ${drug.minDose} ${unit}`}
-              {' '}(raw {rawDose.toFixed(2).replace(/\.?0+$/, '')} {unit})
-            </Badge>
+            <span style={{
+              font: 'var(--type-caption-2)', fontWeight: 600,
+              color: 'var(--warning)',
+              background: 'color-mix(in srgb, var(--warning) 12%, transparent)',
+              padding: '2px 7px', borderRadius: 'var(--r-pill)',
+            }}>
+              {clampReason === 'max' ? `max ${drug.maxDose}` : `min ${drug.minDose}`} {unit}
+              {' '}(raw {rawDose.toFixed(2).replace(/\.?0+$/, '')})
+            </span>
           )}
         </div>
 
         {drug.notes && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2">
+          <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 4 }}>
             {drug.notes}
           </p>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

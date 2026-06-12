@@ -20,33 +20,44 @@ export function Kalkulator() {
   const [activeTab, setActiveTab] = useState<CalcTab>('ett_size');
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Kalkulator</h1>
+    <div className="ios-screen pb-6">
+      <div style={{ padding: '24px 20px 8px' }}>
+        <h1 className="ios-large-title">Kalkulator</h1>
+      </div>
+
+      <div className="ios-section"><span className="label">Data Pasien</span></div>
       <PatientInput />
 
-      {/* Tab bar */}
-      <div className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+      {/* Scrollable pill tabs */}
+      <div style={{
+        display: 'flex', gap: 6, overflowX: 'auto', padding: '16px 16px 0',
+        scrollbarWidth: 'none',
+      }}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === tab.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-            }`}
+            style={{
+              flexShrink: 0, padding: '7px 16px', borderRadius: 'var(--r-pill)',
+              border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+              font: 'var(--type-subheadline)', fontWeight: activeTab === tab.id ? 600 : 400,
+              background: activeTab === tab.id ? 'var(--accent)' : 'var(--fill-secondary)',
+              color: activeTab === tab.id ? '#fff' : 'var(--label-primary)',
+              transition: 'all var(--dur-fast)',
+            }}
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Tab content */}
-      {activeTab === 'ett_size'  && <EttCalculator />}
-      {activeTab === 'ett_depth' && <EttDepthCalculator />}
-      {activeTab === 'dosis'     && <EmergencyDrugsCalculator />}
-      {activeTab === 'syringe'   && <SyringePumpCalculator />}
-      {activeTab === 'agd'       && <AbgInterpreter />}
+      <div style={{ marginTop: 16 }}>
+        {activeTab === 'ett_size'  && <EttCalculator />}
+        {activeTab === 'ett_depth' && <EttDepthCalculator />}
+        {activeTab === 'dosis'     && <EmergencyDrugsCalculator />}
+        {activeTab === 'syringe'   && <SyringePumpCalculator />}
+        {activeTab === 'agd'       && <AbgInterpreter />}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent } from '../ui/card';
+import { AlertTriangle } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { calculatePelod2, type Pelod2Input } from '../../utils/pelod2';
@@ -46,177 +46,169 @@ export function Pelod2Score() {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">PELOD-2</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">PELOD-2</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>
           Pediatric Logistic Organ Dysfunction Score <Cite source="leteurtre2013" />.
         </p>
       </div>
 
-      {/* Input usia — digunakan untuk threshold MAP & kreatinin */}
-      <Card>
-        <CardContent className="pt-4 space-y-4">
-          <SectionTitle>Demografis</SectionTitle>
-          <NumField label="Usia" unit="bulan" value={v.ageMonths} onChange={(val) => update('ageMonths', val)} />
+      <div className="ios-card" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <Sec>Demografis</Sec>
+        <NF label="Usia" unit="bulan" value={v.ageMonths} onChange={(x) => update('ageMonths', x)} />
 
-          <SectionTitle>Neurologi</SectionTitle>
-          <NumField label="GCS Total" unit="" value={v.gcs} onChange={(val) => update('gcs', val)} min={3} max={15} />
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Reaktivitas Pupil</label>
-            <div className="grid grid-cols-3 gap-2">
-              {(
-                [
-                  ['both_react', 'Keduanya reaktif'],
-                  ['one_fixed', 'Satu fixed'],
-                  ['both_fixed', 'Keduanya fixed'],
-                ] as [Pelod2Input['pupils'], string][]
-              ).map(([val, label]) => (
-                <button
-                  key={val}
-                  onClick={() => updatePupils(val)}
-                  className={`min-h-[48px] rounded-xl border px-2 py-2 text-xs font-medium text-center transition-colors leading-snug ${
-                    v.pupils === val
-                      ? 'border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400'
-                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+        <Sec>Neurologi</Sec>
+        <NF label="GCS Total" unit="" value={v.gcs} onChange={(x) => update('gcs', x)} min={3} max={15} />
+        <div>
+          <label style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-secondary)', display: 'block', marginBottom: 8 }}>
+            Reaktivitas Pupil
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {([
+              ['both_react', 'Keduanya reaktif'],
+              ['one_fixed',  'Satu fixed'],
+              ['both_fixed', 'Keduanya fixed'],
+            ] as [Pelod2Input['pupils'], string][]).map(([val, label]) => (
+              <button key={val} onClick={() => updatePupils(val)} style={optStyle(v.pupils === val)}>
+                {label}
+              </button>
+            ))}
           </div>
+        </div>
 
-          <SectionTitle>Kardiovaskular</SectionTitle>
-          <div className="grid grid-cols-2 gap-3">
-            <NumField label="Laktat" unit="mmol/L" value={v.lactateMmolL} onChange={(val) => update('lactateMmolL', val)} step="0.1" />
-            <NumField label="MAP" unit="mmHg" value={v.mapMmHg} onChange={(val) => update('mapMmHg', val)} />
+        <Sec>Kardiovaskular</Sec>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <NF label="Laktat" unit="mmol/L" value={v.lactateMmolL} onChange={(x) => update('lactateMmolL', x)} step="0.1" />
+          <NF label="MAP" unit="mmHg" value={v.mapMmHg} onChange={(x) => update('mapMmHg', x)} />
+        </div>
+
+        <Sec>Renal</Sec>
+        <NF label="Kreatinin" unit="mg/dL" value={v.creatinineMgDl} onChange={(x) => update('creatinineMgDl', x)} step="0.1" />
+
+        <Sec>Respirasi</Sec>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <NF label="P/F ratio" unit="" value={v.pf} onChange={(x) => update('pf', x)} />
+          <NF label="PaCO₂" unit="mmHg" value={v.paCO2MmHg} onChange={(x) => update('paCO2MmHg', x)} />
+        </div>
+        <button onClick={() => update('onVentilator', !v.onVentilator)} style={optStyle(v.onVentilator)}>
+          {v.onVentilator ? '✓ Menggunakan ventilator' : 'Ventilator?'}
+        </button>
+
+        <Sec>Hematologi</Sec>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <NF label="WBC" unit="×10³/µL" value={v.wbcE3PerMcL} onChange={(x) => update('wbcE3PerMcL', x)} step="0.1" />
+          <NF label="Trombosit" unit="×10³/µL" value={v.plateletsE3PerMcL} onChange={(x) => update('plateletsE3PerMcL', x)} />
+        </div>
+
+        <Sec>Hepatik</Sec>
+        <NF label="Bilirubin" unit="mg/dL" value={v.bilirubinMgDl} onChange={(x) => update('bilirubinMgDl', x)} step="0.1" />
+        {v.ageMonths < 1 && (
+          <div className="ios-warn">
+            <AlertTriangle size={14} />
+            <span>Hepatik tidak dinilai pada neonatus (&lt;1 bulan).</span>
           </div>
-
-          <SectionTitle>Renal</SectionTitle>
-          <NumField label="Kreatinin" unit="mg/dL" value={v.creatinineMgDl} onChange={(val) => update('creatinineMgDl', val)} step="0.1" />
-
-          <SectionTitle>Respirasi</SectionTitle>
-          <div className="grid grid-cols-2 gap-3">
-            <NumField label="P/F ratio" unit="" value={v.pf} onChange={(val) => update('pf', val)} />
-            <NumField label="PaCO₂" unit="mmHg" value={v.paCO2MmHg} onChange={(val) => update('paCO2MmHg', val)} />
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => update('onVentilator', !v.onVentilator)}
-              className={`min-h-[44px] px-4 rounded-xl border text-sm font-medium transition-colors ${
-                v.onVentilator
-                  ? 'border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-              }`}
-            >
-              {v.onVentilator ? '✓ Menggunakan ventilator' : 'Ventilator?'}
-            </button>
-          </div>
-
-          <SectionTitle>Hematologi</SectionTitle>
-          <div className="grid grid-cols-2 gap-3">
-            <NumField label="WBC" unit="×10³/µL" value={v.wbcE3PerMcL} onChange={(val) => update('wbcE3PerMcL', val)} step="0.1" />
-            <NumField label="Trombosit" unit="×10³/µL" value={v.plateletsE3PerMcL} onChange={(val) => update('plateletsE3PerMcL', val)} />
-          </div>
-
-          <SectionTitle>Hepatik</SectionTitle>
-          <NumField label="Bilirubin" unit="mg/dL" value={v.bilirubinMgDl} onChange={(val) => update('bilirubinMgDl', val)} step="0.1" />
-          {v.ageMonths < 1 && (
-            <p className="text-xs text-yellow-500">Hepatik tidak dinilai pada neonatus (&lt;1 bulan).</p>
-          )}
-        </CardContent>
-      </Card>
+        )}
+      </div>
 
       {error && (
-        <Card>
-          <CardContent className="pt-4">
-            <p className="text-sm text-destructive">{error}</p>
-          </CardContent>
-        </Card>
+        <div className="ios-warn ios-warn--danger">
+          <AlertTriangle size={15} /><span>{error}</span>
+        </div>
       )}
 
       {result && (
         <>
-          {/* Total + mortalitas */}
-          <div className="rounded-2xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 p-5 space-y-3">
-            <div className="flex items-baseline gap-3">
-              <span className="text-5xl font-bold text-blue-600 dark:text-blue-400">{result.total}</span>
-              <span className="text-sm text-slate-500 dark:text-slate-400">poin</span>
+          <div className="ios-card" style={{ overflow: 'hidden' }}>
+            <div style={{ padding: '14px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <span style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>Total</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 40, fontWeight: 700, color: 'var(--tint-score)', lineHeight: 1 }}>
+                  {result.total}
+                </span>
+              </div>
             </div>
-            <div className="text-sm text-slate-600 dark:text-slate-300">
-              Estimasi mortalitas:{' '}
-              <span className="font-bold text-foreground">{result.estimatedMortalityPercent}%</span>
-              <span className="text-xs text-slate-400 ml-1">(model logistik, Leteurtre 2013)</span>
+            <div style={{ padding: '12px 16px' }}>
+              <p style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>
+                Estimasi mortalitas:{' '}
+                <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>{result.estimatedMortalityPercent}%</span>
+                <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginLeft: 6 }}>
+                  (model logistik, Leteurtre 2013)
+                </span>
+              </p>
             </div>
           </div>
 
-          {/* Per-organ breakdown */}
-          <Card>
-            <CardContent className="pt-4 space-y-3">
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                Rincian per organ
-              </p>
-              {result.organScores.map((o) => (
-                <div key={o.organ} className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="text-sm font-medium">{o.organ}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">{o.detail}</div>
-                  </div>
-                  <span className={`shrink-0 text-lg font-bold ${o.score > 0 ? 'text-red-500' : 'text-green-500'}`}>
-                    {o.score}
-                  </span>
+          <div className="ios-list">
+            {result.organScores.map((o, i) => (
+              <div key={o.organ} style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                padding: '10px 14px',
+                borderTop: i === 0 ? 'none' : '0.5px solid var(--separator)',
+                background: 'var(--bg-tertiary)',
+              }}>
+                <div>
+                  <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-primary)' }}>{o.organ}</span>
+                  <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 1 }}>{o.detail}</p>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: 18, fontWeight: 700,
+                  color: o.score > 0 ? 'var(--sys-red)' : 'var(--sys-green)',
+                }}>{o.score}</span>
+              </div>
+            ))}
+          </div>
         </>
       )}
 
       <Disclaimer />
-      <Card>
-        <CardContent className="pt-4 text-xs text-slate-500 dark:text-slate-400">
-          <span className="font-semibold text-foreground">[{REFERENCES.leteurtre2013.id}]</span>{' '}
+      <div className="ios-card" style={{ padding: '12px 14px' }}>
+        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+          <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES.leteurtre2013.id}]</span>{' '}
           {REFERENCES.leteurtre2013.citation}
-        </CardContent>
-      </Card>
+        </p>
+      </div>
     </div>
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function Sec({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide pt-1">
+    <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', paddingTop: 4 }}>
       {children}
     </p>
   );
 }
 
-function NumField({
-  label, unit, value, onChange, step, min, max,
-}: {
-  label: string;
-  unit: string;
-  value: number;
-  onChange: (v: string) => void;
-  step?: string;
-  min?: number;
-  max?: number;
+function optStyle(active: boolean): React.CSSProperties {
+  return {
+    minHeight: 'var(--hit)', borderRadius: 10, border: 'none', cursor: 'pointer',
+    padding: '8px 12px', font: 'var(--type-subheadline)', fontWeight: active ? 600 : 400,
+    background: active ? 'color-mix(in srgb, var(--tint-score) 15%, var(--bg-tertiary))' : 'var(--fill-tertiary)',
+    color: active ? 'var(--tint-score)' : 'var(--label-secondary)',
+    outline: active ? '1.5px solid var(--tint-score)' : 'none',
+    transition: 'all var(--dur-fast)',
+    textAlign: 'center' as const,
+  };
+}
+
+function NF({ label, unit, value, onChange, step, min, max }: {
+  label: string; unit: string; value: number;
+  onChange: (v: string) => void; step?: string; min?: number; max?: number;
 }) {
   return (
-    <div className="space-y-1">
-      <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
-        {label}{unit && <span className="text-slate-400 ml-1">({unit})</span>}
+    <div>
+      <label style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-secondary)', display: 'block', marginBottom: 6 }}>
+        {label}{unit && <span style={{ fontWeight: 400, color: 'var(--label-tertiary)' }}> ({unit})</span>}
       </label>
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        step={step ?? '1'}
-        min={min}
-        max={max}
-        className="w-full min-h-[48px] rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <input type="number" value={value} onChange={(e) => onChange(e.target.value)}
+        step={step ?? '1'} min={min} max={max}
+        style={{
+          width: '100%', minHeight: 40, borderRadius: 'var(--r-sm)',
+          border: '0.5px solid var(--separator)', outline: 'none',
+          background: 'var(--fill-tertiary)', color: 'var(--label-primary)',
+          font: 'var(--type-body)', padding: '0 10px', boxSizing: 'border-box',
+        }} />
     </div>
   );
 }
