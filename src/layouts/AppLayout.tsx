@@ -126,7 +126,7 @@ export function AppLayout() {
           <div style={{
             maxWidth: 640,
             margin: '0 auto',
-            padding: '0 0 96px',
+            padding: '0 0 88px',
           }} className="md-content-pad">
             <FadeOutlet pathname={pathname} />
           </div>
@@ -152,7 +152,7 @@ export function AppLayout() {
             transition: 'transform 260ms var(--ease-out)',
             transform: moreOpen ? 'rotate(90deg)' : 'none',
           }}>
-            <MenuIcon size={24} strokeWidth={1.75} />
+            <MenuIcon size={25} strokeWidth={moreOpen ? 2.2 : 1.85} />
           </span>
           <span>Menu</span>
         </button>
@@ -178,7 +178,7 @@ export function AppLayout() {
       <div
         className="md-hidden"
         style={{
-          position: 'fixed', left: 0, right: 0, bottom: 68, zIndex: 50,
+          position: 'fixed', left: 0, right: 0, bottom: 76, zIndex: 50,
           background: 'var(--bg-elevated)',
           borderRadius: '14px 14px 0 0',
           borderTop: '0.5px solid var(--separator)',
@@ -313,16 +313,8 @@ function TabItem({ item }: { item: NavItem }) {
     >
       {({ isActive }) => (
         <>
-          <span style={{
-            display: 'inline-flex', padding: '0 10px', borderRadius: 'var(--r-pill)',
-            background: isActive ? 'var(--accent-tint)' : 'transparent',
-            transition: 'background var(--dur-fast)',
-          }}>
-            <Icon size={22} strokeWidth={isActive ? 2.25 : 1.75} />
-          </span>
-          <span style={{ whiteSpace: 'nowrap' }}>
-            {item.shortLabel ?? item.label}
-          </span>
+          <Icon size={25} strokeWidth={isActive ? 2.2 : 1.85} />
+          <span>{item.tabLabel ?? item.shortLabel ?? item.label}</span>
         </>
       )}
     </NavLink>
