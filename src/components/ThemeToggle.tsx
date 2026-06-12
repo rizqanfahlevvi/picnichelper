@@ -8,15 +8,19 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      aria-label="Toggle tema"
+      aria-label={theme === 'dark' ? 'Switch ke light mode' : 'Switch ke dark mode'}
       className={cn(
-        'flex h-9 w-9 items-center justify-center rounded-xl transition-colors',
-        'text-muted-foreground hover:bg-accent hover:text-foreground',
+        /* M3 icon button size: 48dp */
+        'flex h-11 w-11 items-center justify-center rounded-full',
+        'text-muted-foreground transition-colors',
+        'hover:bg-surface-high hover:text-foreground',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className,
       )}
     >
-      <Sun size={18} className="hidden dark:block" />
-      <Moon size={18} className="block dark:hidden" />
+      {/* Ikon bertukar berdasarkan tema aktif */}
+      <Sun  size={20} className="hidden dark:block" />
+      <Moon size={20} className="block  dark:hidden" />
     </button>
   );
 }

@@ -1,88 +1,211 @@
 @import "tailwindcss";
 
-/* ─── shadcn/ui CSS variables ─── */
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * PICNIC Helper — Design Token System
+ * Prinsip: Google Material Design 3 + Apple Human Interface Guidelines
+ *
+ * ELEVASI LIGHT MODE  → Box shadow (material depth)
+ * ELEVASI DARK MODE   → Tonal surface (warna makin terang = makin "tinggi")
+ *                        TIDAK ADA shadow putih di dark mode.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
 @layer base {
+
+  /* ── Light Mode (default) ─────────────────────────────────────── */
   :root {
-    /* Light mode */
-    --background: 210 40% 98%;       /* slate-50 */
-    --foreground: 222 47% 11%;       /* slate-900 */
-    --card: 0 0% 100%;               /* white */
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;          /* blue-600 */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 214 32% 91%;        /* slate-200 */
-    --secondary-foreground: 222 47% 11%;
-    --muted: 214 32% 91%;
-    --muted-foreground: 215 20% 45%; /* slate-500 */
-    --accent: 214 32% 91%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 84% 60%;
-    --border: 214 32% 91%;           /* slate-200 */
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --radius: 0.75rem;
+    color-scheme: light;
+
+    /* Primary — Medical Blue, WCAG AA compliant */
+    --primary:            221 83% 45%;   /* #1355C8 */
+    --primary-container:  221 100% 92%;  /* #D8E4FF */
+    --on-primary:         0 0% 100%;
+    --on-primary-container: 221 100% 17%;
+
+    /* Surface ladder — light: putih bersih, beda lewat shadow */
+    --surface-dim:              240 18% 94%;  /* #EEEDF6 — latar redup */
+    --surface:                  240 20% 99%;  /* #FAFAFF — background utama */
+    --surface-container-lowest: 0 0% 100%;    /* #FFFFFF — card tertinggi */
+    --surface-container-low:    240 18% 97%;  /* #F4F4FB — card biasa */
+    --surface-container:        240 14% 94%;  /* #EEEDF5 — nav bar, chip */
+    --surface-container-high:   240 12% 91%;  /* #E8E8EF — elevated chip */
+    --surface-container-highest:240 10% 88%;  /* #E2E1EA — modal, sheet */
+
+    /* On-surface (teks) */
+    --on-surface:         240 14% 11%;   /* #191920 */
+    --on-surface-variant: 245  5% 30%;   /* #46464F */
+
+    /* Outline */
+    --outline:            245  3% 47%;   /* #777680 */
+    --outline-variant:    240  8% 82%;   /* #C8C6D2 */
+
+    /* Semantic */
+    --error:              0 84% 47%;     /* #D32F2F */
+    --on-error:           0 0% 100%;
+    --warning:            38 92% 40%;    /* #C77700 */
+    --success:            142 60% 30%;   /* #1E7E34 */
+
+    /* Elevasi shadow (HANYA light mode — dark pakai tonal) */
+    --shadow-color:       240 14% 11%;
+
+    /* shadcn compat aliases */
+    --background:         var(--surface);
+    --foreground:         var(--on-surface);
+    --card:               var(--surface-container-lowest);
+    --card-foreground:    var(--on-surface);
+    --popover:            var(--surface-container-lowest);
+    --popover-foreground: var(--on-surface);
+    --secondary:          var(--surface-container);
+    --secondary-foreground: var(--on-surface);
+    --muted:              var(--surface-container);
+    --muted-foreground:   var(--on-surface-variant);
+    --accent:             var(--surface-container-high);
+    --accent-foreground:  var(--on-surface);
+    --destructive:        var(--error);
+    --border:             var(--outline-variant);
+    --input:              var(--surface-container-high);
+    --ring:               var(--primary);
+    --radius:             1rem;          /* 16dp — M3 "large" shape */
   }
 
+  /* ── Dark Mode ────────────────────────────────────────────────── */
+  /*
+   * Setiap level lebih terang dari level bawahnya.
+   * Ini satu-satunya cara menciptakan elevasi di dark mode (M3 spec).
+   * TIDAK ADA shadow di dark mode.
+   */
   .dark {
-    --background: 222 84% 5%;        /* slate-950 */
-    --foreground: 210 40% 96%;       /* slate-50 */
-    --card: 222 47% 8%;              /* slate-900-ish */
-    --card-foreground: 210 40% 96%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 213 93% 68%;          /* blue-400 */
-    --primary-foreground: 222 84% 5%;
-    --secondary: 217 33% 17%;        /* slate-800 */
-    --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 55%; /* slate-400 */
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 72% 51%;
-    --border: 217 33% 17%;           /* slate-800 */
-    --input: 217 33% 17%;
-    --ring: 213 93% 68%;
+    color-scheme: dark;
+
+    /* Primary — lebih terang agar kontras di latar gelap */
+    --primary:            224 100% 80%;  /* #ADC6FF */
+    --primary-container:  224 100% 29%;  /* #003EA6 */
+    --on-primary:         224 100% 18%;  /* #002978 */
+    --on-primary-container: 224 100% 92%;
+
+    /* Surface ladder — dark: TIDAK ADA shadow, beda warna = beda elevasi */
+    --surface-dim:              240 12%  6%;   /* #0F0F16 — paling gelap */
+    --surface:                  240 12%  8%;   /* #131318 — background */
+    --surface-container-lowest: 240 14%  6%;   /* #0E0E13 — terdalam */
+    --surface-container-low:    240 12% 12%;   /* #1A1A21 — card dasar */
+    --surface-container:        240 10% 15%;   /* #202028 — nav, input */
+    --surface-container-high:   240  9% 19%;   /* #2A2A32 — chip, badge */
+    --surface-container-highest:240  8% 23%;   /* #353540 — sheet, modal */
+
+    /* On-surface */
+    --on-surface:         270  7% 90%;   /* #E5E1EA */
+    --on-surface-variant: 240  8% 80%;   /* #C7C5D1 */
+
+    /* Outline */
+    --outline:            245  4% 58%;   /* #929098 */
+    --outline-variant:    240  5% 28%;   /* #434349 */
+
+    /* Semantic */
+    --error:              0 100% 74%;    /* #FF8080 */
+    --on-error:           0 100% 18%;
+    --warning:            38 100% 72%;   /* #FFCA5C */
+    --success:            142 60% 60%;   /* #52C77A */
+
+    /* shadcn compat aliases */
+    --background:         var(--surface);
+    --foreground:         var(--on-surface);
+    --card:               var(--surface-container-low);
+    --card-foreground:    var(--on-surface);
+    --popover:            var(--surface-container-highest);
+    --popover-foreground: var(--on-surface);
+    --secondary:          var(--surface-container);
+    --secondary-foreground: var(--on-surface);
+    --muted:              var(--surface-container);
+    --muted-foreground:   var(--on-surface-variant);
+    --accent:             var(--surface-container-high);
+    --accent-foreground:  var(--on-surface);
+    --destructive:        var(--error);
+    --border:             var(--outline-variant);
+    --input:              var(--surface-container);
+    --ring:               var(--primary);
+    --radius:             1rem;
   }
 }
 
+/* ── Tailwind custom tokens ────────────────────────────────────────────── */
 @theme inline {
-  --color-background:         hsl(var(--background));
-  --color-foreground:         hsl(var(--foreground));
-  --color-card:               hsl(var(--card));
-  --color-card-foreground:    hsl(var(--card-foreground));
-  --color-primary:            hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary:          hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted:              hsl(var(--muted));
-  --color-muted-foreground:   hsl(var(--muted-foreground));
-  --color-accent:             hsl(var(--accent));
-  --color-accent-foreground:  hsl(var(--accent-foreground));
-  --color-destructive:        hsl(var(--destructive));
-  --color-border:             hsl(var(--border));
-  --color-input:              hsl(var(--input));
-  --color-ring:               hsl(var(--ring));
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* Peta M3 surface ladder ke utility Tailwind */
+  --color-surface-dim:              hsl(var(--surface-dim));
+  --color-surface:                  hsl(var(--surface));
+  --color-surface-lowest:           hsl(var(--surface-container-lowest));
+  --color-surface-low:              hsl(var(--surface-container-low));
+  --color-surface-container:        hsl(var(--surface-container));
+  --color-surface-high:             hsl(var(--surface-container-high));
+  --color-surface-highest:          hsl(var(--surface-container-highest));
+
+  /* shadcn compat */
+  --color-background:               hsl(var(--background));
+  --color-foreground:               hsl(var(--foreground));
+  --color-card:                     hsl(var(--card));
+  --color-card-foreground:          hsl(var(--card-foreground));
+  --color-primary:                  hsl(var(--primary));
+  --color-primary-container:        hsl(var(--primary-container));
+  --color-primary-foreground:       hsl(var(--on-primary));
+  --color-secondary:                hsl(var(--secondary));
+  --color-secondary-foreground:     hsl(var(--secondary-foreground));
+  --color-muted:                    hsl(var(--muted));
+  --color-muted-foreground:         hsl(var(--muted-foreground));
+  --color-accent:                   hsl(var(--accent));
+  --color-accent-foreground:        hsl(var(--accent-foreground));
+  --color-destructive:              hsl(var(--destructive));
+  --color-border:                   hsl(var(--border));
+  --color-input:                    hsl(var(--input));
+  --color-ring:                     hsl(var(--ring));
+  --color-error:                    hsl(var(--error));
+  --color-warning:                  hsl(var(--warning));
+  --color-success:                  hsl(var(--success));
+
+  /* Radius (M3 shape scale) */
+  --radius-xs:  0.25rem;   /*  4dp — extra-small */
+  --radius-sm:  0.5rem;    /*  8dp — small */
+  --radius-md:  0.75rem;   /* 12dp — medium */
+  --radius-lg:  1rem;      /* 16dp — large (default card) */
+  --radius-xl:  1.75rem;   /* 28dp — extra-large (bottom sheet, FAB) */
+  --radius-full: 9999px;   /* full (chip, badge, nav indicator) */
 }
 
-html, body, #root {
-  height: 100%;
-}
+/* ── Base ──────────────────────────────────────────────────────────────── */
+html, body, #root { height: 100%; }
 
 body {
   margin: 0;
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background-color: hsl(var(--surface-dim));
+  color: hsl(var(--on-surface));
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-tap-highlight-color: transparent;
-  /* Smooth theme transition */
-  transition: background-color 0.2s ease, color 0.2s ease;
+  /* smooth theme transition */
+  transition: background-color 0.2s ease, color 0.1s ease;
 }
 
-/* Touch target minimum 44px (CLAUDE.md) */
+/* Minimum touch target 44pt (Apple HIG) / 48dp (M3) */
 button, a, input, select { touch-action: manipulation; }
+
+/*
+ * ── Elevasi Light Mode: Box Shadow ─────────────────────────────────────
+ * Hanya berlaku di light mode. Di dark mode: overridden ke none.
+ */
+.elevation-1 {
+  box-shadow: 0 1px 2px hsl(var(--shadow-color) / 0.06),
+              0 1px 3px hsl(var(--shadow-color) / 0.10);
+}
+.elevation-2 {
+  box-shadow: 0 2px 4px hsl(var(--shadow-color) / 0.06),
+              0 4px 8px hsl(var(--shadow-color) / 0.10);
+}
+.elevation-3 {
+  box-shadow: 0 4px 8px  hsl(var(--shadow-color) / 0.06),
+              0 8px 16px hsl(var(--shadow-color) / 0.10);
+}
+
+/* Dark mode: tidak ada shadow, biarkan tonal surface yang berbicara */
+.dark .elevation-1,
+.dark .elevation-2,
+.dark .elevation-3 {
+  box-shadow: none;
+}

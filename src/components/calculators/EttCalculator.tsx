@@ -148,7 +148,7 @@ function ResultTile({
   preferred?: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-secondary/50 p-3 text-center space-y-1">
+    <div className="rounded-2xl border border-border bg-surface-container dark:bg-surface-high p-4 text-center space-y-1.5 elevation-1 dark:shadow-none">
       <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
         {label} <Cite source={cite} />
         {preferred && <Badge variant="default" className="text-[10px] h-4 px-1.5">PALS</Badge>}

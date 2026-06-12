@@ -14,12 +14,12 @@ export function PatientInput() {
 
   return (
     <Card>
-      <CardContent className="pt-4 space-y-4">
+      <CardContent className="pt-0 space-y-4">
         <div className="flex gap-2">
           {CATEGORIES.map((c) => (
             <Button
               key={c.id}
-              variant={category === c.id ? 'default' : 'outline'}
+              variant={category === c.id ? 'filled' : 'outlined'}
               className="flex-1"
               onClick={() => setCategory(c.id)}
             >
