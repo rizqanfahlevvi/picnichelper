@@ -196,17 +196,17 @@ body {
 /* Bottom tab bar */
 .ios-tabbar {
   position: fixed; inset-x: 0; bottom: 0; z-index: 20;
-  height: 83px; padding-top: 9px; padding-bottom: env(safe-area-inset-bottom, 0px);
-  display: flex; align-items: flex-start;
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: flex; align-items: center;
   background: var(--material-chrome);
   -webkit-backdrop-filter: var(--blur-base); backdrop-filter: var(--blur-base);
   border-top: 0.5px solid var(--separator);
 }
 .ios-tab {
   flex: 1; background: none; border: 0; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
   color: var(--label-tertiary); transition: color var(--dur-fast); min-height: var(--hit);
-  padding-top: 2px;
 }
 .ios-tab > span { font: var(--type-caption-2); font-size: 10.5px; font-weight: 500; }
 .ios-tab[aria-selected="true"], .ios-tab.is-active { color: var(--accent); }
