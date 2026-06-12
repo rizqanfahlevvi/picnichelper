@@ -3,10 +3,10 @@ import { AppLayout } from './layouts/AppLayout';
 import { Home } from './pages/Home';
 import { Kalkulator } from './pages/Kalkulator';
 import { Referensi } from './pages/Referensi';
-import { Placeholder } from './pages/Placeholder';
 import { Skoring } from './pages/Skoring';
 import { DrugsFluid } from './pages/DrugsFluid';
 import { Teori } from './pages/Teori';
+import { Monitoring } from './pages/Monitoring';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
       { path: 'skoring', element: <Skoring /> },
       { path: 'kalkulator', element: <Kalkulator /> },
       { path: 'drugs-fluids', element: <DrugsFluid /> },
-      { path: 'monitoring', element: <Placeholder title="Monitoring & Weaning" /> },
+      { path: 'monitoring', element: <Monitoring /> },
       { path: 'referensi', element: <Referensi /> },
     ],
   },
