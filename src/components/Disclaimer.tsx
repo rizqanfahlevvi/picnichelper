@@ -1,8 +1,13 @@
+import { Badge } from './ui/badge';
+
 /** Disclaimer klinis — terlihat namun tidak mengganggu (CLAUDE.md). */
 export function Disclaimer() {
   return (
-    <p className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-xs text-[var(--color-text-muted)]">
-      Untuk panduan klinis · bukan pengganti penilaian klinis profesional.
-    </p>
+    <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+      <Badge variant="outline" className="shrink-0 text-[10px]">ℹ</Badge>
+      <p className="text-xs text-muted-foreground">
+        Untuk panduan klinis · bukan pengganti penilaian klinis profesional.
+      </p>
+    </div>
   );
 }

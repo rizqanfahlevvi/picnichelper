@@ -1,22 +1,17 @@
-import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../components/ui/sheet';
+
 import { NAV_ITEMS } from './navItems';
 import { cn } from '../components/ui/cn';
 
-// Navigasi hibrida responsif (CLAUDE.md):
-//  - Desktop (≥ md): sidebar statis kiri, 7 menu permanen.
-//  - Mobile (< md): bottom tab bar (item primaryMobile) + tombol "Menu"
-//    membuka Sheet berisi sisa rute.
-
 export function AppLayout() {
-  const [sheetOpen, setSheetOpen] = useState(false);
   const mobilePrimary = NAV_ITEMS.filter((n) => n.primaryMobile);
   const sheetItems = NAV_ITEMS.filter((n) => !n.primaryMobile);
 
   return (
-    <div className="flex h-full">
-      {/* ── Sidebar desktop ── */}
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)] p-3 md:flex">
+    <div className="flex h-full bg-background text-foreground">
+      {/* ── Sidebar desktop (≥ md) ── */}
+      <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card p-3 md:flex">
         <Brand />
         <nav className="mt-4 flex flex-col gap-1">
           {NAV_ITEMS.map((item) => (
@@ -27,53 +22,53 @@ export function AppLayout() {
 
       {/* ── Area konten ── */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-2 border-b border-[var(--color-border)] px-4 py-3 md:hidden">
+        <header className="flex items-center gap-3 border-b border-border px-4 py-3 md:hidden">
           <Brand />
         </header>
         <main className="flex-1 overflow-y-auto p-4 pb-24 md:pb-4">
-          <div className="mx-auto w-full max-w-3xl">
+          <div className="mx-auto w-full max-w-2xl">
             <Outlet />
           </div>
         </main>
       </div>
 
       {/* ── Bottom tab bar mobile ── */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-[var(--color-border)] bg-[var(--color-surface)] md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid border-t border-border bg-card md:hidden"
+           style={{ gridTemplateColumns: `repeat(${mobilePrimary.length + 1}, 1fr)` }}>
         {mobilePrimary.map((item) => (
           <BottomLink key={item.to} to={item.to} label={item.label} />
         ))}
-        <button
-          onClick={() => setSheetOpen(true)}
-          className="flex min-h-[56px] flex-col items-center justify-center text-xs text-[var(--color-text-muted)]"
-        >
-          Menu
-        </button>
-      </nav>
 
-      {/* ── Sheet "Menu" (sisa rute) ── */}
-      {sheetOpen && (
-        <div className="fixed inset-0 z-30 md:hidden" role="dialog" aria-modal="true">
-          <div
-            className="absolute inset-0 bg-black/60"
-            onClick={() => setSheetOpen(false)}
-          />
-          <div className="absolute inset-x-0 bottom-0 rounded-t-2xl border-t border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--color-border)]" />
-            <div className="grid grid-cols-2 gap-2">
+        {/* Sheet "Menu" — sisa rute via Radix Dialog */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="flex min-h-[56px] flex-col items-center justify-center text-xs text-muted-foreground hover:text-foreground transition-colors">
+              Menu
+            </button>
+          </SheetTrigger>
+          <SheetContent side="bottom">
+            <SheetHeader>
+              <SheetTitle>Menu</SheetTitle>
+            </SheetHeader>
+            <div className="grid grid-cols-2 gap-2 p-4 pt-2">
               {sheetItems.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  onClick={() => setSheetOpen(false)}
-                  className="min-h-[56px] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] p-3 text-sm font-medium"
+                  className={({ isActive }) =>
+                    cn(
+                      'flex min-h-[56px] items-center justify-center rounded-lg border border-border bg-secondary/50 px-3 text-sm font-medium transition-colors hover:bg-secondary',
+                      isActive && 'border-primary text-primary',
+                    )
+                  }
                 >
                   {item.label}
                 </NavLink>
               ))}
             </div>
-          </div>
-        </div>
-      )}
+          </SheetContent>
+        </Sheet>
+      </nav>
     </div>
   );
 }
@@ -81,12 +76,12 @@ export function AppLayout() {
 function Brand() {
   return (
     <div className="flex items-center gap-2">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-primary)] text-sm font-black text-[var(--color-bg)]">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground">
         P
       </span>
       <div className="leading-tight">
         <div className="text-sm font-bold">PICNIC</div>
-        <div className="text-[10px] text-[var(--color-text-muted)]">ER &amp; Intensive Care</div>
+        <div className="text-[10px] text-muted-foreground">ER &amp; Intensive Care</div>
       </div>
     </div>
   );
@@ -99,10 +94,10 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
       end={to === '/'}
       className={({ isActive }) =>
         cn(
-          'min-h-[44px] rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+          'flex min-h-[44px] items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
           isActive
-            ? 'bg-[var(--color-primary)]/15 text-[var(--color-primary)]'
-            : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)]',
+            ? 'bg-primary/15 text-primary'
+            : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
         )
       }
     >
@@ -118,8 +113,8 @@ function BottomLink({ to, label }: { to: string; label: string }) {
       end={to === '/'}
       className={({ isActive }) =>
         cn(
-          'flex min-h-[56px] flex-col items-center justify-center px-1 text-center text-xs',
-          isActive ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]',
+          'flex min-h-[56px] flex-col items-center justify-center text-xs transition-colors',
+          isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
         )
       }
     >

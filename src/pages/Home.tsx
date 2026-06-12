@@ -1,26 +1,30 @@
 import { Link } from 'react-router-dom';
-import { Card } from '../components/ui/Card';
+import { Card, CardContent } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
 import { Disclaimer } from '../components/Disclaimer';
 
 export function Home() {
   return (
     <div className="space-y-4">
-      <header>
+      <div>
         <h1 className="text-2xl font-bold">PICNIC Helper</h1>
-        <p className="text-sm text-[var(--color-text-muted)]">
-          Pediatric ER &amp; Intensive Care Companion
-        </p>
-      </header>
-      <Link to="/kalkulator">
-        <Card className="transition-colors hover:border-[var(--color-primary)]">
-          <div className="text-base font-semibold text-[var(--color-primary)]">
-            Kalkulator ETT
-          </div>
-          <p className="text-sm text-[var(--color-text-muted)]">
-            Ukuran endotracheal tube berdasarkan usia/berat.
-          </p>
+        <p className="text-sm text-muted-foreground">Pediatric ER &amp; Intensive Care Companion</p>
+      </div>
+
+      <Link to="/kalkulator" className="block">
+        <Card className="transition-colors hover:border-primary cursor-pointer">
+          <CardContent className="pt-4 flex items-center justify-between">
+            <div>
+              <div className="font-semibold text-primary">Kalkulator ETT</div>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Ukuran endotracheal tube berdasarkan usia / berat.
+              </p>
+            </div>
+            <Badge variant="secondary">MVP</Badge>
+          </CardContent>
         </Card>
       </Link>
+
       <Disclaimer />
     </div>
   );
