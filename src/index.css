@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 /*
+ * Tailwind v4: dark: variant pakai class .dark di <html> (next-themes),
+ * bukan prefers-color-scheme. Satu baris ini yang menghubungkan keduanya.
+ */
+@custom-variant dark (&:is(.dark *));
+
+/*
  * PICNIC Helper — Design Tokens
  * Philosophy: Apple HIG (deference, clarity, depth) + clinical ergonomics
  *
