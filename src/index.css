@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* ─── Token tema (dark-first, kontras tinggi untuk bedside sif malam) ─── */
+@theme {
+  --color-bg: #0b0f1a;
+  --color-surface: #141a29;
+  --color-surface-2: #1c2436;
+  --color-border: #2a3346;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-primary: #38bdf8;
+  --color-primary-strong: #0ea5e9;
+  --color-warn: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Target sentuh besar untuk pemakaian satu tangan (CLAUDE.md: min 44px) */
+button, a, input, select { touch-action: manipulation; }
