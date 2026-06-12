@@ -75,4 +75,10 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1016/S0140-6736(03)13397-1',
     verified: true,
   },
+  holliday1957: {
+    id: 10,
+    citation:
+      'Holliday MA, Segar WE. The maintenance need for water in parenteral fluid therapy. Pediatrics. 1957;19(5):823–832. (Rumus 4-2-1 maintenance cairan pediatri)',
+    verified: true,
+  },
 };

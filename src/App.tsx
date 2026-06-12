@@ -5,6 +5,7 @@ import { Kalkulator } from './pages/Kalkulator';
 import { Referensi } from './pages/Referensi';
 import { Placeholder } from './pages/Placeholder';
 import { Skoring } from './pages/Skoring';
+import { DrugsFluid } from './pages/DrugsFluid';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
       { path: 'teori', element: <Placeholder title="Teori" /> },
       { path: 'skoring', element: <Skoring /> },
       { path: 'kalkulator', element: <Kalkulator /> },
-      { path: 'drugs-fluids', element: <Placeholder title="Drugs & Fluids" /> },
+      { path: 'drugs-fluids', element: <DrugsFluid /> },
       { path: 'monitoring', element: <Placeholder title="Monitoring & Weaning" /> },
       { path: 'referensi', element: <Referensi /> },
     ],
