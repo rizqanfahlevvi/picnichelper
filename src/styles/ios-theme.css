@@ -1,0 +1,314 @@
+/* ============================================================================
+   PICNIC Helper · iOS Design Language
+   ----------------------------------------------------------------------------
+   Token + komponen gaya Apple iOS 17/18 (grouped-inset, translucent chrome,
+   bottom tab bar). Diekstrak dari mockup visual yang sudah disetujui.
+
+   Cara pakai (React + Vite + Tailwind + shadcn/ui):
+   1. Taruh file ini di  src/styles/ios-theme.css
+   2. Import di paling atas  src/index.css :  @import "./styles/ios-theme.css";
+   3. Dark mode mengikuti konvensi shadcn (class .dark di <html>) DAN
+      prefers-color-scheme sebagai fallback.
+   4. Font: pakai system stack (-apple-system) + Inter sbg fallback non-Apple.
+      Di index.html tambahkan:
+      <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
+   Catatan: kelas .ios-* di bawah adalah CSS biasa — boleh dipakai berdampingan
+   dengan Tailwind. Untuk komponen shadcn (Card, Button, Badge), lihat blok
+   "SHADCN BRIDGE" di bawah agar warnанya otomatis mengikuti palet iOS.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1 · TOKENS — Light (default)
+   --------------------------------------------------------------------------- */
+:root {
+  /* Font families */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Inter var", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* Type scale (iOS HIG) — size / line-height / weight / tracking */
+  --type-large-title: 700 34px/41px var(--font-sans);
+  --type-title-1:     700 28px/34px var(--font-sans);
+  --type-title-2:     700 22px/28px var(--font-sans);
+  --type-title-3:     600 20px/25px var(--font-sans);
+  --type-headline:    600 17px/22px var(--font-sans);
+  --type-body:        400 17px/22px var(--font-sans);
+  --type-callout:     400 16px/21px var(--font-sans);
+  --type-subheadline: 400 15px/20px var(--font-sans);
+  --type-footnote:    400 13px/18px var(--font-sans);
+  --type-caption-1:   400 12px/16px var(--font-sans);
+  --type-caption-2:   400 11px/13px var(--font-sans);
+
+  /* System tints (Apple, light) */
+  --sys-blue: #007AFF;  --sys-green: #34C759;  --sys-indigo: #5856D6;
+  --sys-orange: #FF9500; --sys-pink: #FF2D55;  --sys-purple: #AF52DE;
+  --sys-red: #FF3B30;   --sys-teal: #30B0C7;   --sys-cyan: #32ADE6;
+  --sys-yellow: #FFCC00; --sys-mint: #00C7BE;  --sys-brown: #A2845E;
+
+  /* Backgrounds (3-layer) */
+  --bg-secondary: #F2F2F7;   /* page / systemGroupedBackground */
+  --bg-tertiary:  #FFFFFF;   /* card / row */
+  --bg-elevated:  #FFFFFF;   /* sheet / modal */
+  --bg-overlay:   rgba(0,0,0,0.40);
+
+  /* Fills (interactive surfaces) */
+  --fill-secondary: rgba(120,120,128,0.16);
+  --fill-tertiary:  rgba(118,118,128,0.12);
+
+  /* Labels / text hierarchy */
+  --label-primary:   #000000;
+  --label-secondary: rgba(60,60,67,0.60);
+  --label-tertiary:  rgba(60,60,67,0.30);
+
+  /* Separators */
+  --separator: rgba(60,60,67,0.29);
+
+  /* Brand + clinical category accents */
+  --accent: var(--sys-blue);
+  --accent-tint: rgba(0,122,255,0.12);
+  --success: var(--sys-green);
+  --warning: var(--sys-orange);
+  --danger:  var(--sys-red);
+
+  --tint-vital:  var(--sys-red);     /* hemodinamik / vasopressor */
+  --tint-resp:   var(--sys-teal);    /* airway / ABG / ventilator / ETT */
+  --tint-neuro:  var(--sys-purple);  /* neuro / sedasi */
+  --tint-fluid:  var(--sys-blue);    /* cairan */
+  --tint-drug:   var(--sys-indigo);  /* obat */
+  --tint-renal:  var(--sys-mint);    /* renal */
+  --tint-score:  var(--sys-orange);  /* skoring */
+  --tint-theory: var(--sys-brown);   /* teori */
+
+  /* Radii */
+  --r-card: 14px;  --r-sm: 8px;  --r-pill: 999px;
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.03);
+  --shadow-2: 0 4px 12px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+
+  /* Materials (translucency) — hanya untuk chrome di atas konten scroll */
+  --material-chrome: rgba(248,248,248,0.78);
+  --blur-base: saturate(180%) blur(20px);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;  --dur-base: 260ms;
+
+  /* Min touch target (bedside, satu jempol) */
+  --hit: 44px;
+}
+
+/* ---------------------------------------------------------------------------
+   2 · TOKENS — Dark  (shadcn .dark class + prefers-color-scheme fallback)
+   --------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --sys-blue:#0A84FF; --sys-green:#30D158; --sys-indigo:#5E5CE6;
+    --sys-orange:#FF9F0A; --sys-pink:#FF375F; --sys-purple:#BF5AF2;
+    --sys-red:#FF453A; --sys-teal:#40C8E0; --sys-cyan:#64D2FF;
+    --sys-yellow:#FFD60A; --sys-mint:#66D4CF; --sys-brown:#AC8E68;
+    --bg-secondary:#000000; --bg-tertiary:#1C1C1E; --bg-elevated:#1C1C1E;
+    --bg-overlay:rgba(0,0,0,0.60);
+    --fill-secondary:rgba(120,120,128,0.32); --fill-tertiary:rgba(118,118,128,0.24);
+    --label-primary:#FFFFFF; --label-secondary:rgba(235,235,245,0.60);
+    --label-tertiary:rgba(235,235,245,0.30); --separator:rgba(84,84,88,0.65);
+    --accent-tint:rgba(10,132,255,0.18);
+    --shadow-1:0 1px 2px rgba(0,0,0,0.40);
+    --shadow-2:0 4px 12px rgba(0,0,0,0.50), 0 1px 2px rgba(0,0,0,0.40);
+    --material-chrome:rgba(10,10,12,0.82);
+  }
+}
+.dark {
+  --sys-blue:#0A84FF; --sys-green:#30D158; --sys-indigo:#5E5CE6;
+  --sys-orange:#FF9F0A; --sys-pink:#FF375F; --sys-purple:#BF5AF2;
+  --sys-red:#FF453A; --sys-teal:#40C8E0; --sys-cyan:#64D2FF;
+  --sys-yellow:#FFD60A; --sys-mint:#66D4CF; --sys-brown:#AC8E68;
+  --bg-secondary:#000000; --bg-tertiary:#1C1C1E; --bg-elevated:#1C1C1E;
+  --bg-overlay:rgba(0,0,0,0.60);
+  --fill-secondary:rgba(120,120,128,0.32); --fill-tertiary:rgba(118,118,128,0.24);
+  --label-primary:#FFFFFF; --label-secondary:rgba(235,235,245,0.60);
+  --label-tertiary:rgba(235,235,245,0.30); --separator:rgba(84,84,88,0.65);
+  --accent-tint:rgba(10,132,255,0.18);
+  --shadow-1:0 1px 2px rgba(0,0,0,0.40);
+  --shadow-2:0 4px 12px rgba(0,0,0,0.50), 0 1px 2px rgba(0,0,0,0.40);
+  --material-chrome:rgba(10,10,12,0.82);
+}
+
+/* ---------------------------------------------------------------------------
+   3 · BASE
+   --------------------------------------------------------------------------- */
+body {
+  font-family: var(--font-sans);
+  color: var(--label-primary);
+  background: var(--bg-secondary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Type helpers */
+.ios-large-title { font: var(--type-large-title); letter-spacing: 0.011em; }
+.ios-title-1     { font: var(--type-title-1);     letter-spacing: 0.007em; }
+.ios-title-2     { font: var(--type-title-2);     letter-spacing: 0.005em; }
+.ios-title-3     { font: var(--type-title-3); }
+.ios-headline    { font: var(--type-headline);    letter-spacing: -0.022em; }
+.ios-body        { font: var(--type-body);        letter-spacing: -0.022em; }
+.ios-callout     { font: var(--type-callout);     letter-spacing: -0.018em; }
+.ios-subhead     { font: var(--type-subheadline); letter-spacing: -0.011em; }
+.ios-footnote    { font: var(--type-footnote); }
+.ios-caption     { font: var(--type-caption-1); }
+.ios-mono        { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+
+/* Category tint utility — pasang di pembungkus untuk mewarnai ikon/hasil */
+.tint-vital  { --tint: var(--tint-vital); }
+.tint-resp   { --tint: var(--tint-resp); }
+.tint-neuro  { --tint: var(--tint-neuro); }
+.tint-fluid  { --tint: var(--tint-fluid); }
+.tint-drug   { --tint: var(--tint-drug); }
+.tint-renal  { --tint: var(--tint-renal); }
+.tint-score  { --tint: var(--tint-score); }
+.tint-theory { --tint: var(--tint-theory); }
+
+/* ---------------------------------------------------------------------------
+   4 · SCREEN + CHROME
+   --------------------------------------------------------------------------- */
+.ios-screen { background: var(--bg-secondary); min-height: 100%; }
+
+/* Top nav bar (translucent, floating) */
+.ios-nav {
+  position: sticky; top: 0; z-index: 20; height: 44px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 8px;
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--blur-base); backdrop-filter: var(--blur-base);
+  border-bottom: 0.5px solid var(--separator);
+}
+.ios-nav--plain { background: var(--bg-secondary); border-bottom-color: transparent;
+  -webkit-backdrop-filter: none; backdrop-filter: none; }
+.ios-nav-title { font: var(--type-headline); letter-spacing: -0.022em; color: var(--label-primary); }
+.ios-nav-btn {
+  display: inline-flex; align-items: center; gap: 2px; background: none; border: 0; cursor: pointer;
+  color: var(--accent); font: var(--type-body); letter-spacing: -0.02em; padding: 0 4px; min-height: var(--hit);
+}
+
+/* Bottom tab bar (5 tabs / atau 4 + Menu) */
+.ios-tabbar {
+  position: sticky; bottom: 0; z-index: 20; height: 76px; padding-top: 9px;
+  display: flex; align-items: flex-start;
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--blur-base); backdrop-filter: var(--blur-base);
+  border-top: 0.5px solid var(--separator);
+}
+.ios-tab {
+  flex: 1; background: none; border: 0; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: var(--label-tertiary); transition: color var(--dur-fast);
+}
+.ios-tab > span { font: var(--type-caption-2); font-size: 10.5px; font-weight: 500; }
+.ios-tab[aria-selected="true"], .ios-tab.is-active { color: var(--accent); }
+
+/* ---------------------------------------------------------------------------
+   5 · GROUPED-INSET LIST  (pola utama iOS)
+   --------------------------------------------------------------------------- */
+.ios-section {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 22px 32px 6px;
+}
+.ios-section > .label {
+  font: var(--type-footnote); text-transform: uppercase; letter-spacing: 0.04em;
+  font-weight: 600; color: var(--label-secondary); white-space: nowrap;
+}
+.ios-section > .action { font: var(--type-footnote); color: var(--accent); font-weight: 500; cursor: pointer; }
+
+.ios-list {
+  margin: 0 16px; background: var(--bg-tertiary);
+  border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-1);
+}
+.ios-row {
+  display: flex; align-items: center; gap: 12px; padding: 9px 14px; min-height: var(--hit);
+  cursor: pointer; transition: background var(--dur-fast) var(--ease-out);
+}
+.ios-row + .ios-row { border-top: 0.5px solid var(--separator); }
+.ios-row:active { background: var(--fill-tertiary); }
+.ios-row-icon {
+  width: 29px; height: 29px; border-radius: 30%; flex-shrink: 0;
+  display: grid; place-items: center; color: #fff; background: var(--tint, var(--accent));
+  box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.15);
+}
+.ios-row-icon > svg { width: 18px; height: 18px; }
+.ios-row-text { flex: 1; min-width: 0; }
+.ios-row-label { font: var(--type-body); letter-spacing: -0.022em; color: var(--label-primary); }
+.ios-row-sub { font: var(--type-footnote); color: var(--label-secondary); margin-top: 1px; line-height: 1.25; }
+.ios-chevron { color: var(--label-tertiary); flex-shrink: 0; }
+.ios-badge {
+  font: var(--type-caption-2); font-weight: 600; padding: 3px 8px; border-radius: var(--r-pill);
+  background: var(--fill-secondary); color: var(--label-secondary);
+}
+.ios-badge--accent { background: var(--accent-tint); color: var(--accent); }
+
+/* ---------------------------------------------------------------------------
+   6 · CARD / RESULT / SEGMENTED / WARNING  (komponen kalkulator)
+   --------------------------------------------------------------------------- */
+.ios-card { margin: 0 16px; background: var(--bg-tertiary); border-radius: var(--r-card);
+  box-shadow: var(--shadow-1); }
+
+/* hasil kalkulasi — angka tabular besar berwarna tint kategori */
+.ios-result-grid { display: flex; }
+.ios-result { flex: 1; padding: 13px 14px 14px; display: flex; flex-direction: column; gap: 3px; }
+.ios-result + .ios-result { border-left: 0.5px solid var(--separator); }
+.ios-result-label { font: var(--type-caption-2); text-transform: uppercase; letter-spacing: 0.005em;
+  font-weight: 600; color: var(--label-secondary); }
+.ios-result-value { font-family: var(--font-mono); font-feature-settings: "tnum";
+  font-size: 28px; font-weight: 700; letter-spacing: -0.01em; color: var(--tint, var(--accent)); }
+.ios-result-unit { font: var(--type-subheadline); font-family: var(--font-mono);
+  color: var(--label-secondary); font-weight: 600; margin-left: 4px; }
+.ios-result-note { font: var(--type-caption-1); color: var(--label-tertiary); }
+
+/* segmented control */
+.ios-segmented { display: flex; gap: 2px; padding: 2px; margin: 0 16px;
+  background: var(--fill-tertiary); border-radius: var(--r-sm); }
+.ios-segmented > button {
+  flex: 1; border: 0; cursor: pointer; padding: 7px 8px; border-radius: 7px;
+  font: var(--type-subheadline); font-weight: 400; letter-spacing: -0.01em;
+  background: transparent; color: var(--label-primary);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.ios-segmented > button[aria-selected="true"] {
+  background: var(--bg-tertiary); font-weight: 600; box-shadow: var(--shadow-1);
+}
+
+/* warning / patient-safety banner */
+.ios-warn { display: flex; gap: 9px; align-items: flex-start; margin: 0 16px;
+  padding: 11px 13px; border-radius: var(--r-card); font: var(--type-footnote);
+  line-height: 1.4; color: var(--label-primary);
+  background: color-mix(in srgb, var(--warning) 12%, transparent); }
+.ios-warn--danger { background: color-mix(in srgb, var(--danger) 12%, transparent); }
+.ios-warn > svg { flex-shrink: 0; margin-top: 1px; color: var(--warning); }
+.ios-warn--danger > svg { color: var(--danger); }
+
+/* ---------------------------------------------------------------------------
+   7 · SITASI + DISCLAIMER  (medical guardrails — wajib)
+   --------------------------------------------------------------------------- */
+.ios-cite { font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+  color: var(--accent); margin-left: 2px; vertical-align: super; cursor: pointer; }
+.ios-disclaimer { display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 18px 20px 0; padding: 0 12px; text-align: center;
+  font: var(--type-caption-1); color: var(--label-tertiary); line-height: 1.35; }
+.ios-disclaimer > svg { flex-shrink: 0; }
+
+/* ---------------------------------------------------------------------------
+   8 · SHADCN BRIDGE  (opsional)
+   ----------------------------------------------------------------------------
+   Agar komponen shadcn (Card, Button, Badge, Input) otomatis memakai palet iOS,
+   timpa token shadcn di src/index.css. shadcn memakai format channel HSL
+   "H S% L%" lalu dibungkus hsl(var(--x)). Nilai target (silakan konversi):
+     --radius:                 14px
+     --background  (light):    #F2F2F7   (dark) #000000
+     --card        (light):    #FFFFFF   (dark) #1C1C1E
+     --foreground  (light):    #000000   (dark) #FFFFFF
+     --primary     (light):    #007AFF   (dark) #0A84FF
+     --muted-foreground:       rgba(60,60,67,.6) / rgba(235,235,245,.6)
+     --border:                 rgba(60,60,67,.29) / rgba(84,84,88,.65)
+     --ring:                   #007AFF / #0A84FF
+   ============================================================================ */
