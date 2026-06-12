@@ -7,15 +7,16 @@ import {
 export interface NavItem {
   to: string;
   label: string;
+  shortLabel?: string;     // label pendek untuk bottom tab bar
   icon: LucideIcon;
   tint: string;           // CSS class: tint-resp / tint-fluid / dst
   primaryMobile?: boolean;
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { to: '/',             label: 'Home',                icon: Home,           tint: 'tint-fluid',  primaryMobile: true  },
-  { to: '/kalkulator',   label: 'Kalkulator',          icon: Calculator,     tint: 'tint-resp',   primaryMobile: true  },
-  { to: '/drugs-fluids', label: 'Drugs & Fluids',      icon: Syringe,        tint: 'tint-drug',   primaryMobile: true  },
+  { to: '/',             label: 'Home',                                   icon: Home,           tint: 'tint-fluid',  primaryMobile: true  },
+  { to: '/kalkulator',   label: 'Kalkulator',          shortLabel: 'Kalku', icon: Calculator,     tint: 'tint-resp',   primaryMobile: true  },
+  { to: '/drugs-fluids', label: 'Drugs & Fluids',      shortLabel: 'Drugs', icon: Syringe,        tint: 'tint-drug',   primaryMobile: true  },
   { to: '/teori',        label: 'Teori',               icon: BookOpen,       tint: 'tint-theory'                       },
   { to: '/skoring',      label: 'Skoring',             icon: BarChart2,      tint: 'tint-score'                        },
   { to: '/monitoring',   label: 'Monitoring',          icon: Activity,       tint: 'tint-vital'                        },

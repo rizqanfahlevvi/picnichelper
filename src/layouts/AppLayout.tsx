@@ -126,7 +126,7 @@ export function AppLayout() {
           <div style={{
             maxWidth: 640,
             margin: '0 auto',
-            padding: '0 0 96px',
+            padding: '0 0 112px',
           }} className="md-content-pad">
             <FadeOutlet pathname={pathname} />
           </div>
@@ -314,13 +314,15 @@ function TabItem({ item }: { item: NavItem }) {
       {({ isActive }) => (
         <>
           <span style={{
-            display: 'inline-flex', padding: '2px 10px', borderRadius: 'var(--r-pill)',
+            display: 'inline-flex', padding: '0 10px', borderRadius: 'var(--r-pill)',
             background: isActive ? 'var(--accent-tint)' : 'transparent',
             transition: 'background var(--dur-fast)',
           }}>
             <Icon size={22} strokeWidth={isActive ? 2.25 : 1.75} />
           </span>
-          <span>{item.label}</span>
+          <span style={{ whiteSpace: 'nowrap' }}>
+            {item.shortLabel ?? item.label}
+          </span>
         </>
       )}
     </NavLink>
