@@ -105,7 +105,7 @@ export function AppLayout() {
       {/* ══════════════════════════════════════════
           CONTENT AREA
       ══════════════════════════════════════════ */}
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>
 
         {/* Top nav bar (mobile only) */}
         <header
