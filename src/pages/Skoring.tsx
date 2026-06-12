@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { DownesScore } from '../components/scoring/DownesScore';
 import { Pelod2Score } from '../components/scoring/Pelod2Score';
+import { PsofaScore } from '../components/scoring/PsofaScore';
+import { CribIIScore } from '../components/scoring/CribIIScore';
 
-type SkoringTab = 'downes' | 'pelod2';
+type SkoringTab = 'downes' | 'pelod2' | 'psofa' | 'cribii';
 
-const TABS: { id: SkoringTab; label: string; hint: string }[] = [
-  { id: 'downes', label: 'Downes',  hint: 'Distres napas neonatus' },
-  { id: 'pelod2', label: 'PELOD-2', hint: 'Disfungsi organ PICU' },
+const TABS: { id: SkoringTab; label: string }[] = [
+  { id: 'downes', label: 'Downes'  },
+  { id: 'pelod2', label: 'PELOD-2' },
+  { id: 'psofa',  label: 'pSOFA'   },
+  { id: 'cribii', label: 'CRIB-II' },
 ];
 
 export function Skoring() {
@@ -34,6 +38,8 @@ export function Skoring() {
 
       {activeTab === 'downes' && <DownesScore />}
       {activeTab === 'pelod2' && <Pelod2Score />}
+      {activeTab === 'psofa'  && <PsofaScore />}
+      {activeTab === 'cribii' && <CribIIScore />}
     </div>
   );
 }

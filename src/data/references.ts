@@ -61,4 +61,18 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1097/CCM.0b013e31828a2984',
     verified: true,
   },
+  matics2017: {
+    id: 8,
+    citation:
+      'Matics TJ, Sanchez-Pinto LN. Adaptation and Validation of a Pediatric Sequential Organ Failure Assessment Score and Evaluation of the Sepsis-3 Definitions in Critically Ill Children. JAMA Pediatr. 2017;171(10):e172352.',
+    url: 'https://doi.org/10.1001/jamapediatrics.2017.2352',
+    verified: true,
+  },
+  parry2003: {
+    id: 9,
+    citation:
+      'Parry G, Tucker J, Tarnow-Mordi W; UK Neonatal Staffing Study Collaborative Group. CRIB II: an update of the clinical risk index for babies score. Lancet. 2003;361(9371):1789–1791.',
+    url: 'https://doi.org/10.1016/S0140-6736(03)13397-1',
+    verified: true,
+  },
 };
