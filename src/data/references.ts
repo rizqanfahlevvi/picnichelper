@@ -42,4 +42,10 @@ export const REFERENCES: Record<string, Reference> = {
       'Weiner GM, Zaichkin J, eds. Textbook of Neonatal Resuscitation (NRP). 8th ed. American Academy of Pediatrics; 2021. Tabel ukuran ETT neonatus berbasis berat & usia gestasi.',
     verified: true,
   },
+  boston1980: {
+    id: 5,
+    citation:
+      'Narins RG, Emmett M. Simple and mixed acid-base disorders: a practical approach. Medicine (Baltimore). 1980;59(3):161–187. (Boston Rules untuk kompensasi gangguan asam-basa)',
+    verified: true,
+  },
 };
