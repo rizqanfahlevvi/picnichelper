@@ -126,7 +126,7 @@ export function AppLayout() {
           <div style={{
             maxWidth: 640,
             margin: '0 auto',
-            padding: '0 0 80px',
+            padding: '0 0 96px',
           }} className="md-content-pad">
             <FadeOutlet pathname={pathname} />
           </div>
@@ -178,7 +178,7 @@ export function AppLayout() {
       <div
         className="md-hidden"
         style={{
-          position: 'fixed', left: 0, right: 0, bottom: 56, zIndex: 50,
+          position: 'fixed', left: 0, right: 0, bottom: 68, zIndex: 50,
           background: 'var(--bg-elevated)',
           borderRadius: '14px 14px 0 0',
           borderTop: '0.5px solid var(--separator)',
