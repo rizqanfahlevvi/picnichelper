@@ -1,53 +1,78 @@
 @import "tailwindcss";
 
-/* ─── shadcn/ui CSS variables (dark theme — bedside, kontras tinggi) ─── */
+/* ─── shadcn/ui CSS variables ─── */
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 213 31% 93%;
-    --card: 222 47% 9%;
-    --card-foreground: 213 31% 93%;
-    --popover: 222 47% 9%;
-    --popover-foreground: 213 31% 93%;
-    --primary: 199 89% 60%;
-    --primary-foreground: 222 47% 6%;
-    --secondary: 222 30% 16%;
-    --secondary-foreground: 213 31% 93%;
-    --muted: 222 30% 16%;
-    --muted-foreground: 215 20% 60%;
-    --accent: 222 30% 16%;
-    --accent-foreground: 213 31% 93%;
+    /* Light mode */
+    --background: 210 40% 98%;       /* slate-50 */
+    --foreground: 222 47% 11%;       /* slate-900 */
+    --card: 0 0% 100%;               /* white */
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;          /* blue-600 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 32% 91%;        /* slate-200 */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 20% 45%; /* slate-500 */
+    --accent: 214 32% 91%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
-    --border: 222 30% 20%;
-    --input: 222 30% 20%;
-    --ring: 199 89% 60%;
+    --border: 214 32% 91%;           /* slate-200 */
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
     --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 84% 5%;        /* slate-950 */
+    --foreground: 210 40% 96%;       /* slate-50 */
+    --card: 222 47% 8%;              /* slate-900-ish */
+    --card-foreground: 210 40% 96%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 213 93% 68%;          /* blue-400 */
+    --primary-foreground: 222 84% 5%;
+    --secondary: 217 33% 17%;        /* slate-800 */
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 55%; /* slate-400 */
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 0 72% 51%;
+    --border: 217 33% 17%;           /* slate-800 */
+    --input: 217 33% 17%;
+    --ring: 213 93% 68%;
   }
 }
 
 @theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-primary: hsl(var(--primary));
+  --color-background:         hsl(var(--background));
+  --color-foreground:         hsl(var(--foreground));
+  --color-card:               hsl(var(--card));
+  --color-card-foreground:    hsl(var(--card-foreground));
+  --color-primary:            hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
+  --color-secondary:          hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+  --color-muted:              hsl(var(--muted));
+  --color-muted-foreground:   hsl(var(--muted-foreground));
+  --color-accent:             hsl(var(--accent));
+  --color-accent-foreground:  hsl(var(--accent-foreground));
+  --color-destructive:        hsl(var(--destructive));
+  --color-border:             hsl(var(--border));
+  --color-input:              hsl(var(--input));
+  --color-ring:               hsl(var(--ring));
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-html, body, #root { height: 100%; }
+html, body, #root {
+  height: 100%;
+}
 
 body {
   margin: 0;
@@ -55,7 +80,9 @@ body {
   color: hsl(var(--foreground));
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-tap-highlight-color: transparent;
+  /* Smooth theme transition */
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Target sentuh besar untuk pemakaian satu tangan (CLAUDE.md: min 44px) */
+/* Touch target minimum 44px (CLAUDE.md) */
 button, a, input, select { touch-action: manipulation; }
