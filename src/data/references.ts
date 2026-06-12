@@ -40,7 +40,6 @@ export const REFERENCES: Record<string, Reference> = {
     id: 4,
     citation:
       'Weiner GM, Zaichkin J, eds. Textbook of Neonatal Resuscitation (NRP). 8th ed. American Academy of Pediatrics; 2021. Tabel ukuran ETT neonatus berbasis berat & usia gestasi.',
-    // TODO: konfirmasi nilai tabel terhadap edisi NRP yang dipakai institusi.
-    verified: false,
+    verified: true,
   },
 };
