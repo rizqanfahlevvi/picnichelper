@@ -1,39 +1,52 @@
-/*
- * AppLayout — Apple HIG Adaptive Layout
- *
- * Mobile  (<md): iOS-style Tab Bar (bottom, translucent blur)
- *                + iOS-style Navigation Bar (top, translucent blur)
- * Desktop (≥md): Navigation sidebar + content area
- *
- * Touch targets: every tappable element min 48 × 48 px
- * Background: slate-50 (light) / slate-950 (dark)
- */
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../components/ui/sheet';
 import { ThemeToggle } from '../components/ThemeToggle';
-import { cn } from '../components/ui/cn';
 import { BOTTOM_PRIMARY, SHEET_ITEMS, MenuIcon } from './navItems';
 import type { NavItem } from './navItems';
 
+/* Page titles untuk ios-nav-title */
+const PAGE_TITLES: Record<string, string> = {
+  '/':             'Home',
+  '/kalkulator':   'Kalkulator',
+  '/drugs-fluids': 'Drugs & Fluids',
+  '/skoring':      'Skoring Klinis',
+  '/teori':        'Teori & Klinis',
+  '/monitoring':   'Monitoring & Weaning',
+  '/referensi':    'Referensi',
+};
+
 export function AppLayout() {
+  const { pathname } = useLocation();
+  const title = PAGE_TITLES[pathname] ?? 'PICNIC Helper';
+  const isHome = pathname === '/';
+
   return (
-    <div className="flex h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50">
+    <div style={{ display: 'flex', height: '100%', background: 'var(--bg-secondary)' }}>
 
       {/* ══════════════════════════════════════════
-          DESKTOP: Sidebar
+          DESKTOP: Sidebar (≥ md)
       ══════════════════════════════════════════ */}
-      <aside className={cn(
-        'hidden md:flex w-64 shrink-0 flex-col',
-        'bg-white dark:bg-slate-900',
-        'border-r border-slate-200 dark:border-slate-800',
-      )}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+      <aside style={{
+        width: 240,
+        flexShrink: 0,
+        display: 'none',    /* override via CSS media query below */
+        flexDirection: 'column',
+        background: 'var(--bg-tertiary)',
+        borderRight: '0.5px solid var(--separator)',
+      }} className="md-sidebar">
+        {/* Sidebar header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '16px 16px 12px',
+          borderBottom: '0.5px solid var(--separator)',
+        }}>
           <Brand />
           <ThemeToggle />
         </div>
-        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
+        {/* Sidebar nav */}
+        <nav style={{ flex: 1, overflowY: 'auto', padding: '8px 8px' }}>
           {[...BOTTOM_PRIMARY, ...SHEET_ITEMS].map((item) => (
-            <SidebarNavItem key={item.to} item={item} />
+            <SidebarItem key={item.to} item={item} />
           ))}
         </nav>
       </aside>
@@ -41,194 +54,181 @@ export function AppLayout() {
       {/* ══════════════════════════════════════════
           CONTENT AREA
       ══════════════════════════════════════════ */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
 
-        {/* ── iOS Navigation Bar (mobile) ──
-            Translucent blur, white/slate-950 tinted background
-            Height: 56 px (iOS standard navigation bar) */}
-        <header className={cn(
-          'md:hidden sticky top-0 z-10',
-          'flex items-center justify-between',
-          'h-14 px-2',
-          /* iOS translucent effect */
-          'bg-white/80 backdrop-blur-md dark:bg-slate-950/80',
-          'border-b border-slate-200/70 dark:border-slate-800/70',
-        )}>
-          <Brand />
-          <ThemeToggle />
+        {/* ── Top nav bar (mobile only) ── */}
+        <header
+          className={`ios-nav md-hidden ${isHome ? 'ios-nav--plain' : ''}`}
+          style={{ justifyContent: 'space-between' }}
+        >
+          <Brand compact />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {!isHome && (
+              <span className="ios-nav-title" style={{ marginRight: 4 }}>{title}</span>
+            )}
+            <ThemeToggle />
+          </div>
         </header>
 
         {/* Scrollable content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-2xl px-4 py-5 pb-32 md:pb-8">
+        <main style={{ flex: 1, overflowY: 'auto' }}>
+          <div style={{
+            maxWidth: 640,
+            margin: '0 auto',
+            /* Padding bottom: ruang untuk tab bar mobile + safe area */
+            padding: '0 0 96px',
+          }} className="md-content-pad">
             <Outlet />
           </div>
         </main>
       </div>
 
       {/* ══════════════════════════════════════════
-          MOBILE: iOS-style Tab Bar (bottom)
-          Height: 83 px (49px bar + 34px safe area)
-          Translucent: bg-white/80 + backdrop-blur-md (light)
-                       bg-slate-950/80 + backdrop-blur-md (dark)
-          Top border: subtle 1px slate-200/slate-800
-          Touch targets: min 48 × 48 px per item
+          MOBILE: Bottom Tab Bar (< md)
       ══════════════════════════════════════════ */}
-      <nav className={cn(
-        'md:hidden fixed inset-x-0 bottom-0 z-20',
-        'flex items-stretch',
-        /* iOS translucent tab bar */
-        'bg-white/80 backdrop-blur-md dark:bg-slate-950/80',
-        'border-t border-slate-200 dark:border-slate-800',
-        /* Safe area for modern phones (swipe indicator) */
-        'pb-4',
-      )}>
+      <nav className="ios-tabbar md-hidden">
         {BOTTOM_PRIMARY.map((item) => (
-          <TabBarItem key={item.to} item={item} />
+          <TabItem key={item.to} item={item} />
         ))}
 
-        {/* "Menu" — Sheet untuk rute tambahan */}
+        {/* Menu → Sheet */}
         <Sheet>
           <SheetTrigger asChild>
-            <button className={cn(
-              'flex flex-1 flex-col items-center justify-center gap-1',
-              'min-h-[48px] pt-2',
-              /* Inactive state */
-              'text-slate-400 dark:text-slate-500',
-              'transition-colors',
-            )}>
+            <button className="ios-tab" aria-selected={false}>
               <MenuIcon size={24} strokeWidth={1.75} />
-              <span className="text-[10px] font-medium tracking-wide">Menu</span>
+              <span>Menu</span>
             </button>
           </SheetTrigger>
           <SheetContent side="bottom">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <div className="grid grid-cols-2 gap-2.5 px-5 pb-6 pt-1">
+            <div className="ios-list" style={{ margin: '8px 16px 32px' }}>
               {SHEET_ITEMS.map((item) => (
-                <SheetNavItem key={item.to} item={item} />
+                <SheetItem key={item.to} item={item} />
               ))}
             </div>
           </SheetContent>
         </Sheet>
       </nav>
+
+      {/* Responsive styles injected via <style> tag */}
+      <style>{`
+        @media (min-width: 768px) {
+          .md-sidebar { display: flex !important; }
+          .md-hidden  { display: none  !important; }
+          .md-content-pad { padding: 24px 24px 32px !important; }
+        }
+      `}</style>
     </div>
   );
 }
 
-/* ── Sub-komponen ─────────────────────────────────────────────────────── */
-
-function Brand() {
+/* ── Brand ──────────────────────────────────────────────────────────────── */
+function Brand({ compact }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className={cn(
-        'flex h-9 w-9 items-center justify-center rounded-xl',
-        'bg-blue-600 text-white dark:bg-blue-500',
-        'text-sm font-black',
-      )}>
-        P
-      </div>
-      <div className="leading-tight">
-        <div className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+    <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 8 : 10 }}>
+      <div style={{
+        width: compact ? 28 : 32, height: compact ? 28 : 32,
+        borderRadius: 8, flexShrink: 0,
+        background: 'var(--sys-teal)',
+        display: 'grid', placeItems: 'center',
+        color: '#fff', fontWeight: 900,
+        fontSize: compact ? 12 : 14,
+        boxShadow: 'var(--shadow-1)',
+      }}>P</div>
+      {!compact && (
+        <div style={{ lineHeight: 1.2 }}>
+          <div style={{ font: 'var(--type-headline)', letterSpacing: '-0.022em', color: 'var(--label-primary)' }}>
+            PICNIC
+          </div>
+          <div style={{ font: 'var(--type-caption-2)', color: 'var(--label-secondary)' }}>
+            ER &amp; Intensive Care
+          </div>
+        </div>
+      )}
+      {compact && (
+        <span style={{ font: 'var(--type-headline)', letterSpacing: '-0.022em', color: 'var(--label-primary)' }}>
           PICNIC
-        </div>
-        <div className="text-[10px] text-slate-500 dark:text-slate-400 tracking-wide">
-          ER &amp; Intensive Care
-        </div>
-      </div>
+        </span>
+      )}
     </div>
   );
 }
 
-/* Sidebar nav item */
-function SidebarNavItem({ item }: { item: NavItem }) {
+/* ── Sidebar item (desktop) ─────────────────────────────────────────────── */
+function SidebarItem({ item }: { item: NavItem }) {
   const Icon = item.icon;
   return (
     <NavLink
       to={item.to}
       end={item.to === '/'}
-      className={({ isActive }) => cn(
-        'flex items-center gap-3 rounded-xl px-3 min-h-[44px] text-sm font-medium transition-colors',
-        isActive
-          ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400'
-          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-50',
-      )}
+      style={({ isActive }) => ({
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '8px 10px', borderRadius: 10,
+        minHeight: 'var(--hit)',
+        marginBottom: 2,
+        background: isActive ? 'var(--accent-tint)' : 'transparent',
+        color: isActive ? 'var(--accent)' : 'var(--label-secondary)',
+        fontWeight: isActive ? 600 : 400,
+        font: 'var(--type-subheadline)',
+        textDecoration: 'none',
+        transition: 'background var(--dur-fast), color var(--dur-fast)',
+      })}
     >
       {({ isActive }) => (
         <>
-          <Icon
-            size={18}
-            strokeWidth={isActive ? 2.25 : 1.75}
-          />
-          {item.label}
-        </>
-      )}
-    </NavLink>
-  );
-}
-
-/*
- * iOS Tab Bar item
- * Active : icon + label in blue-600 (light) / blue-400 (dark)
- * Inactive: icon + label in slate-400 (light) / slate-500 (dark)
- * Touch target: min-h-[48px]
- */
-function TabBarItem({ item }: { item: NavItem }) {
-  const Icon = item.icon;
-  return (
-    <NavLink
-      to={item.to}
-      end={item.to === '/'}
-      className="flex flex-1 flex-col items-center justify-center gap-1 min-h-[48px] pt-2 transition-colors"
-    >
-      {({ isActive }) => (
-        <>
-          <Icon
-            size={24}
-            strokeWidth={isActive ? 2.5 : 1.75}
-            className={cn(
-              'transition-colors',
-              isActive
-                ? 'text-blue-600 dark:text-blue-400'
-                : 'text-slate-400 dark:text-slate-500',
-            )}
-          />
-          <span className={cn(
-            'text-[10px] font-medium tracking-wide transition-colors',
-            isActive
-              ? 'text-blue-600 dark:text-blue-400'
-              : 'text-slate-400 dark:text-slate-500',
-          )}>
-            {item.label}
+          <span className={item.tint} style={{
+            width: 28, height: 28, borderRadius: '30%', flexShrink: 0,
+            display: 'grid', placeItems: 'center',
+            background: isActive ? 'var(--tint, var(--accent))' : 'var(--fill-secondary)',
+            color: isActive ? '#fff' : 'var(--label-secondary)',
+            transition: 'background var(--dur-fast)',
+          }}>
+            <Icon size={16} strokeWidth={isActive ? 2.25 : 1.75} />
           </span>
+          {item.label}
         </>
       )}
     </NavLink>
   );
 }
 
-/* Sheet nav item */
-function SheetNavItem({ item }: { item: NavItem }) {
+/* ── Tab bar item (mobile) ──────────────────────────────────────────────── */
+function TabItem({ item }: { item: NavItem }) {
   const Icon = item.icon;
   return (
     <NavLink
       to={item.to}
-      className={({ isActive }) => cn(
-        'flex items-center gap-3 min-h-[52px] rounded-xl border px-4 text-sm font-medium transition-colors',
-        isActive
-          ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400'
-          : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700',
-      )}
+      end={item.to === '/'}
+      className={({ isActive }) => `ios-tab${isActive ? ' is-active' : ''}`}
     >
       {({ isActive }) => (
         <>
-          <Icon
-            size={18}
-            strokeWidth={isActive ? 2.25 : 1.75}
-            className={isActive ? '' : 'text-slate-400 dark:text-slate-500'}
-          />
-          {item.label}
+          <Icon size={24} strokeWidth={isActive ? 2.25 : 1.75} />
+          <span>{item.label}</span>
+        </>
+      )}
+    </NavLink>
+  );
+}
+
+/* ── Sheet item ─────────────────────────────────────────────────────────── */
+function SheetItem({ item }: { item: NavItem }) {
+  const Icon = item.icon;
+  return (
+    <NavLink
+      to={item.to}
+      className={`ios-row ${item.tint}`}
+    >
+      {({ isActive }) => (
+        <>
+          <span className="ios-row-icon">
+            <Icon size={18} strokeWidth={isActive ? 2.25 : 1.75} color="#fff" />
+          </span>
+          <span className="ios-row-text">
+            <span className="ios-row-label">{item.label}</span>
+          </span>
         </>
       )}
     </NavLink>
