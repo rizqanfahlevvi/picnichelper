@@ -48,4 +48,17 @@ export const REFERENCES: Record<string, Reference> = {
       'Narins RG, Emmett M. Simple and mixed acid-base disorders: a practical approach. Medicine (Baltimore). 1980;59(3):161–187. (Boston Rules untuk kompensasi gangguan asam-basa)',
     verified: true,
   },
+  downes1970: {
+    id: 6,
+    citation:
+      'Downes JJ, Vidyasagar D, Boggs TR Jr, Morrow GM 3rd. Respiratory distress syndrome of newborn infants. Clin Pediatr (Phila). 1970;9(6):325–331. (Downes Score untuk distres napas neonatus)',
+    verified: true,
+  },
+  leteurtre2013: {
+    id: 7,
+    citation:
+      'Leteurtre S, Duhamel A, Salleron J, et al. PELOD-2: an update of the Pediatric Logistic Organ Dysfunction Score. Crit Care Med. 2013;41(7):1761–1773.',
+    url: 'https://doi.org/10.1097/CCM.0b013e31828a2984',
+    verified: true,
+  },
 };
