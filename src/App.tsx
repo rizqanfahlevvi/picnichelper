@@ -6,6 +6,7 @@ import { Referensi } from './pages/Referensi';
 import { Placeholder } from './pages/Placeholder';
 import { Skoring } from './pages/Skoring';
 import { DrugsFluid } from './pages/DrugsFluid';
+import { Teori } from './pages/Teori';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { index: true, element: <Home /> },
-      { path: 'teori', element: <Placeholder title="Teori" /> },
+      { path: 'teori', element: <Teori /> },
       { path: 'skoring', element: <Skoring /> },
       { path: 'kalkulator', element: <Kalkulator /> },
       { path: 'drugs-fluids', element: <DrugsFluid /> },
