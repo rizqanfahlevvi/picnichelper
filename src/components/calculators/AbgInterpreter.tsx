@@ -154,6 +154,7 @@ export function AbgInterpreter() {
       )}
 
       {result && <AbgResultCard result={result} />}
+      {result && <AbgGuidanceCard disorder={result.primaryDisorder} compensationStatus={result.compensationStatus} />}
 
       <NormalRangeCard />
       <TheoryAccordion sections={ABG_THEORY} />
@@ -245,6 +246,89 @@ function CompStatus({ status, tint }: { status: AbgResult['compensationStatus'];
     }}>
       {labels[status]}
     </span>
+  );
+}
+
+function GRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 6 }}>
+      <span style={{ flexShrink: 0, font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-primary)', minWidth: 130 }}>{label}</span>
+      <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', lineHeight: 1.4 }}>{value}</span>
+    </div>
+  );
+}
+
+function AbgGuidanceCard({ disorder, compensationStatus }: {
+  disorder: PrimaryDisorder;
+  compensationStatus: AbgResult['compensationStatus'];
+}) {
+  if (disorder === 'normal') return null;
+
+  return (
+    <div className="ios-card" style={{ overflow: 'hidden' }}>
+      <div style={{ padding: '10px 16px 8px', borderBottom: '0.5px solid var(--separator)' }}>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
+          Pendekatan Klinis
+        </p>
+      </div>
+
+      <div style={{ padding: '12px 16px' }}>
+        {compensationStatus === 'over' && (
+          <div style={{ padding: '8px 12px', borderRadius: 'var(--r-sm)', background: 'color-mix(in srgb, var(--sys-orange) 10%, var(--bg-tertiary))', marginBottom: 10 }}>
+            <p style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--sys-orange)' }}>
+              ⚠ Kompensasi berlebih → kemungkinan gangguan asam-basa ganda (mixed disorder)
+            </p>
+          </div>
+        )}
+        {compensationStatus === 'under' && (
+          <div style={{ padding: '8px 12px', borderRadius: 'var(--r-sm)', background: 'color-mix(in srgb, var(--sys-orange) 10%, var(--bg-tertiary))', marginBottom: 10 }}>
+            <p style={{ font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--sys-orange)' }}>
+              ⚠ Kompensasi kurang → kemungkinan gangguan ganda atau kondisi akut
+            </p>
+          </div>
+        )}
+
+        {disorder === 'metabolic_acidosis' && (
+          <>
+            <GRow label="Hitung Anion Gap" value="AG = Na⁺ − (Cl⁻ + HCO₃⁻); normal 8–12. Masukkan Na & Cl untuk kalkulasi lengkap." />
+            <GRow label="AG tinggi (HAGMA)" value="MUDPILES: Methanol, Uremia, DKA, Propilen glikol, INH/Iron, Laktat, Ethylene glycol, Salisilat" />
+            <GRow label="AG normal (NAGMA)" value="Diare (kehilangan bikarbonat), RTA, cairan NaCl berlebihan, Addison, fistula pankreas" />
+            <GRow label="Delta Ratio (HAGMA)" value="(AG − 12) / (24 − HCO₃⁻): < 0.4 = NAGMA murni; 0.4–1 = campuran; 1–2 = HAGMA; > 2 = HAGMA + alk. met." />
+            <GRow label="Tatalaksana umum" value="Tangani penyebab primer. NaHCO₃ IV dipertimbangkan bila pH < 7.1 atau HCO₃⁻ < 10 dengan hemodinamik tidak stabil." />
+            <GRow label="Target koreksi" value="Tidak perlu normalisasi penuh; target HCO₃⁻ ≥ 15 mEq/L untuk stabilisasi enzim dan kontraktilitas jantung." />
+          </>
+        )}
+
+        {disorder === 'metabolic_alkalosis' && (
+          <>
+            <GRow label="Penyebab tersering anak" value="Muntah / NGT suction (Cl⁻ loss), diuretik berlebihan, hipokalemia, steroid/mineralokortikoid" />
+            <GRow label="Cek Cl⁻ urin" value="< 20 mEq/L = chloride-responsive (muntah, diuretik lama) → koreksi dengan NaCl + KCl; > 20 = chloride-resistant (hiperaldosteronisme, Cushing) → tangani penyebab" />
+            <GRow label="Koreksi hipokalemia" value="Wajib: alkalosis metabolik tidak dapat terkoreksi tanpa koreksi K⁺ terlebih dahulu (K⁺ masuk sel, H⁺ keluar)" />
+            <GRow label="Tatalaksana" value="Cairan NaCl 0.9% untuk chloride-responsive; koreksi KCl; hentikan diuretik; asetazolamid bila tidak responsif" />
+          </>
+        )}
+
+        {disorder === 'respiratory_acidosis' && (
+          <>
+            <GRow label="Penyebab akut" value="Obstruksi jalan napas (croup, benda asing), bronkospasme berat, depresi SSP (opiat, benzodiazepin), pneumotoraks" />
+            <GRow label="Penyebab kronik" value="Penyakit neuromuskular (DMD, SMA), PPOK (jarang anak), deformitas dinding dada, hipoventilasi sentral (obesitas)" />
+            <GRow label="Pendekatan segera" value="Airway, breathing: posisi, O₂, nebulisasi (bronkospasme); pertimbangkan NIV (CPAP/BiPAP) sebelum intubasi" />
+            <GRow label="Indikasi intubasi" value="Hipoksia refrakter, kelelahan pernapasan, kesadaran menurun, ETCO₂ / PaCO₂ naik progresif" />
+            <GRow label="Target ventilasi" value="Jangan normalisasi PaCO₂ terlalu cepat pada asidosis kronik → alkalosis metabolik rebound (alkalosis posthiperkapnik)" />
+          </>
+        )}
+
+        {disorder === 'respiratory_alkalosis' && (
+          <>
+            <GRow label="Penyebab tersering" value="Nyeri, ansietas, demam, sepsis awal (stimulasi pusat napas), hipoksia (kompensasi), gagal jantung, hiperventilasi" />
+            <GRow label="Penyebab penting" value="Sepsis: alkalosis respiratorik sering menjadi tanda awal sebelum asidosis metabolik; PE (jarang anak)" />
+            <GRow label="Evaluasi hipoksia" value="Hitung A-a gradient: A-a = [(FiO₂ × 713) − (PaCO₂ / 0.8)] − PaO₂. Normal < 10–15 mmHg (room air)" />
+            <GRow label="Tatalaksana" value="Tangani penyebab primer. Bila nyeri/ansietas: analgesik + anxiolytic. Hindari rebreathing (paper bag) — risiko hipoksia" />
+            <GRow label="Perhatian" value="Alkalosis berat (pH > 7.6) → vasokonstriksi serebral, aritmia, kejang. Pertimbangkan intubasi bila agitasi ekstrem" />
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
