@@ -9,7 +9,6 @@ import {
   type DownesParam,
 } from '../../utils/downes';
 import { REFERENCES } from '../../data/references';
-
 const PARAMS = Object.keys(DOWNES_PARAM_LABELS) as DownesParam[];
 
 const SEVERITY_TINT = {
@@ -115,10 +114,15 @@ export function DownesScore() {
 
       <Disclaimer />
       <div className="ios-card" style={{ padding: '12px 14px' }}>
-        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
-          <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES.downes1970.id}]</span>{' '}
-          {REFERENCES.downes1970.citation}
-        </p>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
+        <ol style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 0, listStyle: 'none', margin: 0 }}>
+          {(['downes1970'] as const).map((key) => (
+            <li key={key} style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+              <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[key].id}]</span>{' '}
+              {REFERENCES[key].citation}
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );

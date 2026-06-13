@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
+import { Cite } from '../Citation';
 import { WEANING_CRITERIA, type WeaningCriterion } from '../../utils/vitalSigns';
+import { REFERENCES } from '../../data/references';
 
 const CATEGORY_LABELS: Record<WeaningCriterion['category'], string> = {
   klinis:     'Klinis',
@@ -39,6 +41,12 @@ export function WeaningChecklist() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 20px 4px' }}>
+        <h2 className="ios-title-3">Weaning Checklist</h2>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>
+          Kriteria weaning ventilator mekanik <Cite source="pals2020" />.
+        </p>
+      </div>
       {/* Progress card */}
       <div className="ios-card" style={{ padding: '14px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
@@ -175,6 +183,17 @@ export function WeaningChecklist() {
       </div>
 
       <Disclaimer />
+      <div className="ios-card" style={{ padding: '12px 14px' }}>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
+        <ol style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 0, listStyle: 'none', margin: 0 }}>
+          {(['pals2020'] as const).map((key) => (
+            <li key={key} style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+              <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[key].id}]</span>{' '}
+              {REFERENCES[key].citation}
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }
