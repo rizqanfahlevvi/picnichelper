@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { usePatientStore } from '../../store/patientStore';
@@ -47,7 +48,7 @@ export function RenalCalculator() {
       {tab === 'pcr'  && <PcrSection />}
       {tab === 'uo'   && <UoSection />}
 
-      <TheoryAccordion />
+      <TheoryAccordion sections={RENAL_THEORY} />
       <Disclaimer />
 
       <div className="ios-card" style={{ padding: '12px 14px' }}>
@@ -117,32 +118,64 @@ function EgfrSection() {
       {error && <div className="ios-warn ios-warn--danger"><AlertTriangle size={15} /><span>{error}</span></div>}
 
       {result && (
-        <div className="ios-card" style={{ overflow: 'hidden' }}>
-          <div style={{ padding: '14px 16px', background: `color-mix(in srgb, ${result.color} 10%, var(--bg-tertiary))`, borderBottom: '0.5px solid var(--separator)' }}>
-            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 4 }}>eGFR</p>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 44, fontWeight: 700, color: result.color }}>{result.egfr}</span>
-              <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>mL/min/1.73m²</span>
+        <>
+          <div className="ios-card" style={{ overflow: 'hidden' }}>
+            <div style={{ padding: '14px 16px', background: `color-mix(in srgb, ${result.color} 10%, var(--bg-tertiary))`, borderBottom: '0.5px solid var(--separator)' }}>
+              <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 4 }}>eGFR</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 44, fontWeight: 700, color: result.color }}>{result.egfr}</span>
+                <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>mL/min/1.73m²</span>
+              </div>
             </div>
+            <div style={{ padding: '12px 16px' }}>
+              <span style={{
+                display: 'inline-block',
+                font: 'var(--type-caption-2)', fontWeight: 700,
+                color: result.color,
+                background: `color-mix(in srgb, ${result.color} 12%, transparent)`,
+                padding: '3px 10px', borderRadius: 'var(--r-pill)',
+              }}>{result.stageLabel}</span>
+            </div>
+            <CkdTable current={result.stage} />
           </div>
-          <div style={{ padding: '12px 16px' }}>
-            <span style={{
-              display: 'inline-block',
-              font: 'var(--type-caption-2)', fontWeight: 700,
-              color: result.color,
-              background: `color-mix(in srgb, ${result.color} 12%, transparent)`,
-              padding: '3px 10px', borderRadius: 'var(--r-pill)',
-            }}>{result.stageLabel}</span>
-            {(result.stage === 'G4' || result.stage === 'G5') && (
-              <p style={{ font: 'var(--type-footnote)', color: 'var(--sys-red)', marginTop: 8, lineHeight: 1.4 }}>
-                ⚠ Pertimbangkan konsultasi nefrologi pediatri segera.
-              </p>
-            )}
-          </div>
-          <CkdTable current={result.stage} />
-        </div>
+          <EgfrGuidanceCard stage={result.stage} />
+        </>
       )}
     </>
+  );
+}
+
+function EgfrGuidanceCard({ stage }: { stage: string }) {
+  const guidance: Record<string, { monitor: string; referral: string; notes: string }> = {
+    G1:  { monitor: 'Tahunan bila ada faktor risiko CKD', referral: 'Tidak perlu kecuali ada proteinuria/hematuria persisten', notes: 'G1 = CKD hanya bila ada tanda kerusakan ginjal lain ≥ 3 bulan (proteinuria, kelainan imaging, dll.)' },
+    G2:  { monitor: 'Tiap 6–12 bulan', referral: 'Tidak rutin; pertimbangkan bila ada proteinuria atau penyebab tidak jelas', notes: 'Pastikan ada tanda kerusakan ginjal untuk diagnosis CKD G2' },
+    G3a: { monitor: 'Tiap 3–6 bulan: eGFR, urinalisis, TD, elektrolit', referral: 'Pertimbangkan rujuk nefrologi pediatri untuk evaluasi penyebab', notes: 'Pantau: anemia (EPO ↓), asidosis metabolik, Ca/P, PTH' },
+    G3b: { monitor: 'Tiap 3 bulan: eGFR, elektrolit, Ca, P, PTH, CBC', referral: 'Rujuk nefrologi pediatri', notes: 'Mulai pertimbangkan: suplemen NaHCO₃ (asidosis), EPO (anemia), restriksi fosfor' },
+    G4:  { monitor: 'Tiap 1–3 bulan: semua parameter CKD', referral: 'Rujuk nefrologi SEGERA — persiapkan terapi pengganti ginjal', notes: 'Konseling RRT (dialisis/transplantasi), akses vaskular, evaluasi transplantasi' },
+    G5:  { monitor: 'Tiap kunjungan: semua parameter + berat badan + TD', referral: 'Nefrologi segera — RRT aktif atau direncanakan', notes: 'Target Hb 11–12 g/dL, bikarbonat > 22, Ca×P < 55 mg²/dL²' },
+  };
+  const g = guidance[stage];
+  if (!g) return null;
+  return (
+    <div className="ios-card" style={{ overflow: 'hidden' }}>
+      <div style={{ padding: '10px 16px 8px', borderBottom: '0.5px solid var(--separator)' }}>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>Tindak Lanjut {stage}</p>
+      </div>
+      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <GRow label="Frekuensi monitoring" value={g.monitor} />
+        <GRow label="Rujukan nefrologi" value={g.referral} />
+        <GRow label="Catatan klinis" value={g.notes} />
+      </div>
+    </div>
+  );
+}
+
+function GRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+      <span style={{ flexShrink: 0, font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-primary)', minWidth: 130 }}>{label}</span>
+      <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', lineHeight: 1.4 }}>{value}</span>
+    </div>
   );
 }
 
@@ -217,6 +250,7 @@ function PcrSection() {
       {error && <div className="ios-warn ios-warn--danger"><AlertTriangle size={15} /><span>{error}</span></div>}
 
       {result && (
+        <>
         <div className="ios-card" style={{ overflow: 'hidden' }}>
           <div style={{ padding: '14px 16px', background: `color-mix(in srgb, ${result.color} 10%, var(--bg-tertiary))`, borderBottom: '0.5px solid var(--separator)' }}>
             <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 4 }}>Rasio Protein:Kreatinin</p>
@@ -253,8 +287,41 @@ function PcrSection() {
             ))}
           </div>
         </div>
+        <PcrGuidanceCard ratioClass={result.ratioClass} />
+        </>
       )}
     </>
+  );
+}
+
+function PcrGuidanceCard({ ratioClass }: { ratioClass: string }) {
+  return (
+    <div className="ios-card" style={{ overflow: 'hidden' }}>
+      <div style={{ padding: '10px 16px 8px', borderBottom: '0.5px solid var(--separator)' }}>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>Langkah Selanjutnya</p>
+      </div>
+      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {ratioClass === 'normal' && (
+          <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)' }}>PCR normal. Ulangi bila ada gejala klinis (edema, hematuria). Pertimbangkan repeat tiap 6–12 bulan bila ada faktor risiko CKD.</p>
+        )}
+        {ratioClass === 'mild' && <>
+          <GRow label="Evaluasi" value="Urinalisis lengkap (mikroskopi urin), tekanan darah, eGFR" />
+          <GRow label="Penyebab" value="UTI, demam, olahraga berat, orthostatic proteinuria — singkirkan terlebih dahulu" />
+          <GRow label="Follow-up" value="Ulangi PCR dalam 1–3 bulan, konfirmasi persistensi" />
+        </>}
+        {ratioClass === 'significant' && <>
+          <GRow label="Evaluasi urgent" value="Urinalisis + mikroskopi, eGFR, albumin serum, C3/C4, ANA, HBsAg, anti-dsDNA" />
+          <GRow label="Diagnosis banding" value="Glomerulonefritis (IgA, FSGS, membranous), CKD dengan proteinuria, lupus nefritis" />
+          <GRow label="Tindakan" value="Rujuk nefrologi pediatri; pertimbangkan biopsi ginjal bila proteinuria persisten > 3–6 bulan" />
+        </>}
+        {ratioClass === 'nephrotic' && <>
+          <GRow label="Sindrom nefrotik" value="PCR ≥ 2.0 + edema + hipoalbuminemia (< 2.5 g/dL) + hiperlipidemia" />
+          <GRow label="Evaluasi segera" value="Albumin serum, lipid, eGFR, elektrolit; C3/C4; TB screening (sebelum steroid); varicella status" />
+          <GRow label="Tatalaksana" value="Rujuk nefrologi segera. Steroid (prednisolon) adalah terapi awal standar anak" />
+          <GRow label="Komplikasi" value="Peritonitis spontan (pneumococcal), trombosis vena, infeksi — waspadai tanda bahaya" />
+        </>}
+      </div>
+    </div>
   );
 }
 
@@ -286,23 +353,44 @@ function UoSection() {
       </div>
 
       {rateResult && (
-        <div className="ios-card" style={{ overflow: 'hidden' }}>
-          <div style={{ padding: '14px 16px', background: `color-mix(in srgb, ${rateResult.color} 10%, var(--bg-tertiary))`, borderBottom: '0.5px solid var(--separator)' }}>
-            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 4 }}>Urine Output</p>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 44, fontWeight: 700, color: rateResult.color }}>{rateResult.rate.toFixed(2)}</span>
-              <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>mL/kg/jam</span>
+        <>
+          <div className="ios-card" style={{ overflow: 'hidden' }}>
+            <div style={{ padding: '14px 16px', background: `color-mix(in srgb, ${rateResult.color} 10%, var(--bg-tertiary))`, borderBottom: '0.5px solid var(--separator)' }}>
+              <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 4 }}>Urine Output</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 44, fontWeight: 700, color: rateResult.color }}>{rateResult.rate.toFixed(2)}</span>
+                <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>mL/kg/jam</span>
+              </div>
+            </div>
+            <div style={{ padding: '12px 16px' }}>
+              <span style={{
+                display: 'inline-block',
+                font: 'var(--type-caption-2)', fontWeight: 700, color: rateResult.color,
+                background: `color-mix(in srgb, ${rateResult.color} 12%, transparent)`,
+                padding: '3px 10px', borderRadius: 'var(--r-pill)',
+              }}>{rateResult.label}</span>
             </div>
           </div>
-          <div style={{ padding: '12px 16px' }}>
-            <span style={{
-              display: 'inline-block',
-              font: 'var(--type-caption-2)', fontWeight: 700, color: rateResult.color,
-              background: `color-mix(in srgb, ${rateResult.color} 12%, transparent)`,
-              padding: '3px 10px', borderRadius: 'var(--r-pill)',
-            }}>{rateResult.label}</span>
-          </div>
-        </div>
+          {rateResult.uoClass === 'oliguria' && (
+            <div className="ios-card" style={{ overflow: 'hidden' }}>
+              <div style={{ padding: '10px 16px 8px', borderBottom: '0.5px solid var(--separator)' }}>
+                <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>Pendekatan Oliguria / Anuria</p>
+              </div>
+              <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <GRow label="Langkah 1: Singkirkan postrenal" value="Palpasi/perkusi vesika urinaria; USG (hidronefrosis, distensi VU); cek kateter tersumbat" />
+                <GRow label="Langkah 2: Bedakan prerenal vs renal" value="Urea:Cr ratio > 20 → prerenal; FeNa < 1% → prerenal; Na urin < 20 mEq/L → prerenal" />
+                <GRow label="Langkah 3: Fluid challenge" value="Bila prerenal: NaCl 0.9% 10–20 mL/kg IV dalam 15–30 menit, evaluasi UO 1–2 jam setelah" />
+                <GRow label="Bila tidak responsif" value="AKI renal intrinsik: hentikan nefrotoksin, support hemodinamik, konsul nefrologi" />
+                <GRow label="Indikasi dialisis" value="Uremia simtomatik, overload cairan refrakter, hiperkalemia refrakter, asidosis berat" />
+              </div>
+              <div style={{ padding: '10px 16px', background: 'color-mix(in srgb, var(--sys-orange) 10%, var(--bg-tertiary))' }}>
+                <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', fontWeight: 600, lineHeight: 1.5 }}>
+                  ⚠ Anuria total (&lt; 0.1 mL/kg/jam selama &gt; 6 jam) atau oliguria yang tidak respons fluid challenge → konsul nefrologi segera
+                </p>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <div className="ios-card" style={{ padding: '12px 14px' }}>
@@ -351,7 +439,7 @@ function InputRow({ label, unit, value, onChange, placeholder, type, readOnly }:
   );
 }
 
-const RENAL_THEORY = [
+const RENAL_THEORY: TheorySection[] = [
   {
     title: 'eGFR & Formula Schwartz',
     content: `Bedside Schwartz 2009 (formula yang diperbarui):
@@ -394,46 +482,64 @@ Postrenal:
   },
   {
     title: 'Evaluasi & Monitoring CKD',
-    content: `Evaluasi dasar:
+    content: `Evaluasi dasar semua CKD:
 • Urinalisis + protein:kreatinin urin (PCR)
-• Ureum, kreatinin, eGFR
+• Ureum, kreatinin, eGFR (tiap 3–12 bulan sesuai stage)
 • Elektrolit: Na, K, bikarbonat, Ca, P
-• CBC: anemia normsokromik normositik (EPO ↓)
-• Parathyroid hormone (PTH) bila G3+
-• Tekanan darah (HTN tersering pada CKD anak)
-• USG ginjal: ukuran, korteks, obstruksi
+• CBC: anemia normokromik normositik (EPO ↓)
+• PTH bila G3+; hemoglobin glycated (HbA1c) bila DM
+• Tekanan darah tiap kunjungan (HTN tersering pada CKD)
+• USG ginjal: ukuran, echogenisitas, obstruksi
 
-Target monitoring (CKD G3+):
-• TD: < 50th percentile usia/tinggi
-• Hb: 11–12 g/dL (pertimbangkan EPO)
-• Bikarbonat: > 22 mEq/L (suplemen NaHCO3 bila perlu)
-• Ca × P product: < 55 mg²/dL² (risiko kalsifikasi)`,
+Target terapi CKD G3+:
+• TD: < 50th persentil usia/tinggi (kurang dari target dewasa)
+• Hb: 11–12 g/dL; pertimbangkan EPO bila Hb < 10 g/dL
+• Bikarbonat: > 22 mEq/L; suplemen NaHCO₃ bila di bawah
+• Ca×P product: < 55 mg²/dL²; batasi fosfor diet
+• Nutrisi: tidak restriksi protein pada anak (pertumbuhan)`,
+  },
+  {
+    title: 'AKI — Staging KDIGO & Tatalaksana',
+    content: `Staging AKI (KDIGO 2012):
+• Stage 1: Cr ×1.5–1.9 baseline atau naik ≥ 0.3 mg/dL dalam 48 jam, UO < 0.5 mL/kg/jam × 6–12 jam
+• Stage 2: Cr ×2.0–2.9 baseline, UO < 0.5 mL/kg/jam × ≥ 12 jam
+• Stage 3: Cr ×3.0 atau ≥ 4 mg/dL, UO < 0.3 mL/kg/jam × ≥ 24 jam, atau anuria ≥ 12 jam
+
+Prinsip tatalaksana:
+1. Optimalkan hemodinamik: MAP sesuai usia, pastikan euvolemia
+2. Hentikan nefrotoksin (AINS, aminoglikosida, kontras IV)
+3. Sesuaikan dosis semua obat yang terekskresi renal
+4. Nutrisi adekuat — jangan puasakan
+5. Monitor ketat: UO per jam, berat badan 2×/hari, elektrolit 12–24 jam
+
+Indikasi RRT (dialisis/CRRT):
+• Overload cairan refrakter ≥ 10–15% BB
+• Hiperkalemia refrakter (K > 6.5)
+• Asidosis metabolik berat refrakter (pH < 7.15)
+• Uremia simtomatik (ensefalopati, perikarditis)`,
+  },
+  {
+    title: 'Sindrom Nefrotik — Pendekatan Anak',
+    content: `Definisi:
+• Proteinuria masif (PCR ≥ 2.0 atau 40 mg/m²/jam)
+• Hipoalbuminemia (< 2.5 g/dL)
+• Edema
+• Hiperlipidemia (kompensasi sintesis albumin → lipid ↑)
+
+Idiopatik (tersering 90% anak):
+• Minimal Change Disease (MCD): anak 1–10 th, responsif steroid
+• FSGS: remaja, sering steroid-resisten
+
+Terapi awal (ISKDC protocol):
+• Prednisolon 60 mg/m²/hari (maks 60 mg) × 4–6 minggu
+• Kemudian taper selama 4–6 minggu
+• 90% MCD respons dalam 4 minggu → complete remission
+
+Komplikasi:
+• Peritonitis spontan (pneumococcal) — nyeri abdomen akut
+• Trombosis vena (kehilangan antitrombin III)
+• Infeksi (imunoglobulin hilang lewat urin)
+
+Sebelum mulai steroid: TB screening, varicella status, cek HBsAg`,
   },
 ];
-
-function TheoryAccordion() {
-  const [open, setOpen] = useState<number | null>(null);
-  return (
-    <div className="ios-card" style={{ overflow: 'hidden' }}>
-      <div style={{ padding: '10px 14px 8px' }}>
-        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>Panduan Klinis</p>
-      </div>
-      {RENAL_THEORY.map((s, i) => (
-        <div key={i} style={{ borderTop: '0.5px solid var(--separator)' }}>
-          <button
-            onClick={() => setOpen(open === i ? null : i)}
-            style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 14px', background: 'none', border: 'none', cursor: 'pointer', minHeight: 'var(--hit)' }}
-          >
-            <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', textAlign: 'left' }}>{s.title}</span>
-            {open === i ? <ChevronUp size={16} color="var(--label-tertiary)" /> : <ChevronDown size={16} color="var(--label-tertiary)" />}
-          </button>
-          {open === i && (
-            <div style={{ padding: '0 14px 14px' }}>
-              <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>{s.content}</p>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}

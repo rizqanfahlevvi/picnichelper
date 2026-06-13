@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { usePatientStore } from '../../store/patientStore';
 import {
   interpretBp,
@@ -90,9 +91,10 @@ export function BloodPressureCalculator() {
       {error && <div className="ios-warn ios-warn--danger"><AlertTriangle size={15} /><span>{error}</span></div>}
 
       {result && <BpResultCard result={result} sbp={Number(sbp)} dbp={Number(dbp)} />}
+      {result && <BpManagementCard category={result.overallCategory} />}
 
       <NormalRangeCard />
-      <TheoryAccordion />
+      <TheoryAccordion sections={BP_THEORY} />
       <Disclaimer />
 
       <div className="ios-card" style={{ padding: '12px 14px' }}>
@@ -214,6 +216,103 @@ function BpDetailCell({ label, value, category, borderRight }: {
   );
 }
 
+function BpManagementCard({ category }: { category: BpCategory }) {
+  if (category === 'normal') return null;
+
+  return (
+    <div className="ios-card" style={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <div style={{ padding: '10px 16px 8px', borderBottom: '0.5px solid var(--separator)' }}>
+        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
+          Pendekatan Klinis
+        </p>
+      </div>
+
+      {category === 'elevated' && (
+        <div style={{ padding: '12px 16px' }}>
+          <p style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', marginBottom: 8 }}>
+            TD Meningkat (Elevated) — Lifestyle dulu
+          </p>
+          <Step n={1} text="Konfirmasi: ukur ulang ≥ 3 kali kunjungan berbeda" />
+          <Step n={2} text="Singkirkan white coat HTN: ABPM (ambulatory BP monitoring) bila diperlukan" />
+          <Step n={3} text="Modifikasi gaya hidup: diet rendah garam (< 2.3 g/hari), olahraga aerobik 3–5×/minggu, pertahankan BB ideal" />
+          <Step n={4} text="Follow-up 6 bulan; belum perlu obat antihipertensi" />
+          <Step n={5} text="Periksa: IMT, riwayat keluarga HTN, aktivitas fisik, pola makan" />
+        </div>
+      )}
+
+      {category === 'stage1' && (
+        <div style={{ padding: '12px 16px' }}>
+          <p style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', marginBottom: 8 }}>
+            HTN Stage 1 — Evaluasi + Gaya Hidup
+          </p>
+          <Step n={1} text="Konfirmasi dengan ABPM; singkirkan white coat HTN" />
+          <Step n={2} text="Evaluasi target organ: Echo (LVH?), funduskopi, kreatinin/eGFR, urinalisis" />
+          <Step n={3} text="Modifikasi gaya hidup intensif 6–12 bulan sebelum memulai obat" />
+          <Step n={4} text="Pertimbangkan obat LEBIH AWAL bila: ada target organ damage, DM, CKD, atau simtomatik" />
+          <InfoItem label="Evaluasi laboratorium" value="Urinalisis, PCR urin, kreatinin/eGFR, elektrolit, lipid, gula darah, USG ginjal" />
+          <InfoItem label="Obat lini 1 (bila perlu)" value="ACEi/ARB (terutama bila CKD/proteinuria), CCB amlodipin, atau tiazid" />
+        </div>
+      )}
+
+      {category === 'stage2' && (
+        <div style={{ padding: '12px 16px' }}>
+          <p style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', marginBottom: 8 }}>
+            HTN Stage 2 — Evaluasi Segera + Obat
+          </p>
+          <Step n={1} text="Evaluasi segera: singkirkan penyebab sekunder (penyakit ginjal, koarktasio, endokrin)" />
+          <Step n={2} text="Pemeriksaan laboratorium lengkap + USG ginjal + Echo jantung" />
+          <Step n={3} text="Mulai obat antihipertensi bersamaan dengan modifikasi gaya hidup" />
+          <Step n={4} text="Rujuk nefrologi/kardiologi pediatri bila penyebab sekunder ditemukan atau tidak responsif" />
+          <InfoItem label="Obat lini 1" value="ACEi atau ARB (jangan kombinasikan keduanya), CCB, atau tiazid — pilih berdasarkan komorbiditas" />
+          <InfoItem label="Target TD" value="< 90th percentile usia/tinggi (anak) atau < 130/80 (remaja ≥ 13 th)" />
+        </div>
+      )}
+
+      {category === 'htn_crisis' && (
+        <div style={{ padding: '12px 16px', background: 'color-mix(in srgb, var(--sys-red) 5%, var(--bg-tertiary))' }}>
+          <p style={{ font: 'var(--type-subheadline)', fontWeight: 700, color: 'var(--sys-red)', marginBottom: 8 }}>
+            🚨 Krisis Hipertensi — Tindakan Segera
+          </p>
+          <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
+            Bedakan: Emergensi vs Urgensi
+          </p>
+          <InfoItem label="Urgensi HTN" value="TD sangat tinggi TANPA gejala target organ — penurunan bertahap oral dalam 24–48 jam" />
+          <InfoItem label="Emergensi HTN" value="TD sangat tinggi + gejala (ensefalopati, kejang, gagal jantung, AKI akut) — IV segera" />
+          <div style={{ height: '0.5px', background: 'var(--separator)', margin: '10px 0' }} />
+          <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
+            Protokol Emergensi (IV)
+          </p>
+          <Step n={1} text="Pasang akses IV + monitor arterial line (bila memungkinkan)" />
+          <Step n={2} text="Target: turunkan MAP 25% dalam 1 jam pertama — jangan terlalu cepat (risiko iskemia serebral)" />
+          <Step n={3} text="Lanjutkan penurunan bertahap dalam 24–48 jam berikutnya ke target normal" />
+          <Step n={4} text="Cari dan tangani penyebab: hipertensi renovaskular, glomerulonefritis akut, feokromositoma" />
+          <InfoItem label="Pilihan obat IV" value="Nicardipine infus (CCB), Labetalol IV (bila tachycardia, pilihan pertama banyak center)" />
+          <InfoItem label="Hindari" value="Penurunan TD > 25% dalam 1 jam pertama — risiko infark otak, kebutaan, AKI" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Step({ n, text }: { n: number; text: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+      <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: '50%', background: 'var(--accent)', color: '#fff', font: 'var(--type-caption-2)', fontWeight: 700, display: 'grid', placeItems: 'center' }}>{n}</span>
+      <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.5, marginTop: 1 }}>{text}</p>
+    </div>
+  );
+}
+
+function InfoItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 6, marginTop: 4, alignItems: 'flex-start' }}>
+      <span style={{ flexShrink: 0, font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-primary)', minWidth: 120 }}>{label}</span>
+      <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', lineHeight: 1.4 }}>{value}</span>
+    </div>
+  );
+}
+
 function NormalRangeCard() {
   return (
     <div className="ios-card" style={{ padding: '12px 14px' }}>
@@ -238,7 +337,21 @@ function NormalRangeCard() {
   );
 }
 
-const THEORY_SECTIONS = [
+const BP_THEORY: TheorySection[] = [
+  {
+    title: 'Cara Pengukuran yang Benar',
+    content: `Pengukuran yang tidak tepat adalah sumber kesalahan terbesar dalam diagnosis HTN anak.
+
+Syarat:
+• Pasien duduk tenang selama 5 menit sebelum pengukuran
+• Lengan setinggi jantung, tidak menyilang kaki
+• Ukuran manset: lebar 40% lingkar lengan atas, panjang melingkari 80–100%
+• Manset terlalu kecil → overestimasi TD; terlalu besar → underestimasi
+
+Konfirmasi diagnosis:
+• HTN harus dikonfirmasi pada ≥ 3 kunjungan berbeda
+• Pertimbangkan ABPM (ambulatory blood pressure monitoring) untuk menyingkirkan white coat HTN`,
+  },
   {
     title: 'Definisi & Staging (AAP 2017)',
     content: `Anak 1–12 tahun (berdasarkan persentil usia/jenis kelamin/tinggi):
@@ -294,47 +407,45 @@ Laboratorium awal (HTN stage 1):
 • Echo jantung bila stage 2`,
   },
   {
-    title: 'Tatalaksana',
-    content: `HTN non-darurat (stage 1–2, tanpa gejala):
-→ Modifikasi gaya hidup dulu (6–12 bulan): diet DASH, kurangi garam, olahraga
-→ Obat bila: target organ damage, HTN simtomatik, DM, CKD, atau no response
+    title: 'Tatalaksana Bertahap',
+    content: `Elevated (90th–95th persentil):
+→ Modifikasi gaya hidup saja: diet DASH, kurangi garam (< 2.3 g/hari), olahraga aerobik ≥ 30 mnt 3–5×/minggu, pertahankan IMT normal
+→ Follow-up 6 bulan; jika tidak membaik → evaluasi seperti Stage 1
 
-Obat lini pertama (anak):
-• ACEi / ARB (terutama bila CKD/proteinuria): lisinopril, enalapril
-• CCB amlodipin (anak > 6 tahun): aman, efektif
-• Tiazid (bila hipervolemia)
-• Beta-blocker (bila komorbid aritmia/migren)
+HTN Stage 1 (95th–99th persentil):
+→ Lifestyle 6–12 bulan dahulu
+→ Mulai obat bila: target organ damage, DM, CKD, atau tidak ada respons lifestyle
+→ Obat lini 1: ACEi/ARB (CKD/proteinuria), CCB amlodipin, tiazid
 
-Krisis Hipertensi:
-→ Urgensi: penurunan bertahap 25% dalam 8 jam, oral OK
-→ Emergensi (ensefalopati, LVF, AKI): IV nicardipine, labetalol
-→ Target: turunkan 25% MAP dalam 1 jam pertama, lanjutkan bertahap`,
+HTN Stage 2 (> 99th persentil + 5 mmHg):
+→ Obat segera + lifestyle bersamaan
+→ Singkirkan penyebab sekunder
+→ Rujuk bila tidak responsif atau penyebab sekunder ditemukan
+
+Krisis HTN Emergensi:
+→ IV nicardipine (drip) atau labetalol IV
+→ Turunkan MAP 25% dalam 1 jam pertama — jangan lebih cepat
+→ Lanjutkan koreksi bertahap 24–48 jam`,
+  },
+  {
+    title: 'Penyebab Sekunder & Evaluasi',
+    content: `Penyebab sekunder lebih sering pada anak (vs dewasa):
+
+Bayi & anak kecil:
+• Stenosis arteri renalis (paling sering neonatus/bayi)
+• Koarktasio aorta (periksa TD 4 ekstremitas)
+• Penyakit ginjal parenkim
+
+Anak & remaja:
+• Penyakit ginjal parenkim (GN akut, CKD, reflux nephropathy)
+• HTN renovaskular
+• Aldosteronisme primer (K rendah, alkalosis metabolik)
+• Sindrom Cushing (berat badan naik, striae, moon face)
+• Feokromositoma (headache episodik, berkeringat, palpitasi)
+• HTN esensial (makin sering pada anak obese > 6 tahun)
+
+Evaluasi awal:
+Urinalisis + PCR urin, kreatinin/eGFR, elektrolit, lipid, gula darah, USG ginjal
+Tambahan bila Stage 2: Echo jantung, renin/aldosteron, metanefrin urin`,
   },
 ];
-
-function TheoryAccordion() {
-  const [open, setOpen] = useState<number | null>(null);
-  return (
-    <div className="ios-card" style={{ overflow: 'hidden' }}>
-      <div style={{ padding: '10px 14px 8px' }}>
-        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>Panduan Klinis</p>
-      </div>
-      {THEORY_SECTIONS.map((s, i) => (
-        <div key={i} style={{ borderTop: '0.5px solid var(--separator)' }}>
-          <button
-            onClick={() => setOpen(open === i ? null : i)}
-            style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 14px', background: 'none', border: 'none', cursor: 'pointer', minHeight: 'var(--hit)' }}
-          >
-            <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', textAlign: 'left' }}>{s.title}</span>
-            {open === i ? <ChevronUp size={16} color="var(--label-tertiary)" /> : <ChevronDown size={16} color="var(--label-tertiary)" />}
-          </button>
-          {open === i && (
-            <div style={{ padding: '0 14px 14px' }}>
-              <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>{s.content}</p>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
