@@ -147,13 +147,15 @@ export function AppLayout() {
             aria-expanded={moreOpen}
           >
             <span style={{
-              display: 'inline-flex',
-              transition: 'transform 260ms var(--ease-out)',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              width: 48, height: 28, borderRadius: 14,
+              background: moreOpen ? 'rgba(50,173,230,0.15)' : 'transparent',
+              transition: 'background 180ms, transform 260ms var(--ease-out)',
               transform: moreOpen ? 'rotate(90deg)' : 'none',
             }}>
-              <MenuIcon size={25} strokeWidth={moreOpen ? 2.2 : 1.85} />
+              <MenuIcon size={22} strokeWidth={moreOpen ? 2.2 : 1.85} />
             </span>
-            <span>Menu</span>
+            <span style={{ fontWeight: moreOpen ? 700 : 500 }}>Menu</span>
           </button>
         </nav>
       </div>
@@ -312,8 +314,21 @@ function TabItem({ item }: { item: NavItem }) {
       end={item.to === '/'}
       className={({ isActive }) => `ios-tab${isActive ? ' is-active' : ''}`}
     >
-      <Icon size={25} strokeWidth={1.85} />
-      <span>{item.tabLabel ?? item.shortLabel ?? item.label}</span>
+      {({ isActive }) => (
+        <>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            width: 48, height: 28, borderRadius: 14,
+            background: isActive ? 'rgba(50,173,230,0.15)' : 'transparent',
+            transition: 'background 180ms',
+          }}>
+            <Icon size={22} strokeWidth={isActive ? 2.2 : 1.85} />
+          </span>
+          <span style={{ fontWeight: isActive ? 700 : 500 }}>
+            {item.tabLabel ?? item.shortLabel ?? item.label}
+          </span>
+        </>
+      )}
     </NavLink>
   );
 }
