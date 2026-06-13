@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, RotateCcw } from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { BOTTOM_PRIMARY, SHEET_ITEMS, MenuIcon } from './navItems';
 import type { NavItem } from './navItems';
+import { usePatientStore } from '../store/patientStore';
 
 const PAGE_TITLES: Record<string, string> = {
   '/':             'Home',
@@ -22,6 +23,13 @@ export function AppLayout() {
 
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [moreOpen, setMoreOpen] = useState(false);
+
+  const { weightKg, ageYears, heightCm, nama, reset } = usePatientStore();
+  const hasPatientData = weightKg !== '' || ageYears !== '' || heightCm !== '' || nama !== '';
+
+  function handleReset() {
+    if (confirm('Hapus semua data pasien?')) reset();
+  }
 
   /* Close More panel on navigation */
   useEffect(() => { setMoreOpen(false); }, [pathname]);
@@ -116,6 +124,21 @@ export function AppLayout() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             {!isHome && (
               <span className="ios-nav-title" style={{ marginRight: 4 }}>{title}</span>
+            )}
+            {hasPatientData && (
+              <button
+                onClick={handleReset}
+                title="Reset data pasien"
+                style={{
+                  width: 32, height: 32, borderRadius: '50%',
+                  border: 'none', cursor: 'pointer',
+                  background: 'var(--fill-secondary)',
+                  color: 'var(--label-secondary)',
+                  display: 'grid', placeItems: 'center',
+                }}
+              >
+                <RotateCcw size={15} strokeWidth={2} />
+              </button>
             )}
             <ThemeToggle />
           </div>
