@@ -145,7 +145,7 @@ export function AppLayout() {
         </header>
 
         {/* Scrollable content with fade transition */}
-        <main style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+        <main style={{ flex: 1, overflowY: 'auto', minHeight: 0, overscrollBehaviorY: 'none' }}>
           <div style={{
             maxWidth: 640,
             margin: '0 auto',

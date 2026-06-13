@@ -80,8 +80,8 @@
 }
 
 /* ── Base ────────────────────────────────────────────────────────────────── */
-html, body, #root { height: 100%; }
-body { margin: 0; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+html, body, #root { height: 100%; overscroll-behavior-y: none; }
+body { margin: 0; -webkit-tap-highlight-color: transparent; }
 button, a[role], input, select { touch-action: manipulation; }
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
