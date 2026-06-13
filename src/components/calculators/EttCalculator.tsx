@@ -1,3 +1,4 @@
+import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Cite } from '../Citation';
 import { Disclaimer } from '../Disclaimer';
@@ -8,6 +9,7 @@ import {
   ETT_AGE_MIN_YEARS,
   ETT_AGE_MAX_YEARS,
 } from '../../utils/ett';
+import { ettDepthByAge, ettDepthByTubeId, ettDepthByWeight, ETT_DEPTH_AGE_MIN_YEARS } from '../../utils/ettDepth';
 import { REFERENCES } from '../../data/references';
 
 const NEONATE_WEIGHT_MIN_G = 300;
@@ -52,6 +54,8 @@ function ChildResult({ age }: { age: string }) {
   }
 
   const { cuffed, uncuffed } = ettSizeByAge(ageNum);
+  const depthByAge = ageNum >= ETT_DEPTH_AGE_MIN_YEARS ? ettDepthByAge(ageNum) : null;
+  const depthByTube = ettDepthByTubeId(cuffed);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -62,15 +66,39 @@ function ChildResult({ age }: { age: string }) {
         </div>
       )}
       <div className="ios-card">
+        {/* ── Ukuran ID ── */}
+        <SectionLabel>Ukuran ID <Cite source="duracher2008" /><Cite source="cole1957" /></SectionLabel>
         <div className="ios-result-grid">
-          <ResultTile label="Cuffed" cite="duracher2008" value={cuffed} note="usia/4 + 3.5" preferred />
-          <ResultTile label="Uncuffed" cite="cole1957" value={uncuffed} note="usia/4 + 4" />
+          <ResultTile label="Cuffed" value={cuffed} unit="mm" note="usia/4 + 3.5" preferred />
+          <ResultTile label="Uncuffed" value={uncuffed} unit="mm" note="usia/4 + 4" />
         </div>
-        <p style={{ padding: '10px 14px 12px', font: 'var(--type-footnote)', color: 'var(--label-secondary)', borderTop: '0.5px solid var(--separator)' }}>
-          AHA PALS 2020 lebih menyukai cuffed pada bayi &amp; anak{' '}
-          <Cite source="pals2020" />. Selalu sediakan ukuran ± 0.5 mm.
+        <p style={{ padding: '8px 14px', font: 'var(--type-footnote)', color: 'var(--label-secondary)', borderTop: '0.5px solid var(--separator)' }}>
+          AHA PALS 2020 menyukai cuffed pada bayi &amp; anak <Cite source="pals2020" />. Sediakan ± 0.5 mm.
         </p>
+
+        {/* ── Kedalaman Insersi ── */}
+        <div style={{ borderTop: '0.5px solid var(--separator)' }}>
+          <SectionLabel>Kedalaman Insersi <Cite source="pals2020" /></SectionLabel>
+          <div className="ios-result-grid">
+            {depthByAge
+              ? <ResultTile label="Per Usia" value={depthByAge} unit="cm" note="usia/2 + 12" />
+              : <div className="ios-result tint-resp" style={{ opacity: 0.5 }}>
+                  <div className="ios-result-label">Per Usia</div>
+                  <div className="ios-result-note">Usia &lt; {ETT_DEPTH_AGE_MIN_YEARS} th</div>
+                </div>
+            }
+            <ResultTile label="Per Tube ID" value={depthByTube} unit="cm" note={`ID × 3 = ${cuffed} × 3`} />
+          </div>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ padding: '10px 14px 4px', font: 'var(--type-footnote)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
+      {children}
     </div>
   );
 }
@@ -101,31 +129,35 @@ function NeonateResult({ weight }: { weight: string }) {
     );
   }
 
+  const weightNum = Number(weight);
+  const depthByWeight = ettDepthByWeight(weightNum);
+
   return (
     <div className="ios-card">
+      <SectionLabel>Ukuran ID <Cite source="nrp8" /></SectionLabel>
       <div className="ios-result-grid">
-        <ResultTile label="ETT Uncuffed" cite="nrp8" value={row.sizeMm} note={row.gestation} />
+        <ResultTile label="ETT Uncuffed" value={row.sizeMm} unit="mm" note={row.gestation} />
       </div>
-      <p style={{ padding: '10px 14px 12px', font: 'var(--type-footnote)', color: 'var(--label-secondary)', borderTop: '0.5px solid var(--separator)' }}>
-        Berdasarkan tabel berat NRP 8th ed. <Cite source="nrp8" />
+      <p style={{ padding: '8px 14px', font: 'var(--type-footnote)', color: 'var(--label-secondary)', borderTop: '0.5px solid var(--separator)' }}>
+        Tabel berat NRP 8th ed. <Cite source="nrp8" />
       </p>
+      <div style={{ borderTop: '0.5px solid var(--separator)' }}>
+        <SectionLabel>Kedalaman Insersi <Cite source="nrp8" /></SectionLabel>
+        <div className="ios-result-grid">
+          <ResultTile label="Per Berat" value={depthByWeight} unit="cm" note={`${weightNum} kg + 6`} />
+        </div>
+      </div>
     </div>
   );
 }
 
-function ResultTile({
-  label, cite, value, note, preferred,
-}: {
-  label: string;
-  cite: keyof typeof REFERENCES;
-  value: number;
-  note: string;
-  preferred?: boolean;
+function ResultTile({ label, value, unit, note, preferred }: {
+  label: string; value: number; unit: string; note: string; preferred?: boolean;
 }) {
   return (
     <div className="ios-result tint-resp">
       <div className="ios-result-label">
-        {label} <Cite source={cite} />
+        {label}
         {preferred && (
           <span style={{
             marginLeft: 6, font: 'var(--type-caption-2)', fontWeight: 700,
@@ -136,7 +168,7 @@ function ResultTile({
       </div>
       <div>
         <span className="ios-result-value">{value.toFixed(1)}</span>
-        <span className="ios-result-unit">mm</span>
+        <span className="ios-result-unit">{unit}</span>
       </div>
       <div className="ios-result-note ios-mono">{note}</div>
     </div>

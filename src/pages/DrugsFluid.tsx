@@ -7,7 +7,6 @@ export function DrugsFluid() {
       <div style={{ padding: '24px 20px 8px' }}>
         <h1 className="ios-large-title">Drugs & Fluids</h1>
       </div>
-      <div className="ios-section"><span className="label">Data Pasien</span></div>
       <PatientInput />
       <div style={{ marginTop: 16 }}>
         <FluidCalculator />

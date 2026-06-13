@@ -81,9 +81,9 @@ function CompactCard({ onEdit }: { onEdit: () => void }) {
   }
 
   return (
-    <div style={{ margin: '0 16px', background: 'var(--bg-tertiary)', borderRadius: 'var(--r-card)', overflow: 'hidden', boxShadow: 'var(--shadow-1)' }}>
+    <div style={{ margin: '0 16px', background: 'var(--bg-tertiary)', borderRadius: 'var(--r-card)', overflow: 'hidden', boxShadow: 'var(--shadow-1)', maxWidth: '100%' }}>
       {(nama || gender) && (
-        <div style={{ padding: '8px 14px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ padding: '8px 14px 0', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', overflow: 'hidden' }}>
           {nama && <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)' }}>{nama}</span>}
           {gender && (
             <span style={{

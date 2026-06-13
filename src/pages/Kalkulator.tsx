@@ -25,7 +25,6 @@ export function Kalkulator() {
         <h1 className="ios-large-title">Kalkulator</h1>
       </div>
 
-      <div className="ios-section"><span className="label">Data Pasien</span></div>
       <PatientInput />
 
       {/* Scrollable pill tabs */}
