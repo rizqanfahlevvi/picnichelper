@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Wind, Zap, Droplets, FlaskConical, Beaker, ChevronLeft } from 'lucide-react';
+import { Wind, Zap, Droplets, FlaskConical, Beaker, HeartPulse, TestTube2, ChevronLeft } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { PatientInput } from '../components/PatientInput';
 import { EttCalculator } from '../components/calculators/EttCalculator';
@@ -7,8 +7,10 @@ import { EmergencyDrugsCalculator } from '../components/calculators/EmergencyDru
 import { SyringePumpCalculator } from '../components/calculators/SyringePumpCalculator';
 import { AbgInterpreter } from '../components/calculators/AbgInterpreter';
 import { ElectrolyteCalculator } from '../components/calculators/ElectrolyteCalculator';
+import { BloodPressureCalculator } from '../components/calculators/BloodPressureCalculator';
+import { RenalCalculator } from '../components/calculators/RenalCalculator';
 
-type CalcId = 'ett' | 'dosis' | 'syringe' | 'agd' | 'elektrolit';
+type CalcId = 'ett' | 'dosis' | 'syringe' | 'agd' | 'elektrolit' | 'bp' | 'renal';
 
 interface CalcCard {
   id: CalcId;
@@ -44,6 +46,16 @@ const CALCULATORS: CalcCard[] = [
     id: 'elektrolit', label: 'Elektrolit',
     desc: 'Na · K · Ca · Mg — koreksi & teori',
     icon: Beaker, tintClass: 'tint-renal', tintColor: 'var(--sys-mint)',
+  },
+  {
+    id: 'bp', label: 'Tekanan Darah',
+    desc: 'Klasifikasi HTN — AAP 2017',
+    icon: HeartPulse, tintClass: 'tint-vital', tintColor: 'var(--sys-red)',
+  },
+  {
+    id: 'renal', label: 'Kalkulator Renal',
+    desc: 'eGFR Schwartz · Protein:Cr · UO',
+    icon: TestTube2, tintClass: 'tint-renal', tintColor: 'var(--sys-mint)',
   },
 ];
 
@@ -90,6 +102,8 @@ export function Kalkulator() {
           {active === 'syringe'&& <SyringePumpCalculator />}
           {active === 'agd'       && <AbgInterpreter />}
           {active === 'elektrolit'&& <ElectrolyteCalculator />}
+          {active === 'bp'        && <BloodPressureCalculator />}
+          {active === 'renal'     && <RenalCalculator />}
         </div>
       )}
     </div>

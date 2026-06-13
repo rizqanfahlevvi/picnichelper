@@ -107,4 +107,25 @@ export const REFERENCES: Record<string, Reference> = {
       'Greenbaum LA. Electrolyte and Acid-Base Disorders. In: Kliegman RM, et al., eds. Nelson Textbook of Pediatrics. 21st ed. Philadelphia: Elsevier; 2020. ch 68.',
     verified: true,
   },
+  aap_bp2017: {
+    id: 15,
+    citation:
+      'Flynn JT, Kaelber DC, Baker-Smith CM, et al. Clinical Practice Guideline for Screening and Management of High Blood Pressure in Children and Adolescents. Pediatrics. 2017;140(3):e20171904.',
+    url: 'https://doi.org/10.1542/peds.2017-1904',
+    verified: true,
+  },
+  schwartz2009: {
+    id: 16,
+    citation:
+      'Schwartz GJ, Muñoz A, Schneider MF, et al. New equations to estimate GFR in children with CKD. J Am Soc Nephrol. 2009;20(3):629–637. (Bedside Schwartz: eGFR = 0.413 × tinggi_cm / Cr_mg/dL)',
+    url: 'https://doi.org/10.1681/ASN.2008030287',
+    verified: true,
+  },
+  kdigo2012: {
+    id: 17,
+    citation:
+      'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int Suppl. 2013;3(1):1–150.',
+    url: 'https://doi.org/10.1038/kisup.2012.73',
+    verified: true,
+  },
 };
