@@ -1,6 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { Cite } from '../Citation';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { usePatientStore } from '../../store/patientStore';
 import {
   ettSizeByAge,
@@ -9,6 +10,38 @@ import {
   ETT_AGE_MAX_YEARS,
 } from '../../utils/ett';
 import { REFERENCES } from '../../data/references';
+
+const ETT_THEORY: TheorySection[] = [
+  {
+    title: 'Pemilihan Ukuran ETT',
+    content: `Rumus Cole (1957) untuk anak ≥ 1 tahun:
+• Cuffed: usia/4 + 3.5 mm
+• Uncuffed: usia/4 + 4.0 mm
+
+AHA PALS 2020 merekomendasikan ETT cuffed pada bayi & anak karena mengurangi re-intubasi tanpa meningkatkan risiko edema subglotis. Sediakan ± 0.5 mm dari ukuran kalkulasi.`,
+  },
+  {
+    title: 'Kedalaman Insersi Orotrakeal',
+    content: `Panduan PALS 2020:
+• Per usia: usia/2 + 12 cm (untuk anak ≥ 2 tahun)
+• Per tube ID: ID × 3 cm dari bibir
+
+Konfirmasi posisi wajib dengan:
+1. Auskultasi bilateral (midaksila & epigastrium)
+2. Kapnografi end-tidal CO₂ kontinu
+3. Rontgen dada: ujung ETT 2–3 cm di atas karina`,
+  },
+  {
+    title: 'ETT Neonatus (NRP)',
+    content: `Berdasarkan tabel NRP 8th Edition (berat lahir):
+• < 1 kg    → ETT 2.5 mm, kedalaman ±6.5 cm
+• 1–2 kg   → ETT 3.0 mm, kedalaman ±7.5 cm
+• 2–3 kg   → ETT 3.5 mm, kedalaman ±8.5 cm
+• > 3 kg   → ETT 3.5–4.0 mm, kedalaman ±9.5 cm
+
+Rumus kedalaman: berat (kg) + 6 cm dari bibir.`,
+  },
+];
 
 const NEONATE_WEIGHT_MIN_G = 300;
 const NEONATE_WEIGHT_MAX_G = 6000;
@@ -29,6 +62,7 @@ export function EttCalculator() {
 
       {category === 'anak' ? <ChildResult age={ageYears} /> : <NeonateResult weight={weightKg} />}
 
+      <TheoryAccordion sections={ETT_THEORY} />
       <Disclaimer />
       <ReferenceFootnotes />
     </div>

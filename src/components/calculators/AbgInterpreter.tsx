@@ -1,8 +1,67 @@
 import { useState } from 'react';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { Cite } from '../Citation';
 import { interpretAbg, type AbgResult, type PrimaryDisorder } from '../../utils/abg';
 import { REFERENCES } from '../../data/references';
+
+const ABG_THEORY: TheorySection[] = [
+  {
+    title: 'Langkah Interpretasi Boston Rules',
+    content: `1. Tentukan pH: asidosis (< 7.35) atau alkalosis (> 7.45)
+2. Tentukan gangguan primer:
+   • Asidosis metabolik: HCO₃⁻ ↓
+   • Alkalosis metabolik: HCO₃⁻ ↑
+   • Asidosis respiratorik: PaCO₂ ↑
+   • Alkalosis respiratorik: PaCO₂ ↓
+3. Hitung kompensasi yang diharapkan (Boston Rules)
+4. Bandingkan nilai aktual vs ekspektasi → adekuat / kurang / berlebih`,
+  },
+  {
+    title: 'Boston Rules — Rumus Kompensasi',
+    content: `Asidosis Metabolik (Winter):
+  PaCO₂ = (HCO₃⁻ × 1.5) + 8 ± 2
+
+Alkalosis Metabolik:
+  PaCO₂ = (HCO₃⁻ × 0.7) + 21 ± 2
+
+Asidosis Respiratorik akut:
+  ΔHCO₃⁻ = ΔPaCO₂ × 0.1 (naik 1 per 10 PaCO₂)
+Asidosis Respiratorik kronik:
+  ΔHCO₃⁻ = ΔPaCO₂ × 0.35
+
+Alkalosis Respiratorik akut:
+  ΔHCO₃⁻ = ΔPaCO₂ × 0.2
+Alkalosis Respiratorik kronik:
+  ΔHCO₃⁻ = ΔPaCO₂ × 0.5`,
+  },
+  {
+    title: 'Anion Gap & Delta Ratio',
+    content: `Anion Gap (AG) = Na⁺ − (Cl⁻ + HCO₃⁻)
+Normal: 8–12 mEq/L. High AG (HAGMA) > 12.
+
+Penyebab HAGMA (MUDPILES):
+Methanol, Uremia, DKA/alkohol, Propilen glikol, INH/iron, Laktat, Ethylene glycol, Salisilat
+
+Delta Ratio = (AG − 12) / (24 − HCO₃⁻)
+• < 0.4 → NAGMA murni
+• 0.4–1 → HAGMA + NAGMA campuran
+• 1–2   → HAGMA murni
+• > 2   → HAGMA + Alkalosis metabolik`,
+  },
+  {
+    title: 'P/F Ratio & Klasifikasi ARDS Berlin 2012',
+    content: `P/F Ratio = PaO₂ / FiO₂ (FiO₂ sebagai desimal)
+
+Klasifikasi Berlin 2012 (dengan PEEP ≥ 5 cmH₂O):
+• ≥ 300 mmHg → Normal
+• 200–300     → ARDS Ringan
+• 100–200     → ARDS Sedang
+• < 100       → ARDS Berat
+
+Catatan: nilai P/F dapat lebih rendah pada FiO₂ tinggi akibat vasokonstriksi pulmonal hipoksik.`,
+  },
+];
 
 const DISORDER_LABEL: Record<PrimaryDisorder, string> = {
   metabolic_acidosis:    'Asidosis Metabolik',
@@ -97,6 +156,7 @@ export function AbgInterpreter() {
       {result && <AbgResultCard result={result} />}
 
       <NormalRangeCard />
+      <TheoryAccordion sections={ABG_THEORY} />
       <Disclaimer />
 
       <div className="ios-card" style={{ padding: '12px 14px' }}>

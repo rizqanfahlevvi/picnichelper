@@ -1,11 +1,61 @@
 import { useState } from 'react';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { usePatientStore } from '../../store/patientStore';
 import {
   calculateSyringePumpRate,
   SYRINGE_PUMP_DRUGS,
   type DoseTimeUnit,
 } from '../../utils/syringePump';
+
+const SYRINGE_THEORY: TheorySection[] = [
+  {
+    title: 'Cara Menghitung Kecepatan Infus',
+    content: `Rumus dasar syringe pump:
+Kecepatan (mL/jam) = Dosis (mcg/kg/mnt) × Berat (kg) × 60 ÷ Konsentrasi (mcg/mL)
+
+Atau untuk dosis per jam:
+Kecepatan (mL/jam) = Dosis (mcg/kg/jam) × Berat (kg) ÷ Konsentrasi (mcg/mL)
+
+Pastikan satuan konsisten sebelum memasukkan ke pompa.`,
+  },
+  {
+    title: 'Dopamin & Dobutamin',
+    content: `Dopamin (PALS 2020):
+• Dosis rendah: 2–5 mcg/kg/mnt → efek dopaminergik (renal, splanknik)
+• Dosis sedang: 5–10 mcg/kg/mnt → efek inotropik (β1)
+• Dosis tinggi: > 10 mcg/kg/mnt → efek vasokonstriktif (α1)
+
+Dobutamin:
+• 2–20 mcg/kg/mnt → inotropik positif, kronotropik ringan
+• Pilihan untuk disfungsi miokard + tekanan darah cukup`,
+  },
+  {
+    title: 'Epinefrin & Norepinefrin Drip',
+    content: `Epinefrin infus kontinu:
+• 0.01–1 mcg/kg/mnt
+• Dosis rendah: β-dominan (inotropik + kronotropik)
+• Dosis tinggi: α-dominan (vasokonstriksi)
+
+Norepinefrin infus kontinu:
+• 0.01–1 mcg/kg/mnt
+• Vasopressor utama syok sepsis (α1 dominan)
+• Monitoring tekanan darah invasif (arterial line) dianjurkan`,
+  },
+  {
+    title: 'Morfin, Fentanyl & Midazolam',
+    content: `Morfin infus:
+• 10–40 mcg/kg/jam (setelah loading 0.05–0.1 mg/kg bolus pelan)
+
+Fentanyl infus:
+• 1–5 mcg/kg/jam (lebih stabil hemodinamik dari morfin)
+• Pilihan pada pasien tidak stabil atau alergi morfin
+
+Midazolam infus:
+• 0.05–0.2 mg/kg/jam (1–4 mcg/kg/mnt)
+• Monitoring: depresi napas, akumulasi metabolit aktif`,
+  },
+];
 
 export function SyringePumpCalculator() {
   const { weightKg } = usePatientStore();
@@ -157,6 +207,7 @@ export function SyringePumpCalculator() {
       {/* Dose range hint */}
       {selectedDrug && <DoseRangeHint drugName={selectedDrug} />}
 
+      <TheoryAccordion sections={SYRINGE_THEORY} />
       <Disclaimer />
     </div>
   );
