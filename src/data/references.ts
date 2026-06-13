@@ -81,4 +81,17 @@ export const REFERENCES: Record<string, Reference> = {
       'Holliday MA, Segar WE. The maintenance need for water in parenteral fluid therapy. Pediatrics. 1957;19(5):823–832. (Rumus 4-2-1 maintenance cairan pediatri)',
     verified: true,
   },
+  ards2012: {
+    id: 11,
+    citation:
+      'ARDS Definition Task Force; Ranieri VM, Rubenfeld GD, Thompson BT, et al. Acute respiratory distress syndrome: the Berlin Definition. JAMA. 2012;307(23):2526–2533. (Kriteria ARDS Berlin: P/F ratio untuk klasifikasi ringan/sedang/berat)',
+    url: 'https://doi.org/10.1001/jama.2012.5669',
+    verified: true,
+  },
+  emmett1977: {
+    id: 12,
+    citation:
+      'Emmett M, Narins RG. Clinical use of the anion gap. Medicine (Baltimore). 1977;56(1):38–54. (Rumus anion gap dan interpretasi)',
+    verified: true,
+  },
 };

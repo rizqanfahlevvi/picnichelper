@@ -62,12 +62,20 @@ export interface DrugReferenceRange {
 }
 
 export const SYRINGE_PUMP_DRUGS: DrugReferenceRange[] = [
-  { name: 'Dopamin',      unit: 'per_minute', minDose: 2,    maxDose: 20,   commonConcentrations: [1600, 3200] },
-  { name: 'Dobutamin',    unit: 'per_minute', minDose: 2,    maxDose: 20,   commonConcentrations: [1000, 2000] },
-  { name: 'Epinefrin',    unit: 'per_minute', minDose: 0.01, maxDose: 1,    commonConcentrations: [20, 40]     },
-  { name: 'Norepinefrin', unit: 'per_minute', minDose: 0.01, maxDose: 2,    commonConcentrations: [20, 40]     },
-  { name: 'Milrinon',     unit: 'per_minute', minDose: 0.25, maxDose: 0.75, commonConcentrations: [200]        },
-  { name: 'Morfin',       unit: 'per_hour',   minDose: 10,   maxDose: 40,   commonConcentrations: [1000]       },
-  { name: 'Fentanil',     unit: 'per_hour',   minDose: 1,    maxDose: 5,    commonConcentrations: [10, 20]     },
-  { name: 'Midazolam',    unit: 'per_hour',   minDose: 1,    maxDose: 5,    commonConcentrations: [500, 1000]  },
+  // ── Vasopressors / Inotropes ──────────────────────────────────────────────
+  { name: 'Dopamin',         unit: 'per_minute', minDose: 2,    maxDose: 20,   commonConcentrations: [1600, 3200] },
+  { name: 'Dobutamin',       unit: 'per_minute', minDose: 2,    maxDose: 20,   commonConcentrations: [1000, 2000] },
+  { name: 'Epinefrin',       unit: 'per_minute', minDose: 0.01, maxDose: 1,    commonConcentrations: [20, 40]     },
+  { name: 'Norepinefrin',    unit: 'per_minute', minDose: 0.01, maxDose: 2,    commonConcentrations: [20, 40]     },
+  { name: 'Milrinon',        unit: 'per_minute', minDose: 0.25, maxDose: 0.75, commonConcentrations: [200]        },
+  // ── Analgesics / Sedatives ────────────────────────────────────────────────
+  { name: 'Morfin',          unit: 'per_hour',   minDose: 10,   maxDose: 40,   commonConcentrations: [1000]       },
+  { name: 'Fentanil',        unit: 'per_hour',   minDose: 1,    maxDose: 5,    commonConcentrations: [10, 20]     },
+  { name: 'Midazolam',       unit: 'per_hour',   minDose: 1,    maxDose: 5,    commonConcentrations: [500, 1000]  },
+  // Ketamine continuous infusion for procedural sedation/analgesia (PICU)
+  { name: 'Ketamin',         unit: 'per_hour',   minDose: 500,  maxDose: 2000, commonConcentrations: [2000]       },
+  // Dexmedetomidine: 0.2–0.7 mcg/kg/hr (standard dilution 4 mcg/mL)
+  { name: 'Deksmedetomidin', unit: 'per_hour',   minDose: 0.2,  maxDose: 0.7,  commonConcentrations: [4]          },
+  // TODO: konfirmasi sumber dosis infus kontinu fenobarbital pediatri
+  // { name: 'Fenobarbital', unit: 'per_hour', minDose: ..., maxDose: ..., commonConcentrations: [...] },
 ];

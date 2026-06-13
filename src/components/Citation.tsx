@@ -42,15 +42,15 @@ export function Cite({ source }: { source: keyof typeof REFERENCES }) {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 200,
-            width: 260,
+            width: 210,
             background: 'var(--bg-elevated)',
             border: '0.5px solid var(--separator)',
             borderRadius: 'var(--r-sm)',
             boxShadow: 'var(--shadow-2)',
-            padding: '10px 12px',
+            padding: '8px 10px',
           }}
         >
-          <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', lineHeight: 1.5, margin: 0 }}>
+          <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-secondary)', lineHeight: 1.45, margin: 0 }}>
             <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{ref.id}]</span>{' '}
             {ref.citation}
           </p>
