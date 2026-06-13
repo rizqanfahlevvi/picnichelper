@@ -15,10 +15,13 @@ interface PatientState {
   ageYears: string;
   /** Berat dalam kg (string mentah dari input) */
   weightKg: string;
+  /** Tinggi badan dalam cm (string mentah dari input) — dipakai kalkulator renal */
+  heightCm: string;
 
   setCategory: (c: PatientCategory) => void;
   setAgeYears: (v: string) => void;
   setWeightKg: (v: string) => void;
+  setHeightCm: (v: string) => void;
   reset: () => void;
 }
 
@@ -26,9 +29,11 @@ export const usePatientStore = create<PatientState>((set) => ({
   category: 'anak',
   ageYears: '',
   weightKg: '',
+  heightCm: '',
 
   setCategory: (category) => set({ category }),
   setAgeYears: (ageYears) => set({ ageYears }),
   setWeightKg: (weightKg) => set({ weightKg }),
-  reset: () => set({ ageYears: '', weightKg: '' }),
+  setHeightCm: (heightCm) => set({ heightCm }),
+  reset: () => set({ ageYears: '', weightKg: '', heightCm: '' }),
 }));

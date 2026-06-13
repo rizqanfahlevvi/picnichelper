@@ -6,7 +6,7 @@ const CATEGORIES: { id: PatientCategory; label: string }[] = [
 ];
 
 export function PatientInput() {
-  const { category, ageYears, weightKg, setCategory, setAgeYears, setWeightKg } =
+  const { category, ageYears, weightKg, heightCm, setCategory, setAgeYears, setWeightKg, setHeightCm } =
     usePatientStore();
 
   return (
@@ -43,6 +43,16 @@ export function PatientInput() {
           placeholder={category === 'neonatus' ? 'mis. 1.5' : 'mis. 15'}
           type="number"
           step="0.1"
+          separator
+        />
+        <PatientField
+          label="Tinggi Badan"
+          unit="cm"
+          value={heightCm}
+          onChange={setHeightCm}
+          placeholder="mis. 110"
+          type="number"
+          separator
         />
       </div>
 
