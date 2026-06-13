@@ -195,10 +195,10 @@ body {
 
 /* Bottom tab bar */
 .ios-tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-  height: calc(76px + env(safe-area-inset-bottom, 0px));
+  flex-shrink: 0; width: 100%;
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  padding-top: 9px;
+  padding-top: 8px;
   display: flex; align-items: flex-start;
   background: var(--material-chrome);
   -webkit-backdrop-filter: var(--blur-base); backdrop-filter: var(--blur-base);

@@ -122,41 +122,41 @@ export function AppLayout() {
         </header>
 
         {/* Scrollable content with fade transition */}
-        <main style={{ flex: 1, overflowY: 'auto' }}>
+        <main style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
           <div style={{
             maxWidth: 640,
             margin: '0 auto',
-            padding: '0 0 88px',
+            padding: '0 0 16px',
           }} className="md-content-pad">
             <FadeOutlet pathname={pathname} />
           </div>
         </main>
+
+        {/* ══════════════════════════════════════════
+            MOBILE: Bottom Tab Bar — natural flex child (< md)
+        ══════════════════════════════════════════ */}
+        <nav className="ios-tabbar md-hidden">
+          {BOTTOM_PRIMARY.map((item) => (
+            <TabItem key={item.to} item={item} />
+          ))}
+
+          {/* More button */}
+          <button
+            className={`ios-tab${moreOpen ? ' is-active' : ''}`}
+            onClick={() => setMoreOpen((v) => !v)}
+            aria-expanded={moreOpen}
+          >
+            <span style={{
+              display: 'inline-flex',
+              transition: 'transform 260ms var(--ease-out)',
+              transform: moreOpen ? 'rotate(90deg)' : 'none',
+            }}>
+              <MenuIcon size={25} strokeWidth={moreOpen ? 2.2 : 1.85} />
+            </span>
+            <span>Menu</span>
+          </button>
+        </nav>
       </div>
-
-      {/* ══════════════════════════════════════════
-          MOBILE: Bottom Tab Bar (< md)
-      ══════════════════════════════════════════ */}
-      <nav className="ios-tabbar md-hidden">
-        {BOTTOM_PRIMARY.map((item) => (
-          <TabItem key={item.to} item={item} />
-        ))}
-
-        {/* More button */}
-        <button
-          className={`ios-tab${moreOpen ? ' is-active' : ''}`}
-          onClick={() => setMoreOpen((v) => !v)}
-          aria-expanded={moreOpen}
-        >
-          <span style={{
-            display: 'inline-flex',
-            transition: 'transform 260ms var(--ease-out)',
-            transform: moreOpen ? 'rotate(90deg)' : 'none',
-          }}>
-            <MenuIcon size={25} strokeWidth={moreOpen ? 2.2 : 1.85} />
-          </span>
-          <span>Menu</span>
-        </button>
-      </nav>
 
       {/* ══════════════════════════════════════════
           MOBILE: More slide-up panel (< md)
@@ -178,7 +178,8 @@ export function AppLayout() {
       <div
         className="md-hidden"
         style={{
-          position: 'fixed', left: 0, right: 0, bottom: 76, zIndex: 50,
+          position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 50,
+          paddingBottom: 'calc(60px + env(safe-area-inset-bottom, 0px))',
           background: 'var(--bg-elevated)',
           borderRadius: '14px 14px 0 0',
           borderTop: '0.5px solid var(--separator)',
@@ -311,12 +312,8 @@ function TabItem({ item }: { item: NavItem }) {
       end={item.to === '/'}
       className={({ isActive }) => `ios-tab${isActive ? ' is-active' : ''}`}
     >
-      {({ isActive }) => (
-        <>
-          <Icon size={25} strokeWidth={isActive ? 2.2 : 1.85} />
-          <span>{item.tabLabel ?? item.shortLabel ?? item.label}</span>
-        </>
-      )}
+      <Icon size={25} strokeWidth={1.85} />
+      <span>{item.tabLabel ?? item.shortLabel ?? item.label}</span>
     </NavLink>
   );
 }
