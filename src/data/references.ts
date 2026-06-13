@@ -94,4 +94,17 @@ export const REFERENCES: Record<string, Reference> = {
       'Emmett M, Narins RG. Clinical use of the anion gap. Medicine (Baltimore). 1977;56(1):38–54. (Rumus anion gap dan interpretasi)',
     verified: true,
   },
+  feld2018: {
+    id: 13,
+    citation:
+      'Feld LG, Neuspiel DR, Foster BA, et al. Clinical Practice Guideline: Maintenance Intravenous Fluids in Children. Pediatrics. 2018;142(6):e20183083. (Panduan cairan IV maintenance + hiponatremia)',
+    url: 'https://doi.org/10.1542/peds.2018-3083',
+    verified: true,
+  },
+  greenbaum2020: {
+    id: 14,
+    citation:
+      'Greenbaum LA. Electrolyte and Acid-Base Disorders. In: Kliegman RM, et al., eds. Nelson Textbook of Pediatrics. 21st ed. Philadelphia: Elsevier; 2020. ch 68.',
+    verified: true,
+  },
 };

@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Wind, Zap, Droplets, FlaskConical, ChevronLeft } from 'lucide-react';
+import { Wind, Zap, Droplets, FlaskConical, Beaker, ChevronLeft } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { PatientInput } from '../components/PatientInput';
 import { EttCalculator } from '../components/calculators/EttCalculator';
 import { EmergencyDrugsCalculator } from '../components/calculators/EmergencyDrugsCalculator';
 import { SyringePumpCalculator } from '../components/calculators/SyringePumpCalculator';
 import { AbgInterpreter } from '../components/calculators/AbgInterpreter';
+import { ElectrolyteCalculator } from '../components/calculators/ElectrolyteCalculator';
 
-type CalcId = 'ett' | 'dosis' | 'syringe' | 'agd';
+type CalcId = 'ett' | 'dosis' | 'syringe' | 'agd' | 'elektrolit';
 
 interface CalcCard {
   id: CalcId;
@@ -38,6 +39,11 @@ const CALCULATORS: CalcCard[] = [
     id: 'agd', label: 'Analisis Gas Darah',
     desc: 'Boston Rules · AG · P/F Ratio',
     icon: FlaskConical, tintClass: 'tint-resp', tintColor: 'var(--sys-teal)',
+  },
+  {
+    id: 'elektrolit', label: 'Elektrolit',
+    desc: 'Na · K · Ca · Mg — koreksi & teori',
+    icon: Beaker, tintClass: 'tint-renal', tintColor: 'var(--sys-mint)',
   },
 ];
 
@@ -82,7 +88,8 @@ export function Kalkulator() {
           {active === 'ett'    && <EttCalculator />}
           {active === 'dosis'  && <EmergencyDrugsCalculator />}
           {active === 'syringe'&& <SyringePumpCalculator />}
-          {active === 'agd'    && <AbgInterpreter />}
+          {active === 'agd'       && <AbgInterpreter />}
+          {active === 'elektrolit'&& <ElectrolyteCalculator />}
         </div>
       )}
     </div>
