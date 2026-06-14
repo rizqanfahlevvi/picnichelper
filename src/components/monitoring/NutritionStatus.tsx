@@ -101,7 +101,8 @@ export function NutritionStatus() {
       {/* Derived values */}
       {(bbi || haM || waM || pctBBI) && (
         <div style={{
-          background: 'var(--fill-secondary)', borderRadius: 'var(--r-card)',
+          background: 'var(--bg-tertiary)', borderRadius: 'var(--r-card)',
+          border: '0.5px solid var(--separator)',
           padding: '12px 14px', marginBottom: 16,
         }}>
           <div style={{
