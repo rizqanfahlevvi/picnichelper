@@ -115,4 +115,39 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1542/peds.2018-3083',
     verified: true,
   },
+
+  // ── Library Obat & Cairan ───────────────────────────────────────────────
+  idai2012: {
+    id: 16,
+    citation:
+      'Tambunan T, Rundjan L, Satari HI, dkk., penyunting. Formularium Spesialistik Ilmu Kesehatan Anak. Jakarta: Ikatan Dokter Anak Indonesia (IDAI); 2013. (Rujukan utama dosis obat pediatri)',
+    verified: true,
+  },
+  lexicomp_ped: {
+    id: 17,
+    citation:
+      'Taketomo CK, Hodding JH, Kraus DM. Pediatric & Neonatal Dosage Handbook. 18th ed. Hudson (OH): Lexi-Comp; 2011. (Sumber dosis primer yang dirujuk Formularium IDAI)',
+    verified: true,
+  },
+  aes2016: {
+    id: 18,
+    citation:
+      'Glauser T, Shinnar S, Gloss D, et al. Evidence-based guideline: treatment of convulsive status epilepticus in children and adults: report of the Guideline Committee of the American Epilepsy Society. Epilepsy Curr. 2016;16(1):48–61.',
+    url: 'https://doi.org/10.5698/1535-7597-16.1.48',
+    verified: true,
+  },
+  esett2019: {
+    id: 19,
+    citation:
+      'Kapur J, Elm J, Chamberlain JM, et al. Randomized Trial of Three Anticonvulsant Medications for Status Epilepticus. N Engl J Med. 2019;381(22):2103–2113. (ESETT: levetirasetam, fosfenitoin, valproat setara sebagai lini kedua)',
+    url: 'https://doi.org/10.1056/NEJMoa1905795',
+    verified: true,
+  },
+  kochanek2019: {
+    id: 20,
+    citation:
+      'Kochanek PM, Tasker RC, Carney N, et al. Guidelines for the Management of Pediatric Severe Traumatic Brain Injury, Third Edition. Pediatr Crit Care Med. 2019;20(3S Suppl 1):S1–S82. (Terapi hiperosmolar untuk hipertensi intrakranial)',
+    url: 'https://doi.org/10.1097/PCC.0000000000001735',
+    verified: true,
+  },
 };
