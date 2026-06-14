@@ -56,10 +56,33 @@ export interface DrugEntry {
   aliases: string[];
   category: DrugCategory;
   routes: DrugRoute[];
+  /** Mekanisme kerja singkat */
+  mechanism?: string;
   /** Kontraindikasi utama */
   contraindications?: string[];
   /** Peringatan klinis penting */
   warnings?: string[];
+  /** Penyesuaian dosis pada gangguan ginjal */
+  renalAdjustment?: string;
+  /** Penyesuaian dosis pada gangguan hati */
+  hepaticAdjustment?: string;
+  /** Farmakokinetik klinis relevan */
+  pharmacokinetics?: {
+    onset?: string;
+    peak?: string;
+    duration?: string;
+    halfLife?: string;
+    metabolism?: string;
+    excretion?: string;
+  };
+  /** Pertimbangan populasi khusus */
+  specialPopulations?: {
+    neonates?: string;
+    infants?: string;
+    renal?: string;
+    hepatic?: string;
+    obesity?: string;
+  };
   /** Referensi sumber dosis (key ke REFERENCES) */
   references: string[];
   /** false = belum dikonfirmasi pengarah klinis, jangan tampilkan */
@@ -664,18 +687,19 @@ export const DRUG_LIBRARY: DrugEntry[] = [
   {
     id: 'ondansetron',
     name: 'Ondansetron',
-    aliases: ['Zofran', 'Ondansetron HCl', 'Narfoz'],
+    aliases: ['Zofran', 'Ondansetron HCl', 'Narfoz', 'Vomceran'],
     category: 'antiemetik',
+    mechanism: 'Antagonis selektif reseptor 5-HT₃ (serotonin) di saluran cerna dan SSP. Menghambat impuls vagal aferen yang memicu muntah.',
     routes: [
       {
         route: 'IV',
         dose: {
           minPerKg: 0.1, maxPerKg: 0.15, unit: 'mg/kg',
           maxAbsoluteMg: 4,
-          frequency: 'tiap 8 jam prn',
-          ivDuration: 'pelan 5 menit',
-          indication: 'Mual muntah pasca-operasi atau kemoterapi',
-          notes: 'Dosis single: 0.1 mg/kg (maks 4 mg). Dosis dapat diulang tiap 8 jam.',
+          frequency: 'tiap 8 jam prn; kemoterapi: tiap 4 jam',
+          ivDuration: 'minimal 30 detik (bolus); dianjurkan infus 15 menit',
+          indication: 'Mual muntah pasca-operasi (PONV), kemoterapi, atau akut',
+          notes: 'Dosis PONV: 0.1 mg/kg (maks 4 mg). Dosis kemoterapi: 0.15 mg/kg (maks 8 mg) tiap 4 jam × 3 dosis.',
         },
       },
       {
@@ -684,14 +708,115 @@ export const DRUG_LIBRARY: DrugEntry[] = [
           minPerKg: 0.1, maxPerKg: 0.15, unit: 'mg/kg',
           maxAbsoluteMg: 4,
           frequency: 'tiap 8 jam prn',
-          indication: 'Mual muntah akut (gastroenteritis, dll)',
+          indication: 'Mual muntah akut (gastroenteritis, post-kemoterapi oral)',
+          notes: 'ODT (Orally Disintegrating Tablet) tersedia — berguna pada anak sulit menelan. Bioavailabilitas oral ~60%.',
         },
       },
     ],
-    warnings: [
-      'QT prolongation pada dosis tinggi — hati-hati pada pasien dengan risiko aritmia',
-      'Sakit kepala adalah efek samping tersering',
+    contraindications: [
+      'Hipersensitivitas terhadap ondansetron atau setron lain',
+      'Kombinasi dengan apomorphine (hipotensi berat)',
+      'Sindrom QT kongenital — kontraindikasi relatif',
     ],
+    warnings: [
+      'QTc prolongation — dosis single IV > 32 mg dilarang (FDA 2012); pada anak gunakan dosis minimal efektif',
+      'Hindari kombinasi dengan obat QT-prolonging lain (klorokuin, azitromisin, antipsikotik)',
+      'Serotonin syndrome bila dikombinasi dengan obat serotonergik lain',
+      'Sakit kepala (tersering), konstipasi, flushing — efek samping ringan',
+      'Masking: ondansetron dapat menutupi tanda obstruksi usus — evaluasi penyebab muntah terlebih dahulu',
+    ],
+    renalAdjustment: 'Tidak diperlukan penyesuaian dosis pada gangguan ginjal (eGFR > 10 mL/min/1.73m²). Data terbatas pada eGFR < 10 — pertimbangkan monitoring.',
+    hepaticAdjustment: 'Gangguan hati berat (Child-Pugh C): dosis maksimal 8 mg/hari (dewasa). Pada anak dengan hepatik berat: kurangi dosis 50%, monitor ketat.',
+    pharmacokinetics: {
+      onset: 'IV: 1–5 menit; PO: 30–60 menit',
+      peak: 'IV: akhir infus; PO: 1–2 jam',
+      duration: '4–8 jam (tergantung dosis)',
+      halfLife: '3–4 jam (anak); lebih panjang pada hepatik berat',
+      metabolism: 'Hepar via CYP1A2, CYP2D6, CYP3A4',
+      excretion: 'Urin (44–60%, sebagian besar metabolit); feses (25%)',
+    },
+    specialPopulations: {
+      neonates: 'Data terbatas pada neonatus. Pembersihan lebih lambat — gunakan dosis lebih rendah dan interval lebih panjang. Belum disetujui untuk neonatus.',
+      infants: 'Usia < 6 bulan: data terbatas. Usia 6 bulan – 1 tahun: 0.1 mg/kg IV/PO tiap 8 jam, maks 2 mg/dosis.',
+    },
+    references: ['pals2020'],
+    verified: true,
+  },
+  {
+    id: 'paracetamol',
+    name: 'Paracetamol (Asetaminofen)',
+    aliases: ['Acetaminophen', 'Parasetamol', 'Tylenol', 'Panadol', 'Tempra', 'Sanmol', 'Biogesic'],
+    category: 'analgesik',
+    mechanism: 'Inhibisi sintesis prostaglandin di SSP (sentrall COX inhibitor). Efek analgesik dan antipiretik tanpa efek anti-inflamasi perifer signifikan.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 15, unit: 'mg/kg',
+          maxAbsoluteMg: 1000,
+          frequency: 'tiap 4–6 jam; maks 5 dosis/24 jam',
+          indication: 'Nyeri ringan-sedang, demam',
+          notes: 'Dosis harian maks: 75 mg/kg/hari atau 4 g/hari (ambil yang lebih kecil). Tersedia sirup 120 mg/5 mL, 160 mg/5 mL, 250 mg/5 mL.',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 7.5, maxPerKg: 15, unit: 'mg/kg',
+          maxAbsoluteMg: 1000,
+          frequency: 'tiap 6 jam (maks 4 dosis/24 jam)',
+          ivDuration: 'infus 15 menit',
+          indication: 'Nyeri pasca-operasi atau saat tidak dapat PO',
+          notes: [
+            '< 10 kg: 7.5 mg/kg/dosis q6h, maks 30 mg/kg/hari.',
+            '10–33 kg: 15 mg/kg/dosis q6h, maks 60 mg/kg/hari.',
+            '33–50 kg: 15 mg/kg q6h, maks 2 g/dosis, maks 60 mg/kg/hari.',
+            '> 50 kg: 1000 mg q6h, maks 4 g/hari.',
+            'Tersedia: Perfalgan 10 mg/mL (vial 50 mL = 500 mg atau 100 mL = 1000 mg).',
+          ].join(' '),
+        },
+      },
+      {
+        route: 'Rektal',
+        dose: {
+          minPerKg: 15, maxPerKg: 20, unit: 'mg/kg',
+          maxAbsoluteMg: 650,
+          frequency: 'tiap 6–8 jam prn',
+          indication: 'Demam / nyeri bila tidak dapat PO atau IV',
+          notes: 'Absorpsi rektal lebih lambat dan tidak menentu dibanding PO. Onset 1–2 jam. Tersedia suppositoria 125 mg, 250 mg.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitivitas paracetamol',
+      'Penyakit hati berat aktif (hepatitis fulminan, sirosis dekompensasi berat)',
+      'Defisiensi G6PD berat — pertimbangkan risiko-manfaat',
+    ],
+    warnings: [
+      'Hepatotoksisitas pada overdosis — batas aman sempit pada malnutrisi, alkohol, atau induksi enzim hati',
+      'Dosis TOTAL harian (semua produk mengandung paracetamol) harus diperhitungkan — waspadai produk kombinasi',
+      'Overdosis: N-asetilsistein (NAC) adalah antidotum — mulai dalam 8 jam untuk efek optimal',
+      'Tidak memiliki efek anti-inflamasi — gunakan AINS bila inflamasi menjadi target terapi',
+    ],
+    renalAdjustment: [
+      'eGFR 10–50 mL/min/1.73m²: perpanjang interval ke tiap 6 jam (PO/IV).',
+      'eGFR < 10 mL/min/1.73m²: perpanjang interval ke tiap 8 jam; gunakan dosis minimal efektif.',
+      'Hemodialisis: diberikan setelah dialisis (paracetamol terdialisis).',
+    ].join(' '),
+    hepaticAdjustment: 'Gangguan hati ringan-sedang: kurangi dosis dan/atau perpanjang interval. Gangguan hati berat (Child-Pugh C): hindari penggunaan atau gunakan dosis paling rendah dengan monitoring ketat fungsi hati.',
+    pharmacokinetics: {
+      onset: 'PO: 30–60 menit; IV: 15–30 menit; Rektal: 1–2 jam',
+      peak: 'PO: 1–2 jam; IV: akhir infus 15 menit; Rektal: 1.5–3 jam',
+      duration: '4–6 jam',
+      halfLife: '1.5–3 jam (anak); lebih panjang pada neonatus (3–5 jam) dan hepatik berat',
+      metabolism: 'Hepar: glukuronidasi (60%) & sulfasi (35%); metabolit toksik NAPQI detoksifikasi GSH',
+      excretion: 'Urin (>90% sebagai konjugat); < 5% tidak berubah',
+    },
+    specialPopulations: {
+      neonates: 'Neonatus aterm (≥ 37 minggu): PO/IV 10–15 mg/kg q6–8h. Maks 60 mg/kg/hari. Kapasitas glukuronidasi imatur — waktu paruh lebih panjang, interval diperpanjang.',
+      infants: 'Usia 1–3 bulan: 10–15 mg/kg PO q6–8h. Peningkatan interval dibanding anak yang lebih besar.',
+      obesity: 'Gunakan berat badan ideal (IBW) atau adjusted body weight untuk menghindari overdosis pada anak obesitas.',
+    },
     references: ['pals2020'],
     verified: true,
   },
