@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { usePatientStore } from '../../store/patientStore';
 import {
   whoWFA, whoLHFA, whoWFLH, whoBMIFA,
@@ -6,9 +7,15 @@ import {
   interpretZScore,
   type ZInterpretation,
 } from '../../utils/nutritionStatus';
+import {
+  getWHO_WFA_Curve, getWHO_LHFA_Curve,
+  getCDC_WFA_Curve, getCDC_HFA_Curve,
+} from '../../data/growthCurves';
+import { GrowthChart } from './GrowthChart';
 
 export function NutritionStatus() {
   const { weightKg, heightCm, ageMonths, gender } = usePatientStore();
+  const [showChart, setShowChart] = useState(false);
 
   const wKg = parseFloat(weightKg);
   const hCm = parseFloat(heightCm);
@@ -135,6 +142,57 @@ export function NutritionStatus() {
               : 'Tambahkan tinggi badan di Data Pasien.'
         } />
       )}
+
+      {/* Growth curve toggle */}
+      {(hasWeight || hasHeight) && (
+        <button
+          onClick={() => setShowChart(v => !v)}
+          style={{
+            width: '100%', padding: '10px 14px', marginBottom: 16,
+            background: showChart ? 'var(--accent)' : 'var(--fill-secondary)',
+            color: showChart ? '#fff' : 'var(--label-primary)',
+            border: 'none', borderRadius: 'var(--r-card)',
+            font: 'var(--type-subheadline)', fontWeight: 600,
+            cursor: 'pointer', transition: 'all var(--dur-fast)',
+          }}
+        >
+          {showChart ? 'Sembunyikan Grafik Kurva' : 'Tampilkan Grafik Kurva'}
+        </button>
+      )}
+
+      {/* Growth charts */}
+      {showChart && (() => {
+        const xPad = ageM <= 60 ? 12 : 24;
+        const xDom: [number, number] = [Math.max(0, ageM - xPad), ageM + xPad];
+        return (
+          <div style={{ marginBottom: 16 }}>
+            {hasWeight && (
+              <GrowthChart
+                title={use5y ? 'Kurva BB/U (WHO 0–5 tahun)' : 'Kurva BB/U (CDC 2–20 tahun)'}
+                data={use5y ? getWHO_WFA_Curve(sex) : getCDC_WFA_Curve(sex)}
+                patientX={ageM}
+                patientY={wKg}
+                xLabel="Usia (bulan)"
+                yLabel="Berat (kg)"
+                xDomain={xDom}
+              />
+            )}
+            {hasHeight && (
+              <GrowthChart
+                title={use5y
+                  ? (ageM < 24 ? 'Kurva PB/U (WHO 0–5 tahun)' : 'Kurva TB/U (WHO 0–5 tahun)')
+                  : 'Kurva TB/U (CDC 2–20 tahun)'}
+                data={use5y ? getWHO_LHFA_Curve(sex) : getCDC_HFA_Curve(sex)}
+                patientX={ageM}
+                patientY={hCm}
+                xLabel="Usia (bulan)"
+                yLabel={ageM < 24 ? 'Panjang (cm)' : 'Tinggi (cm)'}
+                xDomain={xDom}
+              />
+            )}
+          </div>
+        );
+      })()}
 
       {/* References */}
       <div style={{
