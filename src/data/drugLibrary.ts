@@ -3513,6 +3513,253 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     references: ['pals2020'],
     verified: true,
   },
+
+  // ── Antikonvulsan ──────────────────────────────────────────────────────
+  {
+    id: 'asam_valproat',
+    name: 'Asam Valproat',
+    aliases: ['Valproic acid', 'Sodium valproate', 'Depakote', 'Depakene', 'Convulex', 'Leptilan'],
+    category: 'antikonvulsan',
+    mechanism: 'Meningkatkan kadar GABA di SSP; menghambat kanal natrium dan kalsium. Spektrum luas: epilepsi umum, fokal, dan campuran.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 60, unit: 'mg/kg',
+          frequency: 'dosis awal 10–15 mg/kg/hari; eskalasi 5–10 mg/kg/minggu hingga maks 60 mg/kg/hari (dosis terbagi 2–3×/hari)',
+          notes: 'Kadar terapeutik 50–100 µg/mL. Jangan melebihi 60 mg/kg/hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Penyakit hati atau disfungsi hepar berat',
+      'Kehamilan (teratogenik — spina bifida)',
+      'Porfiria',
+    ],
+    warnings: [
+      'Hepatotoksisitas fatal pada anak <2 tahun dan pasien dengan polifarmasi — pantau SGOT/SGPT',
+      'Pankreatitis akut (jarang namun fatal)',
+      'Hiperamonemia dengan atau tanpa ensefalopati',
+      'Trombositopenia — pantau hitung trombosit',
+      'Sindrom DRESS; peningkatan BB & rambut rontok',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'karbamazepin',
+    name: 'Karbamazepin',
+    aliases: ['Carbamazepine', 'Tegretol', 'Bamgetol'],
+    category: 'antikonvulsan',
+    mechanism: 'Menghambat kanal natrium dependen-tegangan (stabilisasi membran neuron). Efektif untuk epilepsi fokal dan tonik-klonik umum.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 35, unit: 'mg/kg',
+          frequency: 'dosis terbagi 2–3×/hari; eskalasi bertahap tiap minggu',
+          notes: 'Anak <6 tahun: awal 10–20 mg/kg/hari, maks 35 mg/kg/hari. Anak 6–12 tahun: awal 200 mg/hari, eskalasi ke 400–800 mg/hari, maks 1000 mg/hari. Anak >12 tahun: awal 400 mg/hari, eskalasi bertahap [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Riwayat depresi sumsum tulang',
+      'Kombinasi dengan MAOIs (interval minimal 2 minggu)',
+      'Blok AV',
+    ],
+    warnings: [
+      'Sindrom Steven-Johnson / DRESS (lebih tinggi pada pasien HLA-B*1502 — skrining pada populasi Asia)',
+      'Autoinduktor enzim CYP — banyak interaksi obat; kadar dapat turun setelah beberapa minggu',
+      'Hiponatremia (efek ADH-like) pada dosis tinggi',
+      'Gangguan hematopoietik: leukopenia, anemia aplastik (jarang) — pantau DPL awal & berkala',
+      'Diplopia, ataksia, vertigo (efek dosis-terkait)',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'klonazepam',
+    name: 'Klonazepam',
+    aliases: ['Clonazepam', 'Rivotril', 'Riklona'],
+    category: 'antikonvulsan',
+    mechanism: 'Benzodiazepin — meningkatkan efek GABA melalui reseptor GABA-A. Efektif untuk absence, mioklonik, dan tonik-klonik.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.01, maxPerKg: 0.2, unit: 'mg/kg',
+          frequency: 'dosis terbagi 2–3×/hari; titrasi lambat',
+          fixedDose: 'Anak <1 th: awal 250 mcg/hari → pemeliharaan 0,5–1 mg/hari (maks 4–8 mg/hari). Anak 1–5 th: awal 250 mcg/hari → 1–3 mg/hari. Anak 5–12 th: awal 500 mcg/hari → 3–6 mg/hari. Semua dosis terbagi 3×/hari [16].',
+          notes: 'Dosis berdasarkan usia, bukan BB. Titrasi bertahap untuk meminimalkan efek sedasi.',
+        },
+      },
+    ],
+    contraindications: [
+      'Insufisiensi hepar berat atau glaukoma sudut sempit',
+      'Kondisi klinis yang membutuhkan waspada penuh (depresi napas)',
+    ],
+    warnings: [
+      'Toleransi dan ketergantungan fisik pada penggunaan jangka panjang',
+      'Sedasi berlebih; hindari kombinasi dengan alkohol atau depresan SSP lain',
+      'Depresi napas — pantau ketat pada bayi dan anak kecil',
+      'Jangan hentikan mendadak (risiko status epileptikus)',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'topiramat',
+    name: 'Topiramat',
+    aliases: ['Topamax', 'Topiramate', 'Topiragen'],
+    category: 'antikonvulsan',
+    mechanism: 'Multimekanism: blokade kanal natrium, potensiasi GABA-A, antagonisme AMPA/kainat (glutamat), inhibisi karbonat anhidrase. Spektrum luas.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 5, maxPerKg: 9, unit: 'mg/kg',
+          frequency: 'dosis terbagi 2×/hari; titrasi dari 1–3 mg/kg/hari, naik tiap 1–2 minggu',
+          notes: 'Anak 2–16 tahun: target dosis 5–9 mg/kg/hari. Mulai dari 1–3 mg/kg/hari dan eskalasi tiap 1–2 minggu [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitivitas terhadap topiramat'],
+    warnings: [
+      'Batu ginjal — pastikan hidrasi adekuat (inhibisi karbonat anhidrase)',
+      'Asidosis metabolik hiperkhloremik — pantau bikarbonat serum',
+      'Glaukoma sudut tertutup akut (dalam 1 bulan pertama)',
+      'Gangguan kognitif / "word-finding difficulty" (efek dosis-terkait)',
+      'Oligohidrosis dan hipertermia pada anak (terutama musim panas)',
+      'Penurunan berat badan',
+    ],
+    renalAdjustment: 'Kurangi dosis 50% pada GFR <70 mL/menit',
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'haloperidol',
+    name: 'Haloperidol',
+    aliases: ['Haldol', 'Serenace', 'Lodomer'],
+    category: 'sedasi',
+    mechanism: 'Antagonis reseptor dopamin D₂ (antipsikotik tipikal). Efek antiemetik dan sedasi pada dosis rendah.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.025, maxPerKg: 0.05, unit: 'mg/kg',
+          maxAbsoluteMg: 10,
+          frequency: 'dosis terbagi 2×/hari',
+          // TODO: Sumber IDAI [16] mencantumkan "25–50 mg/kgBB/hari" (maks 10 mg/hari)
+          // — unit "mg/kgBB" dengan batas 10 mg/hari tidak konsisten (25 mg/kg pada anak 10 kg = 250 mg).
+          // Referensi standar pediatri (Lexi-Comp [17]): 0.025–0.05 mg/kg/hari (mcg bukan mg).
+          // Dosis di sini menggunakan Lexi-Comp [17]. Konfirmasi dengan pengarah klinis.
+          notes: '⚠ Dosis mengikuti Lexi-Comp [17]: 0,025–0,05 mg/kg/hari terbagi 2×/hari (maks 10 mg/hari). Sumber IDAI [16] mengandung inkonsistensi unit — perlu konfirmasi klinis sebelum digunakan.',
+        },
+      },
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 0.025, maxPerKg: 0.05, unit: 'mg/kg',
+          maxAbsoluteMg: 5,
+          frequency: 'tiap 4–8 jam prn',
+          notes: 'Untuk agitasi akut. Pantau tanda-tanda EPS (distonia, akatisia) [17].',
+        },
+      },
+    ],
+    contraindications: [
+      'Depresi SSP berat / koma',
+      'Penyakit Parkinson',
+      'Kondisi yang memperpanjang QTc',
+    ],
+    warnings: [
+      'Efek ekstrapiramidal (EPS): distonia akut, akatisia, tardive dyskinesia',
+      'Sindrom neuroleptik maligna (NMS) — jarang namun fatal',
+      'Perpanjangan QTc — hindari kombinasi dengan obat yang memperpanjang QT',
+      'Jangan gunakan pada anak <3 tahun kecuali terpaksa',
+    ],
+    references: ['idai2012', 'lexicomp_ped'],
+    verified: true,
+  },
+
+  {
+    id: 'klorpromazin',
+    name: 'Klorpromazin',
+    aliases: ['Chlorpromazine', 'Largactil', 'CPZ'],
+    category: 'sedasi',
+    mechanism: 'Antagonis reseptor dopamin D₂, histamin H₁, muskarinik, dan alfa-adrenergik. Antipsikotik tipikal dengan efek sedasi kuat.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.55, maxPerKg: 0.55, unit: 'mg/kg',
+          maxAbsoluteMg: 40,
+          frequency: 'tiap 4–6 jam',
+          notes: 'Bayi ≥6 bulan & anak: 0,55 mg/kg tiap 4–6 jam PO. Maks <5 th / <22,7 kg: 40 mg/hari. Maks anak 5–12 th (22,7–45,5 kg): lihat catatan IM [16].',
+        },
+      },
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 0.55, maxPerKg: 0.55, unit: 'mg/kg',
+          maxAbsoluteMg: 75,
+          frequency: 'tiap 6–8 jam',
+          notes: 'Bayi ≥6 bulan & anak: 0,55 mg/kg IM tiap 6–8 jam. Maks IM <5 th / <22,7 kg: 40 mg/hari. Maks IM 5–12 th / 22,7–45,5 kg: 75 mg/hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Koma atau depresi SSP berat',
+      'Depresi sumsum tulang',
+      'Anak <6 bulan',
+    ],
+    warnings: [
+      'Efek ekstrapiramidal (distonia, akatisia, tardive dyskinesia)',
+      'Hipotensi ortostatik (terutama injeksi IM)',
+      'Sindrom neuroleptik maligna (NMS)',
+      'Ikterus kolestatik (obstruktif)',
+      'Foto-sensitisasi kulit',
+      'Jangan gunakan IV rutin karena risiko hipotensi berat',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'imipramin',
+    name: 'Imipramin',
+    aliases: ['Imipramine', 'Tofranil'],
+    category: 'lainnya',
+    mechanism: 'Antidepresan trisiklik (TCA) — inhibisi reuptake norepinefrin dan serotonin. Digunakan pada anak untuk depresi mayor dan enuresis nokturnal.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 1.5, maxPerKg: 5, unit: 'mg/kg',
+          frequency: 'dosis terbagi 4×/hari (depresi); sekali sebelum tidur (enuresis)',
+          fixedDose: 'Depresi: awal 1,5 mg/kg/hari → maks 5 mg/kg/hari (dosis terbagi 4×). Enuresis (>6 th): 10–25 mg sebelum tidur → maks 2,5 mg/kg/hari; anak 6–12 th maks 50 mg/hari; >12 th maks 75 mg/hari [16].',
+          notes: 'Pantau EKG sebelum memulai (risiko aritmia TCA). Kadar terapeutik plasma dapat dipantau.',
+        },
+      },
+    ],
+    contraindications: [
+      'Kombinasi dengan MAOIs (atau dalam 14 hari setelah penghentian MAOI)',
+      'Infark miokard akut baru-baru ini',
+      'Anak <6 tahun untuk enuresis',
+    ],
+    warnings: [
+      'Overdosis sangat berbahaya — QRS melebar, aritmia fatal, seizure',
+      'Perpanjangan QTc dan interval PR — periksa EKG baseline dan berkala',
+      'Peningkatan pikiran/perilaku bunuh diri pada anak dan remaja (FDA Black Box Warning)',
+      'Jangan hentikan mendadak — tapering bertahap',
+      'Sedasi, mulut kering, konstipasi, retensi urin (efek antikolinergik)',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
