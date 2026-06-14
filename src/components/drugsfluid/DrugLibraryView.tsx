@@ -51,7 +51,7 @@ export function DrugLibraryView() {
   }, [query, activeCategory]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, overflowX: 'hidden', width: '100%' }}>
       {/* Search */}
       <div style={{ padding: '0 16px' }}>
         <div style={{
@@ -80,8 +80,9 @@ export function DrugLibraryView() {
         </div>
       </div>
 
-      {/* Category filter */}
-      <div style={{ display: 'flex', gap: 6, overflowX: 'auto', padding: '0 16px', scrollbarWidth: 'none' }}>
+      {/* Category filter — scroll horizontal hanya di dalam wrapper ini */}
+      <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+      <div style={{ display: 'flex', gap: 6, padding: '0 16px', width: 'max-content' }}>
         <FilterPill label="Semua" active={activeCategory === 'semua'} onClick={() => setActiveCategory('semua')} />
         {DRUG_CATEGORY_ORDER.filter((cat) =>
           DRUG_LIBRARY.some((d) => d.verified && d.category === cat)
@@ -94,6 +95,7 @@ export function DrugLibraryView() {
             onClick={() => setActiveCategory(cat)}
           />
         ))}
+      </div>
       </div>
 
       {/* Count */}
