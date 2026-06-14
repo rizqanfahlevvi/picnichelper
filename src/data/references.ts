@@ -81,4 +81,38 @@ export const REFERENCES: Record<string, Reference> = {
       'Holliday MA, Segar WE. The maintenance need for water in parenteral fluid therapy. Pediatrics. 1957;19(5):823–832. (Rumus 4-2-1 maintenance cairan pediatri)',
     verified: true,
   },
+  schwartz2009: {
+    id: 11,
+    citation:
+      'Schwartz GJ, Muñoz A, Schneider MF, et al. New equations to estimate GFR in children with CKD. J Am Soc Nephrol. 2009;20(3):629–637. (Bedside Schwartz: eGFR = 0.413 × tinggi cm / Cr mg/dL)',
+    url: 'https://doi.org/10.1681/ASN.2008030287',
+    verified: true,
+  },
+  kdigo2012: {
+    id: 12,
+    citation:
+      'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int Suppl. 2013;3(1):1–150.',
+    url: 'https://doi.org/10.1038/kisup.2012.73',
+    verified: true,
+  },
+  aap_bp2017: {
+    id: 13,
+    citation:
+      'Flynn JT, Kaelber DC, Baker-Smith CM, et al. Clinical Practice Guideline for Screening and Management of High Blood Pressure in Children and Adolescents. Pediatrics. 2017;140(3):e20171904.',
+    url: 'https://doi.org/10.1542/peds.2017-1904',
+    verified: true,
+  },
+  greenbaum2020: {
+    id: 14,
+    citation:
+      'Greenbaum LA. Electrolyte and Acid-Base Disorders. In: Kliegman RM, et al., eds. Nelson Textbook of Pediatrics. 21st ed. Philadelphia: Elsevier; 2020. Chapter 68.',
+    verified: true,
+  },
+  feld2018: {
+    id: 15,
+    citation:
+      'Feld LG, Neuspiel DR, Foster BA, et al. Clinical Practice Guideline: Maintenance Intravenous Fluids in Children. Pediatrics. 2018;142(6):e20183083.',
+    url: 'https://doi.org/10.1542/peds.2018-3083',
+    verified: true,
+  },
 };
