@@ -1404,6 +1404,241 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
 
+  {
+    id: 'sefotaksim',
+    name: 'Sefotaksim',
+    aliases: ['Cefotaxime', 'Claforan'],
+    category: 'antibiotik',
+    mechanism: 'Sefalosporin generasi III — menghambat sintesis dinding sel bakteri (PBP). Spektrum luas Gram-negatif; penetrasi SSP baik (meningitis).',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 100, maxPerKg: 200, unit: 'mg/kg',
+          maxAbsoluteMg: 12000,
+          frequency: 'dibagi tiap 6–8 jam (dosis/hari)',
+          ivDuration: 'IV / IM; hindari bolus cepat via vena sentral',
+          indication: 'Sepsis, pneumonia, meningitis, infeksi Gram-negatif',
+          notes: '1 bln–12 th (< 50 kg): 100–200 mg/kg/hari q6–8h; meningitis 200 mg/kg/hari q6h (hingga 225–300 mg/kg/hari pada pneumokokal invasif); maks 12 g/hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap sefotaksim / sefalosporin',
+    ],
+    warnings: [
+      'Jangan pada reaksi hipersensitivitas tipe cepat terhadap penisilin',
+      'Injeksi bolus cepat (< 1 menit via vena sentral) → aritmia mengancam jiwa',
+      'Superinfeksi pada pemakaian lama; kolitis pseudomembranosa',
+    ],
+    renalAdjustment: 'ClCr < 20 mL/menit: kurangi dosis 50%.',
+    specialPopulations: {
+      neonates: '100–150 mg/kg/hari dibagi q8–12h (sesuai BB & usia postnatal); meningitis: gunakan batas atas dosis, interval terpendek, minimal 21 hari [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'seftriakson',
+    name: 'Seftriakson',
+    aliases: ['Ceftriaxone', 'Rocephin'],
+    category: 'antibiotik',
+    mechanism: 'Sefalosporin generasi III dengan waktu paruh panjang (umumnya sekali sehari). Spektrum luas; penetrasi SSP baik.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 20, maxPerKg: 80, unit: 'mg/kg',
+          maxAbsoluteMg: 4000,
+          frequency: 'sekali sehari (atau terbagi tiap 12 jam)',
+          ivDuration: 'IV lambat 3–4 menit; infus 60 menit pada infeksi serius',
+          indication: 'Sepsis, pneumonia, meningitis, gonore',
+          notes: '20–50 mg/kg/hari, hingga 80 mg/kg/hari pada infeksi serius. Gonore: 25–50 mg/kg dosis tunggal (maks 125 mg) [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap sefalosporin, porfiria',
+      'Neonatus dengan ikterus, hipoalbuminemia, asidosis, atau gangguan pengikatan bilirubin',
+    ],
+    warnings: [
+      'NEONATUS: jangan diberikan bersamaan dengan larutan/produk mengandung kalsium IV (presipitasi fatal); gunakan sefotaksim sebagai pengganti pada hiperbilirubinemia',
+      'Menggeser ikatan bilirubin dari albumin → risiko kernikterus pada neonatus',
+      'Endapan kalsium-seftriakson di empedu/ginjal (terutama bayi sangat muda, dehidrasi)',
+    ],
+    specialPopulations: {
+      neonates: 'Hindari pada hiperbilirubinemia — gunakan sefotaksim. Jangan diberikan bersamaan dengan kalsium IV [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'seftazidim',
+    name: 'Seftazidim',
+    aliases: ['Ceftazidime', 'Fortum'],
+    category: 'antibiotik',
+    mechanism: 'Sefalosporin generasi III dengan aktivitas kuat terhadap Pseudomonas aeruginosa. Penggunaan terbatas (restricted).',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 50, maxPerKg: 100, unit: 'mg/kg',
+          maxAbsoluteMg: 6000,
+          frequency: 'dibagi 2–3 dosis (dosis/hari)',
+          ivDuration: 'injeksi IV atau infus IV',
+          indication: 'Infeksi Pseudomonas & Gram-negatif (terutama resisten aminoglikosida)',
+          notes: 'Bayi < 2 bln: 25–50 mg/kg/hari (2 dosis); > 2 bln: 50–100 mg/kg/hari (2–3 dosis). Fibrosis sistik / meningitis imunokompromais: hingga 150 mg/kg/hari (maks 6 g/hari) [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap sefalosporin, porfiria',
+    ],
+    warnings: [
+      'Sensitivitas silang dengan penisilin',
+      'Sesuaikan dosis pada gangguan fungsi ginjal',
+      'Positif palsu pada pemeriksaan glukosa urin & tes Coombs',
+    ],
+    specialPopulations: {
+      neonates: 'IV 50 mg/kg/dosis; interval per usia gestasi (< 30 mgg: ≤ 28 hari q12h, > 28 hari q8h; ≥ 30 mgg: ≤ 14 hari q12h, > 14 hari q8h) [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'meropenem',
+    name: 'Meropenem',
+    aliases: ['Meropenem', 'Meronem'],
+    category: 'antibiotik',
+    mechanism: 'Karbapenem — menghambat sintesis dinding sel bakteri (PBP). Spektrum sangat luas, termasuk organisme penghasil ESBL.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 20, maxPerKg: 40, unit: 'mg/kg',
+          frequency: 'tiap 8 jam',
+          ivDuration: 'infus IV',
+          indication: 'Infeksi Gram-negatif resisten / ESBL, meningitis',
+          notes: 'Infeksi standar 20 mg/kg/dosis; infeksi berat / meningitis Pseudomonas 40 mg/kg/dosis [16]. Frekuensi tiap 8 jam (standar meropenem).',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap karbapenem / beta-laktam',
+    ],
+    warnings: [
+      'Hati-hati pada gangguan fungsi ginjal & riwayat kejang',
+      'Diare / kolitis terkait antibiotik; ruam',
+      'Hipotensi',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'vankomisin',
+    name: 'Vankomisin',
+    aliases: ['Vancomycin', 'Vancocin'],
+    category: 'antibiotik',
+    mechanism: 'Glikopeptida — menghambat sintesis dinding sel bakteri (mengikat prekursor D-Ala-D-Ala). Aktif terhadap Gram-positif termasuk MRSA.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 20, unit: 'mg/kg',
+          frequency: 'tiap 6–8 jam',
+          ivDuration: 'infus ≥ 60 menit (cegah red man syndrome)',
+          indication: 'MRSA, infeksi Gram-positif resisten beta-laktam, endokarditis',
+          notes: 'Anak > 1 bln: 10 mg/kg/dosis q6h; infeksi serius / MRSA / MIC ≈ 1: 15–20 mg/kg/dosis q6–8h. Pantau kadar serum & hidrasi [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap vankomisin',
+      'Hati-hati pada riwayat gangguan pendengaran',
+    ],
+    warnings: [
+      'Red man / red neck syndrome bila infus terlalu cepat — infus ≥ 60 menit',
+      'Nefrotoksik & ototoksik (berkaitan kadar serum tinggi) — pantau kadar & fungsi ginjal',
+      'Neutropenia; jarang DRESS',
+    ],
+    renalAdjustment: 'Sesuaikan dosis & interval pada gangguan fungsi ginjal; pantau kadar serum.',
+    specialPopulations: {
+      neonates: 'Dosis & interval per BB & usia postnatal (mis. > 2000 g, > 7 hari: 10–15 mg/kg/dosis q6–8h; < 1200 g: 15 mg/kg/dosis q24h) [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'metronidazol',
+    name: 'Metronidazol',
+    aliases: ['Metronidazole', 'Flagyl'],
+    category: 'antibiotik',
+    mechanism: 'Nitroimidazol — radikal nitro reduktif merusak DNA mikroorganisme. Aktif terhadap bakteri anaerob & protozoa (amoeba, Giardia).',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 7.5, maxPerKg: 7.5, unit: 'mg/kg',
+          frequency: 'tiap 8 jam',
+          ivDuration: 'infus IV selama 20 menit',
+          indication: 'Infeksi anaerob (peritonitis, abses, tetanus), amoebiasis, giardiasis',
+          notes: 'Infeksi anaerob 7,5 mg/kg q8h. Amoebiasis invasif: 30 mg/kg/hari (3 dosis) 8–10 hari. Giardiasis: 15 mg/kg/hari (2 dosis) [16].',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 7.5, maxPerKg: 7.5, unit: 'mg/kg',
+          frequency: 'tiap 8 jam',
+          indication: 'Infeksi anaerob, amoebiasis, giardiasis (oral)',
+        },
+      },
+    ],
+    contraindications: [
+      'Ketergantungan alkohol kronis',
+    ],
+    warnings: [
+      'Reaksi disulfiram-like dengan alkohol — hindari alkohol',
+      'Gangguan hati / ensefalopati hepatik',
+      'Neuropati perifer & kejang pada pemakaian lama / dosis tinggi; urin kehitaman',
+    ],
+    specialPopulations: {
+      neonates: 'NEC: dosis awal IV/oral 15 mg/kg, rumatan 7,5 mg/kg/dosis; interval ≤ 28 hari q12h, > 28 hari q8h (dikombinasi penisilin + gentamisin) [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'siprofloksasin',
+    name: 'Siprofloksasin',
+    aliases: ['Ciprofloxacin', 'Ciproxin', 'Baquinor'],
+    category: 'antibiotik',
+    mechanism: 'Fluorokuinolon — menghambat DNA girase & topoisomerase IV → mengganggu replikasi DNA bakteri. Aktif Gram-negatif termasuk Pseudomonas.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 20, maxPerKg: 30, unit: 'mg/kg',
+          maxAbsoluteMg: 1500,
+          frequency: 'dibagi tiap 12 jam (dosis/hari)',
+          indication: 'Infeksi Pseudomonas (fibrosis sistik), antraks, Gram-negatif berat',
+          notes: 'Fibrosis sistik (5–12 th): maks 20 mg/kg 2×/hari (maks 1,5 g/hari). Antraks: 20–30 mg/kg/hari q12h × 60 hari (maks 1000 mg/hari) [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Riwayat gangguan tendon pada penggunaan kuinolon',
+    ],
+    warnings: [
+      'Artropati sendi penopang berat badan (data hewan) — tidak rutin untuk anak/remaja; pertimbangkan bila hanya siprofloksasin yang sensitif',
+      'Ruptur tendon — hentikan bila timbul nyeri/inflamasi',
+      'Fotosensitivitas; hati-hati epilepsi/predisposisi kejang, miastenia gravis, defisiensi G6PD',
+      'Jaga hidrasi adekuat (risiko kristaluria)',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
   // ── Lainnya ────────────────────────────────────────────────────────────
   {
     id: 'kalsium_glukonat',
