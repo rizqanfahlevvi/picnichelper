@@ -363,8 +363,10 @@ function RouteRow({ drugRoute, weightKg }: { drugRoute: DrugRoute; weightKg: num
   const { route, dose } = drugRoute;
   const routeColor = ROUTE_COLOR[route] ?? 'var(--accent)';
 
+  const isFixed = !!dose.fixedDose;
+
   let calcResult: { min: string; max: string; formula?: string; capped?: boolean } | null = null;
-  if (weightKg) {
+  if (weightKg && !isFixed) {
     try {
       const r = calculateDose(dose, weightKg);
       const unit = r.doseUnit;
@@ -396,13 +398,15 @@ function RouteRow({ drugRoute, weightKg }: { drugRoute: DrugRoute; weightKg: num
         )}
       </div>
 
-      {/* Dose per kg range */}
+      {/* Dose per kg range (atau dosis tetap) */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
         <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>
-          {isSingle
-            ? `${dose.minPerKg} ${dose.unit}`
-            : `${dose.minPerKg}–${dose.maxPerKg} ${dose.unit}`}
-          {dose.maxAbsoluteMg && ` · maks ${dose.maxAbsoluteMg} ${dose.unit.replace('/kg', '')}`}
+          {isFixed
+            ? dose.fixedDose
+            : isSingle
+              ? `${dose.minPerKg} ${dose.unit}`
+              : `${dose.minPerKg}–${dose.maxPerKg} ${dose.unit}`}
+          {!isFixed && dose.maxAbsoluteMg && ` · maks ${dose.maxAbsoluteMg} ${dose.unit.replace('/kg', '')}`}
         </span>
       </div>
 

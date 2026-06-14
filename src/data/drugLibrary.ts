@@ -20,6 +20,8 @@ export type DrugCategory =
   | 'diuretik'
   | 'antiemetik'
   | 'kortikosteroid'
+  | 'antiparasit'      // antimalaria, antihelmintik
+  | 'antidotum'        // toksikologi & kelasi
   | 'lainnya';
 
 export type RouteCode = 'IV' | 'PO' | 'IM' | 'SC' | 'Inhalasi' | 'Rektal' | 'Intranasal' | 'Sublingual';
@@ -41,6 +43,12 @@ export interface DoseRange {
   indication?: string;
   /** Catatan penting untuk rute ini */
   notes?: string;
+  /**
+   * Dosis tetap / tidak per-kg (mis. dosis berbasis usia atau satuan gram).
+   * Bila diisi, UI menampilkan teks ini dan TIDAK melakukan perhitungan per-kg
+   * (mencegah hasil menyesatkan). minPerKg/maxPerKg diabaikan untuk kalkulasi.
+   */
+  fixedDose?: string;
 }
 
 export interface DrugRoute {
@@ -1989,6 +1997,339 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
 
+  // ── Antiparasit / Antimalaria ──────────────────────────────────────────
+  {
+    id: 'klorokuin',
+    name: 'Klorokuin',
+    aliases: ['Chloroquine', 'Klorokuin Fosfat'],
+    category: 'antiparasit',
+    mechanism: 'Antimalaria 4-aminokuinolin — terakumulasi di vakuola makan parasit, menghambat polimerisasi heme menjadi hemozoin → toksik bagi Plasmodium.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 5, maxPerKg: 10, unit: 'mg/kg',
+          maxAbsoluteMg: 600,
+          frequency: 'lihat catatan (regimen 3 hari)',
+          indication: 'Malaria akut (galur sensitif), profilaksis malaria, artritis reumatoid juvenil',
+          notes: 'Dosis dalam klorokuin basa. Malaria akut: awal 10 mg/kg (max 600 mg), lalu 5 mg/kg (max 300 mg) 6 jam kemudian, dilanjut 5 mg/kg/hari sekali sehari x2 hari [16]. Profilaksis: 5 mg/kg/minggu (max 300 mg) [16]. Hitung dosis berdasarkan BB ideal pada obesitas. Beri bersama makanan.',
+        },
+      },
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 2.5, maxPerKg: 5, unit: 'mg/kg',
+          maxAbsoluteMg: 200,
+          frequency: 'dapat diulang tiap 6 jam (max 10 mg/kg/24 jam)',
+          indication: 'Malaria berat bila terapi oral tidak memungkinkan',
+          notes: 'Klorokuin basa 5 mg/kg (max 200 mg), dapat diulang dalam 6 jam; ATAU dosis kecil berulang 2.5 mg/kg tiap 4 jam — total TIDAK >10 mg/kg/24 jam [16]. HINDARI pemberian parenteral cepat (risiko kolaps kardiovaskular fatal).',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif; gangguan retina/lapang pandang; epilepsi (hindari)',
+    ],
+    warnings: [
+      'Pemberian parenteral cepat → intoksikasi & kegagalan kardiovaskular fatal — beri lambat/dosis kecil berulang [16]',
+      'Pantau ketajaman visus (retinopati pada penggunaan lama dosis tinggi) [16]',
+      'Hati-hati pada defisiensi G6PD, psoriasis, porfiria, gangguan ginjal/hati [16]',
+      'Sangat toksik pada overdosis (aritmia, konvulsi)',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'kuinin',
+    name: 'Kuinin',
+    aliases: ['Quinine', 'Kuinin Sulfat', 'Kuinin Dihidroklorida'],
+    category: 'antiparasit',
+    mechanism: 'Alkaloid sinkona — mengganggu detoksifikasi heme & metabolisme parasit; skizontosid darah untuk P. falciparum.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 10, unit: 'mg/kg',
+          frequency: 'tiap 8 jam, 3–10 hari',
+          indication: 'Malaria P. falciparum resisten obat kombinasi',
+          notes: 'Kuinin sulfat 10 mg/kg tiap 8 jam selama 3, 7, atau 10 hari — lama terapi tergantung kerentanan lokal [16].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 20, unit: 'mg/kg',
+          frequency: 'loading 20 mg/kg, lalu 10 mg/kg q12h',
+          ivDuration: 'Infus lambat selama 4 jam',
+          indication: 'Malaria P. falciparum berat (tidak dapat per oral)',
+          notes: 'Kuinin dihidroklorida: loading 20 mg/kg infus 4 jam, lalu 10 mg/kg tiap 12 jam [16]. Dosis awal DIBAGI DUA bila pasien sudah menerima kuinin/kuinidin/meflokuin dalam 12–24 jam sebelumnya [16]. Pantau gula darah & EKG.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hemoglobinuria, neuritis optik, tinitus',
+    ],
+    warnings: [
+      'Pantau gula darah (hipoglikemia, terutama parenteral) & tanda toksik jantung [16]',
+      'Cinchonism: tinitus, sakit kepala, penglihatan kabur, gangguan dengar [16]',
+      'Hati-hati pada gangguan konduksi/blok jantung, defisiensi G6PD, miastenia gravis [16]',
+      'Sangat toksik pada overdosis — perlu pertolongan medis segera',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'albendazol',
+    name: 'Albendazol',
+    aliases: ['Albendazole'],
+    category: 'antiparasit',
+    mechanism: 'Benzimidazol — berikatan dengan β-tubulin cacing → menghambat polimerisasi mikrotubulus & ambilan glukosa.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 15, maxPerKg: 15, unit: 'mg/kg',
+          maxAbsoluteMg: 800,
+          frequency: 'lihat catatan (per indikasi)',
+          indication: 'Ekinokokosis, neurosistiserkosis, askariasis, cacing tambang, strongyloidiasis, dll',
+          notes: 'Ekinokokosis/neurosistiserkosis: 15 mg/kg/hari dibagi 2 (max 800 mg/hari) — siklus 28 hari (neurosistiserkosis 8–30 hari) [16]. Cacing umum (anak >2 th): 400 mg dosis tunggal; trikuriasis/strongyloidiasis berat: 400 mg/hari x3 hari; kapilariasis: 400 mg/hari x10 hari [16].',
+        },
+      },
+    ],
+    warnings: [
+      'Tes fungsi hati & darah rutin sebelum & 2× tiap siklus pengobatan [16]',
+      'Syok alergik bila terjadi kebocoran kista; konvulsi/meningisme pada penyakit serebral [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'mebendazol',
+    name: 'Mebendazol',
+    aliases: ['Mebendazole'],
+    category: 'antiparasit',
+    mechanism: 'Benzimidazol — menghambat pembentukan mikrotubulus & ambilan glukosa cacing.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '100–500 mg (dosis tetap, bukan per kg)',
+          frequency: 'dosis tetap per indikasi',
+          indication: 'Askariasis, cacing tambang, enterobiasis, trichuriasis, capillariasis',
+          notes: 'Dosis tetap (bukan per kg). Askariasis (>1 th): 500 mg dosis tunggal atau 2×100 mg/hari x3 hari [16]. Cacing tambang/trichuriasis (>1 th): 2×100 mg/hari x3 hari [16]. Enterobiasis (>2 th): 100 mg dosis tunggal, ulang 2–3 mgg; obati seluruh keluarga [16]. Capillariasis (>2 th): 200 mg/hari x20–30 hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Kolestasis, gangguan hati',
+    ],
+    warnings: [
+      'Diberikan di antara waktu makan [16]',
+      'Dosis tinggi: reaksi alergi, peningkatan enzim hati, depresi sumsum tulang (infeksi cestoda) [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'pirantel',
+    name: 'Pirantel',
+    aliases: ['Pyrantel', 'Pirantel Pamoat'],
+    category: 'antiparasit',
+    mechanism: 'Penghambat depolarisasi neuromuskular cacing → paralisis spastik → cacing dikeluarkan.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 10, unit: 'mg/kg',
+          frequency: 'dosis tunggal (lihat catatan)',
+          indication: 'Askariasis, cacing tambang, enterobiasis, trichostrongyliasis',
+          notes: 'Askariasis/trichostrongyliasis: 10 mg/kg dosis tunggal [16]. Cacing tambang: 10 mg/kg dosis tunggal; infeksi berat 10 mg/kg/hari x4 hari [16]. Enterobiasis: 10 mg/kg dosis tunggal, ulang setelah 2–4 mgg [16].',
+        },
+      },
+    ],
+    warnings: [
+      'Kurangi dosis pada gangguan fungsi hati [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'praziquantel',
+    name: 'Praziquantel',
+    aliases: ['Praziquantel'],
+    category: 'antiparasit',
+    mechanism: 'Meningkatkan permeabilitas membran cacing terhadap kalsium → kontraktur & paralisis; merusak tegumen.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 5, maxPerKg: 50, unit: 'mg/kg',
+          frequency: 'dosis tunggal atau terbagi (per indikasi)',
+          indication: 'Taeniasis, infeksi Hymenolepis/Diphyllobothrium, trematoda, sistiserkosis',
+          notes: 'Anak ≥4 th. Taenia saginata/solium: 5–10 mg/kg dosis tunggal [16]. Hymenolepis nana: 15–25 mg/kg dosis tunggal [16]. Diphyllobothrium: 10–25 mg/kg dosis tunggal [16]. Sistiserkosis: 50 mg/kg/hari dibagi 3 x14 hari + kortikosteroid (mulai 2–3 hari sebelum & selama terapi) [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Sistiserkosis okuler',
+    ],
+    warnings: [
+      'Neurosistiserkosis: beri kortikosteroid di bawah pengawasan (risiko hipertensi intrakranial) [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  // ── Antidotum / Toksikologi ────────────────────────────────────────────
+  {
+    id: 'karbon_aktif',
+    name: 'Karbon Aktif',
+    aliases: ['Activated Charcoal', 'Norit', 'Arang Aktif'],
+    category: 'antidotum',
+    mechanism: 'Mengadsorpsi toksin di lumen saluran cerna → mengurangi absorpsi sistemik & meningkatkan eliminasi (dosis berulang).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Bayi 1 g/kg · Anak 25–50 g',
+          frequency: 'dosis tunggal atau tiap 4–6 jam',
+          indication: 'Intoksikasi akut (pencegahan absorpsi & eliminasi aktif)',
+          notes: 'Bayi: 1 g/kg dosis tunggal (pencegahan) atau 1 g/kg tiap 4–6 jam (eliminasi) [16]. Anak 1–12 th: 25 g dosis tunggal (50 g pada keracunan berat); >1 th eliminasi: awal 25–50 g lalu 25–50 g tiap 4–6 jam [16]. Beri dalam ±1 jam pasca-intoksikasi untuk efek terbaik.',
+        },
+      },
+    ],
+    contraindications: [
+      'Intoksikasi hidrokarbon (risiko aspirasi); zat korosif (mengaburkan lesi)',
+      'Jangan bersama antidot oral spesifik atau emetik oral',
+    ],
+    warnings: [
+      'Pasien mengantuk/tidak sadar: intubasi dulu sebelum pemberian via NGT (risiko aspirasi) [16]',
+      'Tidak efektif untuk: alkohol, DDT, sianida, malation, garam logam (Fe, litium) [16]',
+      'Jangan dicampur susu/es krim; boleh dengan coklat/sirup buah untuk palatabilitas [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'methylene_blue',
+    name: 'Metilen Biru',
+    aliases: ['Methylene Blue', 'Methylthioninium chloride', 'Biru Metilen'],
+    category: 'antidotum',
+    mechanism: 'Pada dosis terapi: akseptor elektron yang mereduksi methemoglobin (Fe³⁺) kembali menjadi hemoglobin (Fe²⁺) via NADPH-methemoglobin reduktase.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 1, maxPerKg: 2, unit: 'mg/kg',
+          frequency: 'dosis tunggal, dapat diulang setelah 1 jam',
+          ivDuration: 'Injeksi IV lambat beberapa menit',
+          indication: 'Methemoglobinemia akut',
+          notes: 'Methemoglobinemia akut: 1–2 mg/kg ATAU 25–50 mg/m² dosis tunggal IV lambat, dapat diulang setelah 1 jam [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif; gangguan ginjal berat',
+      'Methemoglobinemia akibat klorat, atau yang timbul saat terapi keracunan sianida dengan natrium nitrit',
+    ],
+    warnings: [
+      'Defisiensi G6PD → anemia hemolitik [16]',
+      'Pantau kadar methemoglobin selama terapi [16]',
+      'Dosis tinggi justru menyebabkan methemoglobinemia & diskolorasi kebiruan kulit/urin/feses [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'deferoksamin',
+    name: 'Deferoksamin',
+    aliases: ['Desferrioxamine', 'Deferoxamine', 'Desferal'],
+    category: 'antidotum',
+    mechanism: 'Kelator besi & aluminium — membentuk kompleks ferrioksamin yang larut air & diekskresi via urin.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 15, maxPerKg: 15, unit: 'mg/kg',
+          frequency: 'per jam (keracunan besi akut)',
+          ivDuration: 'Infus IV lambat',
+          indication: 'Keracunan besi akut, kelebihan besi/aluminium',
+          notes: 'Keracunan besi akut: awal 15 mg/kg/jam, kurangi setelah 4–6 jam — total <80 mg/kg dalam 24 jam [16]. Kelebihan besi kronik (SC/IM): 20–60 mg/kg/hari x4–7 hari/minggu [16]. Kelebihan aluminium (gagal ginjal terminal, IV): 5 mg/kg 1×/minggu pada 1 jam terakhir dialisis [16].',
+        },
+      },
+    ],
+    warnings: [
+      'Infus IV terlalu cepat → anafilaksis, hipotensi, syok, aritmia [16]',
+      'Gagal ginjal; pemeriksaan mata & telinga sebelum & tiap 3 bulan (retinopati, tuli) [16]',
+      'Anak <3 tahun: dapat menghambat pertumbuhan [16]',
+      'Urin berwarna coklat kemerahan (normal); risiko infeksi Yersinia [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+    // CATATAN: di IDAI Formularium 2013 monograf ini keliru berjudul "Pralidoksim Mesilat";
+    // isi sebenarnya adalah Deferoksamin (kelasi besi). Pralidoksim TIDAK di-encode.
+    // TODO: konfirmasi sumber dosis Pralidoksim (antidot organofosfat) dari pedoman lain.
+  },
+  {
+    id: 'dimerkaprol',
+    name: 'Dimerkaprol',
+    aliases: ['Dimercaprol', 'BAL', 'British Anti-Lewisite'],
+    category: 'antidotum',
+    mechanism: 'Gugus sulfhidril (-SH) mengkelat logam berat membentuk kompleks stabil yang diekskresi via urin.',
+    routes: [
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 2.5, maxPerKg: 5, unit: 'mg/kg',
+          frequency: 'per indikasi (tapering)',
+          ivDuration: 'IM dalam',
+          indication: 'Intoksikasi akut arsen, emas, air raksa, timbal (penunjang)',
+          notes: 'Arsen/emas ringan: 2.5 mg/kg q6h x2 hari, lalu q12h hari-3, lalu 1×/hari x10 hari [16]. Berat: 3 mg/kg q4h x2 hari, lalu q6h hari-3, lalu q12h x10 hari [16]. Air raksa: awal 5 mg/kg, lalu 2.5 mg/kg 1–2×/hari x10 hari [16]. Timbal (+ edetat Ca-disodium): ensefalopati berat 4 mg/kg q4h ≥72 jam [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Keracunan besi, selenium, atau cadmium (tidak diindikasikan)',
+      'Gangguan fungsi hati berat (kecuali keracunan arsen)',
+    ],
+    warnings: [
+      'Hipertensi; awasi reaksi abnormal seperti hiperpireksia [16]',
+      'Gangguan ginjal — hentikan/sangat hati-hati bila gagal ginjal selama terapi [16]',
+      'Sediaan dalam minyak kacang — perhatikan riwayat alergi',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'penisilamin',
+    name: 'Penisilamin',
+    aliases: ['Penicillamine', 'Cuprimine'],
+    category: 'antidotum',
+    mechanism: 'Kelator tembaga, timbal & logam berat lain; juga menurunkan kompleks imun (efek pada artritis reumatoid).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 20, maxPerKg: 25, unit: 'mg/kg',
+          frequency: 'dosis terbagi',
+          indication: 'Keracunan logam berat (timah hitam, tembaga), penyakit Wilson',
+          notes: 'Keracunan logam berat: 20–25 mg/kg/hari dibagi [16]. Penyakit Wilson: sampai 20 mg/kg/hari dibagi (min 500 mg/hari) [16]. Artritis reumatoid (8–12 th): awal 2.5 mg/kg/hari, naik bertahap tiap 4 mgg sampai 15–20 mg/kg/hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitivitas, lupus eritematosus',
+    ],
+    warnings: [
+      'Monitor darah & urin rutin (risiko depresi sumsum tulang, proteinuria) [16]',
+      'Laporkan segera: lebam, perdarahan, purpura, infeksi, nyeri tenggorok [16]',
+      'Hindari terapi emas/klorokuin/imunosupresan bersamaan; besi oral terpisah ≥2 jam [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
   // ── Lainnya ────────────────────────────────────────────────────────────
   {
     id: 'kalsium_glukonat',
@@ -2474,13 +2815,15 @@ export const DRUG_CATEGORY_LABEL: Record<DrugCategory, string> = {
   diuretik:       'Diuretik',
   antiemetik:     'Antiemetik',
   kortikosteroid: 'Kortikosteroid',
+  antiparasit:    'Antiparasit',
+  antidotum:      'Antidotum',
   lainnya:        'Lainnya',
 };
 
 export const DRUG_CATEGORY_ORDER: DrugCategory[] = [
   'emergensi', 'vasoaktif', 'antikonvulsan', 'sedasi', 'analgesik',
   'bronkodilator', 'kortikosteroid', 'diuretik', 'antiemetik',
-  'antibiotik', 'antiviral', 'antijamur', 'lainnya',
+  'antibiotik', 'antiviral', 'antijamur', 'antiparasit', 'antidotum', 'lainnya',
 ];
 
 export function searchDrugs(query: string): DrugEntry[] {
