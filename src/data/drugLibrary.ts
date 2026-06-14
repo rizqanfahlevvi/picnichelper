@@ -3760,6 +3760,368 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     references: ['idai2012'],
     verified: true,
   },
+
+  // ── Hematologi & Esensial ──────────────────────────────────────────────
+  {
+    id: 'protamin_sulfat',
+    name: 'Protamin Sulfat',
+    aliases: ['Protamine sulfate', 'Protamine'],
+    category: 'antidotum',
+    mechanism: 'Protein kationik yang berikatan dengan heparin (polianionic) membentuk kompleks inaktif → membalik efek antikoagulan heparin.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'dosis tunggal IV pelan ≥10 menit',
+          fixedDose: '1 mg protamin menetralkan 80–100 unit heparin. Infus IV pelan selama ≥10 menit. Jika heparin diberikan >15 menit sebelumnya, butuh protamin lebih sedikit karena heparin dieliminasi cepat [16].',
+          indication: 'Overdosis heparin',
+          notes: 'Pemberian berlebih protamin sendiri bersifat antikoagulan. Siapkan terapi reaksi alergi.',
+        },
+      },
+    ],
+    warnings: [
+      'Overdosis protamin → efek antikoagulan paradoksal',
+      'Reaksi alergi meningkat pada: pasien yang pernah menerima protamin/insulin protamin, alergi ikan, pria infertil atau pasca-vasektomi',
+      'Bradikardia, hipotensi, dispnea — infus lambat ≥10 menit',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'asam_traneksamat',
+    name: 'Asam Traneksamat',
+    aliases: ['Tranexamic acid', 'TXA', 'Transamin', 'Kalnex'],
+    category: 'lainnya',
+    mechanism: 'Antifibrinolitik — menghambat konversi plasminogen menjadi plasmin secara kompetitif (blokade lisin binding site). Mengurangi lisis bekuan.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 10, unit: 'mg/kg',
+          frequency: 'bolus segera sebelum operasi; dapat diikuti dosis oral',
+          ivDuration: 'IV lambat',
+          indication: 'Perioperatif hemofilia (pencegahan perdarahan saat ekstraksi gigi)',
+          notes: 'Dosis IV 10 mg/kgBB segera sebelum operasi, diikuti 25 mg/kgBB/dosis oral 3–4×/hari selama 2–8 hari. Alternatif murni IV: 10 mg/kgBB/dosis IV 3–4×/hari [16].',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 25, maxPerKg: 25, unit: 'mg/kg',
+          frequency: '3–4×/hari selama 2–8 hari',
+          indication: 'Pemeliharaan pascaoperasi (hemofilia)',
+          notes: 'Dimulai sehari sebelum operasi jika diberikan murni oral [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Perdarahan subarakhnoid',
+      'Gangguan penglihatan warna (acquired defective color vision)',
+      'Proses pembekuan intravaskular aktif (DIC)',
+    ],
+    warnings: [
+      'Penyesuaian dosis pada gangguan ginjal (eliminasi renal)',
+      'Pemantauan oftalmologis pada terapi jangka panjang',
+    ],
+    renalAdjustment: 'Modifikasi dosis diperlukan — konsultasi nefrologi',
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'asam_folat',
+    name: 'Asam Folat',
+    aliases: ['Folic acid', 'Folat', 'Vitamin B9'],
+    category: 'lainnya',
+    mechanism: 'Vitamin B larut air; kofaktor esensial untuk sintesis DNA dan beberapa protein. Defisiensi → anemia megaloblastik.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'RDA (oral): Neonatus prematur 50 µg/hari (~15 µg/kgBB/hari); 0–6 bln 25–35 µg/hari; 6 bln–3 th 50 µg/hari; 4–6 th 75 µg/hari; 7–10 th 100 µg/hari; 11–14 th 150 µg/hari; >15 th 200 µg/hari. Terapi defisiensi: bayi 15 µg/kgBB/hari atau 50 µg/hari; anak awal 1 mg/hari → pemeliharaan: 1–10 th 0,1–0,4 mg/hari; >11 th 0,5 mg/hari [16].',
+          frequency: '1×/hari',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Sama dengan dosis defisiensi oral. Gunakan bila oral tidak memungkinkan [16].',
+          frequency: '1×/hari',
+          indication: 'Anemia megaloblastik defisiensi folat (bila oral tidak dapat diberikan)',
+        },
+      },
+    ],
+    contraindications: [
+      'JANGAN diberikan tanpa vitamin B12 pada anemia megaloblastik (risiko degenerasi subakut medula spinalis)',
+      'Folate-dependent malignant disease',
+    ],
+    warnings: [
+      'Asam folat saja tidak mengobati defisiensi B12 — selalu evaluasi B12 terlebih dahulu',
+      'Susah tidur, iritabilitas, gangguan GI (efek samping ringan)',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'sianokobalamin',
+    name: 'Sianokobalamin (Vitamin B12)',
+    aliases: ['Cyanocobalamin', 'Vitamin B12', 'Methycobal', 'Neurobion'],
+    category: 'lainnya',
+    mechanism: 'Vitamin B12 larut air; kofaktor sintesis DNA dan metabolisme asam amino. Defisiensi → anemia megaloblastik dan degenerasi neuronal.',
+    routes: [
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mcg/kg',
+          fixedDose: 'Umum: 0,3–2 mcg/hari IM/SC dalam. Anemia pernisiosa: 30–50 mcg/hari selama 2 minggu → 100 mcg/bulan. Defisiensi B12: 100 mcg/hari selama 10–15 hari (total 1–1,5 mg) → 1–2×/minggu beberapa bulan → tapering 60 mcg/bulan [16].',
+          frequency: 'lihat catatan',
+          ivDuration: 'IM atau SC dalam',
+          indication: 'Anemia pernisiosa, defisiensi vitamin B12',
+        },
+      },
+      {
+        route: 'SC',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mcg/kg',
+          fixedDose: 'Sama dengan dosis IM. SC dalam [16].',
+          frequency: 'lihat catatan',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitivitas terhadap sianokobalamin atau kobalt',
+      'Atrofi nervus optikus kongenital (Leber disease)',
+    ],
+    warnings: [
+      'Pantau hipokalemia berat saat awal terapi (konversi megaloblastik ke eritropoesis normal)',
+      'Absorbsi turun bila diberikan bersamaan: aminoglikosida, kolkisin, fenitoin, kloramfenikol, vitamin C dosis tinggi',
+      'Monitor: kalium, eritrosit, retikulosit, Hb, hematokrit',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'garam_ferrous',
+    name: 'Garam Ferrous (Zat Besi)',
+    aliases: ['Ferrous sulfate', 'Iron supplement', 'Ferosulfat', 'Sangobion', 'Maltofer', 'Iberet'],
+    category: 'lainnya',
+    mechanism: 'Mineral esensial untuk sintesis hemoglobin dan mioglobin. Suplementasi mengoreksi anemia defisiensi besi.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 2, maxPerKg: 2, unit: 'mg/kg',
+          maxAbsoluteMg: 30,
+          frequency: '1×/hari',
+          indication: 'Profilaksis anemia defisiensi besi (<5 tahun)',
+          notes: 'Anak <5 tahun: 2 mg/kgBB/hari (maks 30 mg/hari). Anak >5 tahun: 30 mg/hari. Dapat diberikan setelah makan untuk kurangi efek GI. Terapi dilanjutkan 3–4 bulan setelah Hb normal untuk mengisi cadangan besi [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hemosiderosis atau hemakromatosis',
+      'Anemia bukan defisiensi besi (hemolitik, megaloblastik)',
+      'Transfusi berulang',
+      'Sedang dalam terapi Fe parenteral',
+    ],
+    warnings: [
+      'Tidak boleh diberikan >6 bulan kecuali ada indikasi khusus',
+      'Feses dapat berwarna kehitaman (normal)',
+      'Hindari pada ulkus peptikum, enteritis regional, kolitis ulserativa',
+      'Monitor: serum iron, TIBC, retikulosit, Hb sebelum dan sesudah terapi',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'zinc',
+    name: 'Zinc (Seng)',
+    aliases: ['Zinc sulfate', 'Zinkid', 'Oralit Zinc', 'Seng elemental'],
+    category: 'lainnya',
+    mechanism: 'Mineral trace esensial; kofaktor >300 enzim. Mendukung fungsi imun, penyembuhan luka, dan sintesis protein.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.5, maxPerKg: 1, unit: 'mg/kg',
+          frequency: 'dosis terbagi 1–3×/hari',
+          fixedDose: 'RDA: Bayi 5 mg/hari; anak 1–10 th 10 mg/hari; >11 th (L) 15 mg/hari, (P) 12 mg/hari. Defisiensi: 0,5–1 mg zinc elemental/kgBB/hari terbagi 1–3×/hari. Wilson disease (anak 5–18 th): <50 kg → 25 mg 3×/hari; ≥50 kg → 50 mg 3×/hari (berikan 1 jam sebelum/sesudah makan) [16].',
+          notes: 'Respon klinis baru tampak 6–8 minggu. Dapat diberikan bersama makanan jika ada ketidaknyamanan GI (kecuali Wilson disease).',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitivitas terhadap garam zinc'],
+    warnings: [
+      'Dosis berlebih: hipotensi, takikardia, hipotermia, edema paru',
+      'Leukopenia dan neutropenia pada dosis berlebih',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'alopurinol',
+    name: 'Alopurinol',
+    aliases: ['Allopurinol', 'Zyloric', 'Purinol'],
+    category: 'lainnya',
+    mechanism: 'Inhibitor xantin oksidase → mengurangi produksi asam urat. Digunakan untuk pencegahan hiperurisemia (termasuk tumor lysis syndrome pada kemoterapi).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 20, unit: 'mg/kg',
+          maxAbsoluteMg: 400,
+          frequency: 'dosis terbagi 2–3×/hari',
+          fixedDose: 'Anak <6 tahun: 150 mg/hari terbagi 3×. Anak 6–10 tahun: 300 mg/hari terbagi 2–3×. Anak <15 tahun: 10–20 mg/kgBB/hari (maks 400 mg/hari) [16].',
+          notes: 'Pastikan asupan cairan ≥2 liter/hari untuk mencegah kristaluria.',
+        },
+      },
+    ],
+    contraindications: [
+      'Serangan gout akut aktif (mulai alopurinol setelah serangan reda; jika muncul saat terapi, lanjutkan dan obati serangan secara terpisah)',
+    ],
+    warnings: [
+      'Hentikan segera jika timbul ruam — risiko Stevens-Johnson / TEN',
+      'Ruam ringan: dapat dicoba ulang setelah bebas ruam; jika muncul lagi → hentikan permanen',
+      'Kerusakan fungsi ginjal dan hati — penyesuaian dosis',
+      'Reaksi hipersensitivitas: eksfoliasi, demam, limfadenopati, artralgia, eosinofilia, vaskulitis, hepatitis, nefritis interstitial',
+    ],
+    renalAdjustment: 'Kurangi dosis sesuai derajat gangguan ginjal',
+    hepaticAdjustment: 'Hati-hati pada gangguan hati berat',
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'neostigmin',
+    name: 'Neostigmin',
+    aliases: ['Neostigmine', 'Prostigmin', 'Neostigmin methylsulfate'],
+    category: 'lainnya',
+    mechanism: 'Inhibitor kolinesterase reversibel → meningkatkan asetilkolin di neuromuscular junction. Memperkuat kontraksi otot (miastenia gravis) dan membalik blokade neuromuskular non-depolarisasi.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Miastenia gravis: awal 7,5–15 mg 3–4×/hari oral. Jarang memerlukan >45 mg tiap 2 jam [16].',
+          frequency: '3–4×/hari',
+          indication: 'Miastenia gravis',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0.04, maxPerKg: 0.04, unit: 'mg/kg',
+          frequency: 'dosis tunggal pascabedah',
+          indication: 'Reversal blokade neuromuskular non-depolarisasi (pascabedah)',
+          notes: 'Neonatus & anak: 0,04 mg/kgBB IV disertai atropin sulfat 0,02 mg/kgBB IV untuk mengatasi efek muskarinik [16]. Selalu siapkan atropin sebagai antidot.',
+        },
+      },
+    ],
+    contraindications: [
+      'Peritonitis atau obstruksi mekanik usus / saluran kemih',
+    ],
+    warnings: [
+      'Selalu siapkan atropin sulfat sebagai antidot efek muskarinik',
+      'Hati-hati pada: epilepsi, asma bronkial, bradikardia, oklusi koroner baru, aritmia, ulkus peptikum, hipertiroidisme',
+      'Overdosis → krisis kolinergik (salivasi berlebih, bronkospasme, bradikardia, kram otot, kematian)',
+      'Atropin dapat menyamarkan tanda awal overdosis',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'streptomisin',
+    name: 'Streptomisin',
+    aliases: ['Streptomycin', 'Streptomycin sulfate'],
+    category: 'antibiotik',
+    mechanism: 'Aminoglikosida — menghambat sintesis protein bakteri (30S ribosom). Anti-tuberkulosis dan aktif terhadap enterokokus, Yersinia (pes), Francisella (tularemia), Brucella.',
+    routes: [
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 20, maxPerKg: 40, unit: 'mg/kg',
+          maxAbsoluteMg: 1000,
+          frequency: 'dosis terbagi tiap 6–12 jam (atau 1×/hari untuk TB)',
+          indication: 'Tuberkulosis dan infeksi berat',
+          notes: 'Dosis TB anak: 20–40 mg/kgBB/hari IM dalam, maks 1 g/hari. Dosis berdasarkan berat badan ideal [16].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 12, maxPerKg: 15, unit: 'mg/kg',
+          maxAbsoluteMg: 1000,
+          frequency: 'tiap 12–24 jam',
+          ivDuration: 'infus 30–60 menit dalam NaCl 0,9%',
+          indication: 'Bila pasien tidak toleran IM',
+          notes: 'Gunakan hanya bila IM tidak memungkinkan [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Gangguan pendengaran yang sudah ada',
+      'Miastenia gravis',
+      'Kehamilan',
+    ],
+    warnings: [
+      'Ototoksisitas (vestibular dan auditori) — pantau pendengaran dan fungsi vestibular',
+      'Nefrotoksisitas — pantau fungsi ginjal dan kadar streptomisin plasma',
+      'Pada bayi: penyesuaian dosis ketat dan monitoring intensif',
+      'Nyeri pada tempat suntikan IM',
+    ],
+    renalAdjustment: 'GFR 50–80: 7,5 mg/kgBB tiap 24 jam; GFR 10–50: tiap 24–72 jam; GFR <10: tiap 72–96 jam',
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  {
+    id: 'kloramfenikol',
+    name: 'Kloramfenikol',
+    aliases: ['Chloramphenicol', 'Chloromycetin', 'Colme'],
+    category: 'antibiotik',
+    mechanism: 'Antibiotik spektrum luas — menghambat sintesis protein bakteri (50S ribosom). Bakteriostatik; untuk organisme tertentu (H. influenzae, Salmonella) dapat bakterisidal.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 50, maxPerKg: 100, unit: 'mg/kg',
+          frequency: 'dosis terbagi 4×/hari',
+          indication: 'Demam tifoid, infeksi berat oleh bakteri sensitif',
+          notes: 'Standar: 50 mg/kgBB/hari terbagi 4×. Infeksi berat (meningitis, sepsis, epiglotitis): hingga 100 mg/kgBB/hari; kurangi segera setelah ada perbaikan klinis. Bayi <2 minggu: 25 mg/kgBB/hari terbagi 4× [16].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 50, maxPerKg: 100, unit: 'mg/kg',
+          frequency: 'dosis terbagi 4×/hari',
+          ivDuration: 'IVP ≥5 menit (konsentrasi maks 100 mg/mL); atau infus intermiten 15–30 menit',
+          indication: 'Demam tifoid, meningitis, sepsis, epiglotitis',
+          notes: 'Neonatus <2 minggu: 25 mg/kgBB/hari terbagi 4×. Bayi 2 minggu–1 tahun: 50 mg/kgBB/hari terbagi 4×. Target kadar puncak 15–25 mg/L; trough <15 mg/L [16]. Monitor kadar plasma pada neonatus, <4 tahun, dan gangguan hepar.',
+        },
+      },
+    ],
+    warnings: [
+      'Anemia aplastik ireversibel (fatal) — hindari penggunaan berulang/jangka panjang',
+      'Sindroma Grey (neonatus): muntah, diare kehijauan, distensi abdomen, hipotermia, sianosis, kegagalan sirkulasi — akibat akumulasi (metabolisme hepar imatur)',
+      'Leukopenia, trombositopenia — periksa DPL sebelum dan selama terapi',
+      'Neuritis perifer dan neuritis optik',
+      'Kurangi dosis pada gangguan fungsi hati',
+    ],
+    renalAdjustment: 'Kurangi dosis pada gagal ginjal — monitoring kadar plasma',
+    hepaticAdjustment: 'Kurangi dosis; monitoring kadar plasma wajib',
+    references: ['idai2012'],
+    verified: true,
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
