@@ -23,6 +23,7 @@ export type DrugCategory =
   | 'antiparasit'      // antimalaria, antihelmintik
   | 'antiretroviral'   // ARV / HIV
   | 'antidotum'        // toksikologi & kelasi
+  | 'onkologi'         // sitostatika & imunosupresan
   | 'lainnya';
 
 export type RouteCode = 'IV' | 'PO' | 'IM' | 'SC' | 'Inhalasi' | 'Rektal' | 'Intranasal' | 'Sublingual';
@@ -2654,6 +2655,398 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
 
+  // ── Onkologi / Sitostatika & Imunosupresan ─────────────────────────────
+  // PERHATIAN: kemoterapi diberikan HANYA oleh tim onkologi sesuai protokol.
+  // Dosis berbasis luas permukaan tubuh (m²) — memakai fixedDose, BUKAN per-kg.
+  {
+    id: 'metotreksat',
+    name: 'Metotreksat',
+    aliases: ['Methotrexate', 'MTX'],
+    category: 'onkologi',
+    mechanism: 'Antimetabolit — menghambat dihidrofolat reduktase (DHFR) → blokir sintesis purin/pirimidin.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '15 mg/m² – 12 g/m² (sesuai protokol)',
+          frequency: 'sesuai protokol',
+          ivDuration: 'IV push / infus (dosis tinggi)',
+          indication: 'Leukemia, limfoma, osteosarkoma, koriokarsinoma, dll',
+          notes: 'Konvensional: 15–50 mg/m² PO/IV. Intermediate: 50 mg/m²–1 g/m² IV. Tinggi: 1–12 g/m² IV infus tiap 1–3 mgg — DIIKUTI rescue leukovorin (kalsium folinat) [16]. JRA: 5–15 mg/m²/minggu.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif; kerusakan hati/ginjal berat; depresi sumsum tulang berat',
+      'Dosis tinggi (>1 g/m²): jangan bila klirens kreatinin <50–75% normal [16]',
+    ],
+    warnings: [
+      'Dosis tinggi WAJIB hidrasi intensif + alkalinisasi urin + rescue leukovorin [16]',
+      'Pantau darah lengkap, klirens kreatinin, fungsi hati, kadar metotreksat plasma [16]',
+      'Ulserasi mukosa, hepatotoksik, mielosupresi, neurotoksik [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'vinkristin',
+    name: 'Vinkristin',
+    aliases: ['Vincristine', 'VCR', 'Oncovin'],
+    category: 'onkologi',
+    mechanism: 'Alkaloid vinca — berikatan dengan tubulin, menghambat pembentukan mikrotubulus (henti mitosis di metafase).',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '1–2 mg/m²/minggu · maks dosis tunggal 2 mg',
+          frequency: 'mingguan (sesuai protokol)',
+          indication: 'Leukemia, Hodgkin, neuroblastoma, tumor Wilms, rabdomiosarkoma',
+          notes: 'Anak >10 kg atau LPT >1 m²: 1–2 mg/m²/minggu x3–6 mgg. Anak <10 kg atau LPT <1 m²: awal 0.05 mg/kg/minggu lalu dititrasi. MAKS dosis tunggal 2 mg [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif vinkristin; sindrom Charcot-Marie-Tooth'],
+    warnings: [
+      'HANYA IV — ekstravasasi menyebabkan nekrosis jaringan berat [16]',
+      'Neurotoksik (neuropati perifer, konstipasi/ileus) — beri laksatif profilaksis [16]',
+      'JANGAN intratekal — FATAL',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'vinblastin',
+    name: 'Vinblastin',
+    aliases: ['Vinblastine', 'VLB', 'Velbe'],
+    category: 'onkologi',
+    mechanism: 'Alkaloid vinca — menghambat polimerisasi mikrotubulus → henti mitosis.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '2.5–6 mg/m²/hari · maks 12.5 mg/m²',
+          frequency: 'tiap 1–2 minggu (sesuai protokol)',
+          indication: 'Hodgkin, germ cell testis, limfoma non-Hodgkin, histiositosis',
+          notes: 'Hodgkin: 2.5–6 mg/m²/hari tiap 1–2 mgg x3–6 mgg, maks 12.5 mg/m² [16]. Histiositosis: 0.4 mg/kg tiap 7–10 hari. Germ cell: 0.2 mg/kg hari-1 & 2 tiap 3 mgg x4 [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif vinblastin/komponen; leukopenia berat [16]',
+      // CATATAN: monograf IDAI keliru menulis "vinkristin" pada KI vinblastin (typo sumber).
+    ],
+    warnings: [
+      'HANYA IV — ekstravasasi menyebabkan nekrosis jaringan [16]',
+      'Mielosupresi (leukopenia) — pantau darah lengkap [16]',
+      'JANGAN intratekal — FATAL',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'doksorubisin',
+    name: 'Doksorubisin',
+    aliases: ['Doxorubicin', 'Adriamycin'],
+    category: 'onkologi',
+    mechanism: 'Antrasiklin — interkalasi DNA & inhibisi topoisomerase II; pembentukan radikal bebas.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '35–75 mg/m²/siklus · kumulatif <550 mg/m²',
+          frequency: 'tiap 21 hari (sesuai protokol)',
+          indication: 'Tumor solid, limfoma, leukemia, neuroblastoma, osteosarkoma',
+          notes: '35–75 mg/m² dosis tunggal tiap 21 hari; atau 20–30 mg/m²/minggu; atau 60–90 mg/m² infus IV >96 jam tiap 3–4 mgg [16]. Reduksi 50% bila bilirubin 1.2–3 mg/dL; 75% bila >3 mg/dL [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif; gagal jantung berat, kardiomiopati; mielosupresi yang sudah ada',
+    ],
+    warnings: [
+      'Kardiotoksik IREVERSIBEL bila dosis kumulatif >550 mg/m² — pantau ekokardiografi [16]',
+      'HANYA IV — ekstravasasi → nekrosis jaringan berat [16]',
+      'Pantau darah lengkap, fungsi hati [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'daunorubisin',
+    name: 'Daunorubisin',
+    aliases: ['Daunorubicin', 'Daunomycin'],
+    category: 'onkologi',
+    mechanism: 'Antrasiklin — interkalasi DNA & inhibisi topoisomerase II.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '25–45 mg/m² · <2 th/<0.5 m²: 1 mg/kg',
+          frequency: 'sesuai protokol induksi',
+          indication: 'Leukemia (ALL, AML) — terapi kombinasi',
+          notes: 'Induksi ALL: 25–45 mg/m² hari-1 tiap minggu x4 siklus, atau 30–45 mg/m²/hari x3 hari. Usia <2 th atau <0.5 m²: 1 mg/kg atau sesuai protokol [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif; gagal jantung kongestif & aritmia; supresi sumsum tulang'],
+    warnings: [
+      'Kardiotoksik — pantau EKG & fraksi ejeksi ventrikel [16]',
+      'Turunkan dosis pada gangguan hati/bilier/ginjal [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'siklofosfamid',
+    name: 'Siklofosfamid',
+    aliases: ['Cyclophosphamide', 'Endoxan', 'CTX'],
+    category: 'onkologi',
+    mechanism: 'Agen alkilasi (nitrogen mustard) — membentuk ikatan silang DNA.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Induksi 60–250 mg/m²/hari · SLE 500–750 mg/m²/bulan',
+          frequency: 'sesuai protokol',
+          indication: 'Leukemia, limfoma, tumor solid, sindrom nefrotik, SLE, vaskulitis',
+          notes: 'Induksi: 2–8 mg/kg atau 60–250 mg/m²/hari IV. Pemeliharaan: 10–15 mg/kg tiap 7–10 hari. SLE: 500–750 mg/m²/bulan, maks 1 g/m². Sindrom nefrotik: 2–3 mg/kg/hari PO x12 mgg [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif; kehamilan & menyusui'],
+    warnings: [
+      'Sistitis hemoragik — hidrasi adekuat + mesna + pengosongan kandung kemih [16]',
+      'Karsinogenik/mutagenik, gangguan fertilitas [16]',
+      'Reduksi dosis awal 33–50% pada depresi sumsum tulang [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'sitarabin',
+    name: 'Sitarabin',
+    aliases: ['Cytarabine', 'Ara-C', 'Cytosar'],
+    category: 'onkologi',
+    mechanism: 'Antimetabolit — analog pirimidin, menghambat DNA polimerase.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Induksi 100–200 mg/m²/hari · dosis tinggi 3 g/m² q12h',
+          frequency: 'sesuai protokol',
+          indication: 'Leukemia, limfoma non-Hodgkin (regimen kombinasi)',
+          notes: 'Induksi: 100–200 mg/m²/hari IV x5–10 hari (drip kontinyu/2 dosis). Rumatan: 70–200 mg/m²/hari x2–5 hari interval 1 bulan. Intratekal: 5–75 mg/m² tiap 2–7 hari. Dosis tinggi (refrakter): 3 g/m² q12h s/d 12 dosis [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif sitarabin'],
+    warnings: [
+      'Turunkan dosis/kurangi hari terapi pada depresi sumsum tulang nyata [16]',
+      'Turunkan dosis pada disfungsi hati hebat [16]',
+      'Pantau fungsi hati, darah lengkap, fungsi ginjal, asam urat [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'merkaptopurin',
+    name: 'Merkaptopurin (6-MP)',
+    aliases: ['Mercaptopurine', '6-MP', '6-Mercaptopurine'],
+    category: 'onkologi',
+    mechanism: 'Antimetabolit purin — menghambat sintesis purin → blokir sintesis DNA/RNA.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '2.5 mg/kg atau 75 mg/m²/hari',
+          frequency: '1× sehari atau terbagi',
+          indication: 'Leukemia akut (ALL/ANLL)',
+          notes: 'Leukemia akut: 2.5 mg/kg atau 75 mg/m²/hari (≈25 mg) dosis tunggal/terbagi [16].',
+        },
+      },
+    ],
+    contraindications: ['Kehamilan, menyusui'],
+    warnings: [
+      'Depresi sumsum tulang, mual [16]',
+      'Hati-hati gangguan ginjal & hati [16]',
+      'Reduksi dosis 25–33% bila diberi bersama alopurinol',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'etoposid',
+    name: 'Etoposid',
+    aliases: ['Etoposide', 'VP-16', 'Vepesid'],
+    category: 'onkologi',
+    mechanism: 'Inhibitor topoisomerase II — menyebabkan pemutusan untai DNA.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '60–120 mg/m²/hari · AML konsolidasi 250 mg/m²',
+          frequency: 'sesuai protokol',
+          indication: 'Karsinoma paru/testis, limfoma, leukemia, neuroblastoma, transplantasi sumsum tulang',
+          notes: '60–120 mg/m²/hari x2–3 hari tiap 3–6 mgg. AML induksi: 150 mg/m²/hari x2–3 hari; konsolidasi: 250 mg/m²/hari x3 hari; transplan sumsum tulang: 60 mg/kg dosis tunggal [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif etoposid'],
+    warnings: [
+      'Mielosupresi berat — pantau darah lengkap [16]',
+      'Hipotensi & reaksi anafilaksis pada pemberian IV — infus lambat [16]',
+      'Mengandung polisorbat 80 — hati-hati pada bayi prematur [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'karboplatin',
+    name: 'Karboplatin',
+    aliases: ['Carboplatin', 'Paraplatin'],
+    category: 'onkologi',
+    mechanism: 'Agen alkilasi platinum — membentuk ikatan silang DNA.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Tumor solid 560 mg/m² · tumor otak 175 mg/m²',
+          frequency: 'sesuai protokol',
+          ivDuration: 'Infus 15–60 menit atau kontinyu (dalam NaCl)',
+          indication: 'Karsinoma ovarium, paru, esofagus, tumor solid, neuroblastoma',
+          notes: 'Tumor solid: 560 mg/m² sekali tiap 4 mgg. Tumor otak: 175 mg/m²/minggu x4 mgg dengan recovery 2 mgg antar siklus [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif karboplatin/sisplatin/manitol; depresi sumsum tulang berat; perdarahan profus'],
+    warnings: [
+      'Depresi sumsum tulang berat — pantau leukosit, trombosit, neutrofil [16]',
+      'Turunkan dosis bila klirens kreatinin <60 mL/mnt [16]',
+      'JANGAN gunakan jarum/peralatan infus mengandung aluminium (menurunkan potensi) [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'sisplatin',
+    name: 'Sisplatin',
+    aliases: ['Cisplatin', 'CDDP'],
+    category: 'onkologi',
+    mechanism: 'Agen alkilasi platinum — ikatan silang DNA intra/antar untai.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '37–100 mg/m²/siklus · neuroblastoma 90 mg/m²',
+          frequency: 'sesuai protokol',
+          indication: 'Karsinoma testis/ovarium, limfoma, neuroblastoma, kanker kepala-leher/serviks/paru',
+          notes: 'Intermiten: 37–75 mg/m² tiap 2–3 mgg, atau 50–100 mg/m² (4–6 jam) tiap 3–4 mgg. Harian: 15–20 mg/m²/hari x5 hari tiap 3–4 mgg. Neuroblastoma: 90 mg/m² tiap 3 mgg [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif platinum; kerusakan ginjal; gangguan pendengaran berat; mielosupresi'],
+    warnings: [
+      'Nefrotoksik kumulatif — hidrasi adekuat ± manitol/furosemid sebelum & sesudah [16]',
+      'Ototoksik (tinitus s/d ketulian) — tes pendengaran [16]',
+      'Pantau kreatinin, elektrolit (Mg, K, Ca), klirens kreatinin [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'kalsium_folinat',
+    name: 'Kalsium Folinat (Leukovorin)',
+    aliases: ['Calcium Folinate', 'Leucovorin', 'Folinic Acid'],
+    category: 'onkologi',
+    mechanism: 'Folat tereduksi — "rescue" sel normal dari toksisitas metotreksat; mengembalikan sintesis folat.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Rescue 12–15 mg q6h · overdosis ≥ dosis MTX',
+          frequency: 'tiap 6 jam (rescue)',
+          indication: 'Rescue metotreksat dosis tinggi, overdosis metotreksat',
+          notes: 'Antidot MTX (mulai ~24 jam sebelum MTX): 120 mg terbagi selama 12–24 jam, lalu 12–15 mg IM atau 15 mg PO tiap 6 jam x48–72 jam [16]. Overdosis MTX (segera, ≤1 jam): dosis IV ≥ dosis MTX, kecepatan ≤160 mg/menit [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'JANGAN diberikan intratekal [16]',
+      'Bukan untuk anemia pernisiosa/megaloblastik akibat defisiensi B12 [16]',
+    ],
+    warnings: [
+      'Reaksi alergi, demam setelah pemberian parenteral [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'azatioprin',
+    name: 'Azatioprin',
+    aliases: ['Azathioprine', 'Imuran'],
+    category: 'onkologi',
+    mechanism: 'Imunosupresan — pro-drug 6-merkaptopurin, menghambat sintesis purin & proliferasi limfosit.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Awal 2–5 mg/kg/hari · rumatan 1–3 mg/kg/hari',
+          frequency: '1× sehari',
+          indication: 'Pencegahan rejeksi transplantasi, penyakit autoimun (SLE, AR, sindrom nefrotik, Crohn)',
+          notes: 'Dosis awal: 2–5 mg/kg/hari. Pemeliharaan: 1–3 mg/kg/hari [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif azatioprin; penggunaan bersama mikofenolat'],
+    warnings: [
+      'Mielosupresi (dapat menetap) — pantau hitung sel darah putih [16]',
+      'Reduksi dosis 25–33% bila diberi bersama alopurinol [16]',
+      'Risiko neoplasma & kanker kulit pada penggunaan jangka panjang [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'siklosporin',
+    name: 'Siklosporin',
+    aliases: ['Ciclosporin', 'Cyclosporine', 'Sandimmun', 'Neoral'],
+    category: 'onkologi',
+    mechanism: 'Inhibitor kalsineurin — menghambat aktivasi sel T & produksi IL-2.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Awal 14–18 mg/kg · rumatan 3–10 mg/kg/hari',
+          frequency: '1–2× sehari',
+          indication: 'Profilaksis GVHD/rejeksi transplantasi, sindrom nefrotik resisten, autoimun berat',
+          notes: 'PO awal: 14–18 mg/kg 4–12 jam pra-transplantasi. Rumatan: 5–15 mg/kg/hari (1–2 dosis), tapering ke 3–10 mg/kg/hari. Glomerulosklerosis fokal: awal 3 mg/kg/hari dibagi 2. IV awal: 5–6 mg/kg [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif; kehamilan & menyusui; hipertensi tak terkontrol'],
+    warnings: [
+      'Nefrotoksik & hepatotoksik — monitor ketat fungsi ginjal/hati, elektrolit [16]',
+      'Hipertensi, hiperkalemia, hipomagnesemia, hiperplasia gingiva [16]',
+      'Pantau kadar obat, tekanan darah, denyut jantung [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
   // ── Lainnya ────────────────────────────────────────────────────────────
   {
     id: 'kalsium_glukonat',
@@ -3142,6 +3535,7 @@ export const DRUG_CATEGORY_LABEL: Record<DrugCategory, string> = {
   antiparasit:    'Antiparasit',
   antiretroviral: 'Antiretroviral',
   antidotum:      'Antidotum',
+  onkologi:       'Onkologi',
   lainnya:        'Lainnya',
 };
 
@@ -3149,7 +3543,7 @@ export const DRUG_CATEGORY_ORDER: DrugCategory[] = [
   'emergensi', 'vasoaktif', 'antikonvulsan', 'sedasi', 'analgesik',
   'bronkodilator', 'kortikosteroid', 'diuretik', 'antiemetik',
   'antibiotik', 'antiviral', 'antijamur', 'antiparasit', 'antiretroviral',
-  'antidotum', 'lainnya',
+  'antidotum', 'onkologi', 'lainnya',
 ];
 
 export function searchDrugs(query: string): DrugEntry[] {
