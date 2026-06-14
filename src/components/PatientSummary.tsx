@@ -20,9 +20,9 @@ export function PatientSummary() {
         <button className="action" onClick={() => setOpen(true)}>{hasPatient ? 'Ubah' : 'Isi'}</button>
       </div>
 
+      <div className="ios-list">
       <button
-        className="ios-list text-left"
-        style={{ display: 'block' }}
+        style={{ display: 'block', width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
         onClick={() => setOpen(true)}
       >
         {hasPatient ? (
@@ -64,6 +64,7 @@ export function PatientSummary() {
           </div>
         )}
       </button>
+      </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="bottom">
