@@ -15,7 +15,8 @@ export type TheoryCategory =
   | 'respirasi'
   | 'infeksi'
   | 'metabolik'
-  | 'farmakologi';
+  | 'farmakologi'
+  | 'gizi';
 
 export interface TheoryPoint {
   text: string;
@@ -565,6 +566,96 @@ export const THEORY_ENTRIES: TheoryEntry[] = [
     ],
     references: ['aspen2017'],
   },
+
+  // ── Gizi ────────────────────────────────────────────────────────────────
+  {
+    id: 'gizi_indikator',
+    title: 'Indikator Status Gizi Anak',
+    subtitle: 'BB/U · TB/U · BB/TB · IMT/U — WHO Z-score',
+    category: 'gizi',
+    points: [
+      { text: 'BB/U (Berat Badan per Usia): mendeteksi underweight. Tidak membedakan wasting (akut) dari stunting (kronik). Kurang spesifik bila tinggi badan tidak diketahui.', cite: 'who_growth2006' },
+      { text: 'TB/U atau PB/U (Tinggi/Panjang Badan per Usia): mendeteksi stunting (gangguan pertumbuhan linear kronik). Panjang badan (recumbent) digunakan pada usia < 2 tahun, tinggi badan (berdiri) pada ≥ 2 tahun.', cite: 'who_growth2006' },
+      { text: 'BB/TB atau BB/PB (Berat Badan per Tinggi/Panjang Badan): mendeteksi wasting (kekurangan gizi akut). Lebih sensitif untuk kondisi akut karena tidak bergantung usia.', cite: 'who_growth2006' },
+      { text: 'IMT/U (Indeks Massa Tubuh per Usia): digunakan WHO untuk usia 0–5 tahun dan CDC untuk 2–20 tahun. Berguna untuk deteksi gizi lebih/obesitas, tetapi untuk malnutrisi BB/TB lebih dianjurkan.', cite: 'who_growth2006' },
+      { text: 'Klasifikasi Z-score WHO: Normal (≥−2 SD hingga +2 SD); Kurang (<−2 SD); Sangat kurang/berat (<−3 SD); Lebih (>+2 SD). Ambang ini berlaku untuk BB/U, TB/U, dan BB/TB.', cite: 'who_growth2006' },
+      { text: 'Gunakan minimal dua indikator secara bersamaan untuk penilaian komprehensif: BB/U saja tidak cukup untuk membedakan wasting dari stunting, dan tata laksananya berbeda.', cite: 'idai_gizi2011' },
+    ],
+    references: ['who_growth2006', 'idai_gizi2011'],
+  },
+  {
+    id: 'gizi_stunting',
+    title: 'Stunting (Pendek)',
+    subtitle: 'TB/U atau PB/U < −2 SD — gangguan linear kronik',
+    category: 'gizi',
+    points: [
+      { text: 'Definisi: Z-score TB/U atau PB/U < −2 SD (pendek); < −3 SD (sangat pendek/severely stunted). Mencerminkan defisit pertumbuhan kumulatif akibat gizi kurang kronik, infeksi berulang, atau stimulasi psikososial tidak adekuat.', cite: 'who_growth2006' },
+      { text: 'Stunting ≠ pendek secara konstitusional. Bedakan dengan familial short stature (TB orang tua pendek, kecepatan tumbuh normal, bone age sesuai) dan constitutional delay (bone age tertinggal, catch-up spontan).', cite: 'idai_gizi2011' },
+      { text: 'Faktor risiko: BBLR, ASI eksklusif tidak adekuat, MPASI terlambat/kurang bergizi, diare berulang, infeksi saluran napas berulang, kemiskinan, sanitasi buruk.', cite: 'kemenkes_gizi_buruk2019' },
+      { text: 'Dampak jangka panjang: penurunan IQ, kapasitas belajar berkurang, produktivitas kerja menurun, peningkatan risiko penyakit kronis di usia dewasa (hipertensi, DM tipe 2, sindrom metabolik).', cite: 'who_pocketbook2013' },
+      { text: 'Pendekatan klinis: atasi penyebab (infeksi, defisiensi mikronurien — zat besi, zinc, vitamin A); optimalkan MPASI (densitas energi dan protein tinggi); suplementasi zinc 10–20 mg/hari selama 10–14 hari bila ada diare.', cite: 'idai_gizi2011' },
+      { text: 'Height Age (HA): usia di mana tinggi badan pasien setara median. Berguna untuk menilai kebutuhan energi realistis dan target pemberian makan — gunakan HA bukan usia kronologis bila stunting berat.', cite: 'idai_gizi2011' },
+    ],
+    references: ['who_growth2006', 'idai_gizi2011', 'kemenkes_gizi_buruk2019', 'who_pocketbook2013'],
+  },
+  {
+    id: 'gizi_wasting',
+    title: 'Wasting — Gizi Kurang & Gizi Buruk',
+    subtitle: 'BB/TB < −2 SD — deplesi massa tubuh akut',
+    category: 'gizi',
+    points: [
+      { text: 'Definisi: Gizi kurang (MAM — Moderate Acute Malnutrition): BB/TB −3 SD hingga < −2 SD atau %BBI 70–80%. Gizi buruk (SAM — Severe Acute Malnutrition): BB/TB < −3 SD atau %BBI < 70% atau edema bilateral (kwashiorkor).', cite: 'who_pocketbook2013' },
+      { text: 'SAM dibagi 3 bentuk klinis: (1) Marasmus — kehilangan lemak dan otot berat, wajah "monkey face", iga gambang, kulit keriput; (2) Kwashiorkor — edema bilateral, rambut merah/kusam, dermatosis; (3) Marasmus-kwashiorkor — kombinasi keduanya.', cite: 'who_pocketbook2013' },
+      { text: 'Deteksi cepat di lapangan: MUAC (Mid-Upper Arm Circumference) < 11,5 cm (usia 6–59 bulan) = SAM. MUAC 11,5–12,5 cm = MAM. Dapat dilakukan tanpa timbangan.', cite: 'kemenkes_gizi_buruk2019' },
+      { text: 'Komplikasi akut yang harus dieksklusi saat masuk: hipoglikemia (GDS < 3 mmol/L atau 54 mg/dL), hipotermia (suhu aksila < 35°C), dehidrasi (anamnesis diare/muntah), infeksi berat (tidak sadar, kejang, pneumonia berat), anemia berat (Hb < 4 g/dL).', cite: 'who_pocketbook2013' },
+      { text: '10 Langkah WHO untuk SAM: (1) hipoglikemia, (2) hipotermia, (3) dehidrasi, (4) elektrolit, (5) infeksi, (6) mikronurien, (7) re-feeding hati-hati, (8) catch-up growth, (9) stimulasi sensoris, (10) follow-up. Laksanakan berurutan.', cite: 'who_pocketbook2013' },
+      { text: 'Refeeding syndrome: risiko tinggi pada SAM. Tanda: hipofosfatemia, hipokalemia, hipomagnesemia setelah pemberian makan dimulai → pembatasan cairan, elektrolit, dan tiamin profilaksis (Vit B1 100–300 mg/hari).', cite: 'aspen2017' },
+    ],
+    references: ['who_pocketbook2013', 'kemenkes_gizi_buruk2019', 'aspen2017'],
+  },
+  {
+    id: 'gizi_formula',
+    title: 'Formula Terapeutik SAM',
+    subtitle: 'F-75, F-100, RUTF — rehab nutrisional bertahap',
+    category: 'gizi',
+    points: [
+      { text: 'Fase stabilisasi (hari 1–7): F-75 (75 kkal/100 mL, 0,9 g protein/100 mL). Tujuan: stabilisasi metabolik, bukan catch-up growth. Berikan 100 mL/kg/hari dibagi 8–12 kali (setiap 2–3 jam).', cite: 'who_pocketbook2013' },
+      { text: 'Fase transisi (hari 7–14): Ganti F-75 → F-100 atau RUTF (Ready-to-Use Therapeutic Food) secara bertahap. Monitor edema, toleransi, dan BB setiap hari.', cite: 'who_pocketbook2013' },
+      { text: 'Fase rehabilitasi (minggu 2–6+): F-100 (100 kkal/100 mL, 2,9 g protein/100 mL) atau RUTF (Plumpy\'Nut: 500 kkal/sachet 92 g). Target catch-up growth: > 10 g/kg/hari.', cite: 'who_pocketbook2013' },
+      { text: 'RUTF lebih dianjurkan untuk rawat jalan (outpatient). Tersedia RUTF lokal dari Indonesia (campuran kacang tanah, susu skim, gula, minyak, vitmin-mineral). Tidak dianjurkan untuk usia < 6 bulan atau bila ada edema berat.', cite: 'kemenkes_gizi_buruk2019' },
+      { text: 'Suplementasi rutin pada SAM: (1) asam folat 5 mg dosis tunggal hari pertama, lanjut 1 mg/hari; (2) multivitamin (tanpa zat besi pada fase awal); (3) zat besi ditambahkan hanya setelah nafsu makan pulih (fase rehabilitasi), karena besi bebas memperburuk infeksi.', cite: 'who_pocketbook2013' },
+      { text: 'Discharge criteria (Kemenkes): BB/TB ≥ −2 SD, tidak ada edema selama 2 minggu, nafsu makan baik, tidak ada infeksi aktif. Pastikan follow-up 1 minggu, 2 minggu, 1 bulan pasca-discharge.', cite: 'kemenkes_gizi_buruk2019' },
+    ],
+    references: ['who_pocketbook2013', 'kemenkes_gizi_buruk2019'],
+  },
+  {
+    id: 'gizi_bbi',
+    title: '% BBI, Height Age & Weight Age',
+    subtitle: 'Estimasi status gizi dan target pemberian makan',
+    category: 'gizi',
+    points: [
+      { text: 'BBI (Berat Badan Ideal) = nilai median BB untuk usia pasien (M dari tabel WFA WHO/CDC). Digunakan sebagai target BB dan dasar perhitungan kebutuhan nutrisi.', cite: 'idai_gizi2011' },
+      { text: '% BBI = (BB aktual / BBI) × 100%. Interpretasi (Waterlow): ≥ 90% = gizi baik; 80–89% = gizi kurang (mild); 70–79% = gizi kurang (moderate/MAM); < 70% = gizi buruk (severe/SAM).', cite: 'idai_gizi2011' },
+      { text: 'Height Age (HA): usia di mana tinggi badan aktual pasien sama dengan median (kurva TB/U). Berguna pada stunting — gunakan HA untuk menghitung BBI yang lebih realistis: BBI = median BB pada HA.', cite: 'idai_gizi2011' },
+      { text: 'Weight Age (WA): usia di mana BB aktual pasien sama dengan median (kurva BB/U). Menggambarkan "usia nutrisi" pasien. Bila WA jauh di bawah usia kronologis: bukti wasting/underweight bermakna.', cite: 'idai_gizi2011' },
+      { text: 'Contoh klinis: anak 5 tahun BB 12 kg TB 95 cm. HA = 3 th (tinggi setara median anak 3 th). WA = 2 th 6 bln. BBI (pada HA) = ~14 kg. %BBI = 12/14 × 100% = 86% → gizi kurang. Kebutuhan energi dihitung berdasarkan BBI (HA), bukan usia kronologis.', cite: 'idai_gizi2011' },
+      { text: 'Catch-up growth: bila stunting bermakna, target kalori perlu melampaui RDA usia kronologis. Gunakan RDA usia kronologis × (BBI / BB aktual) sebagai titik awal, lalu eskalasi bertahap (hindari refeeding syndrome).', cite: 'aspen2017' },
+    ],
+    references: ['idai_gizi2011', 'aspen2017'],
+  },
+  {
+    id: 'gizi_overweight',
+    title: 'Gizi Lebih & Obesitas pada Anak',
+    subtitle: 'BB/TB atau IMT/U > +2 SD — pendekatan ICU',
+    category: 'gizi',
+    points: [
+      { text: 'Definisi WHO: Gizi lebih (overweight) = BB/TB atau IMT/U +2 SD hingga +3 SD. Obesitas = > +3 SD. Pada anak ≥ 2 tahun, CDC menggunakan persentil IMT: ≥ 85th = overweight, ≥ 95th = obesitas.', cite: 'who_growth2006' },
+      { text: 'Di PICU, obesitas meningkatkan risiko: ARDS (penurunan FRC, atelektasis), sleep apnea, sulit intubasi, resistensi insulin, dan thrombosis vena dalam. Indeks ventilasi perlu koreksi.', cite: 'aspen2017' },
+      { text: 'Kebutuhan kalori di ICU pada obesitas: gunakan BB ideal (BBI pada usia kronologis), bukan BB aktual, untuk menghindari overfeeding. Target protein lebih tinggi: 2–2,5 g/kg BBI/hari.', cite: 'aspen2017' },
+      { text: 'Jangan melakukan restriksi kalori agresif saat sakit kritis akut — tujuan nutrisional di ICU adalah mempertahankan massa otot dan mendukung imunitas, bukan penurunan BB.', cite: 'aspen2017' },
+    ],
+    references: ['who_growth2006', 'aspen2017'],
+  },
 ];
 
 export const CATEGORY_LABELS: Record<TheoryCategory, string> = {
@@ -579,10 +670,11 @@ export const CATEGORY_LABELS: Record<TheoryCategory, string> = {
   infeksi:      'Infeksi',
   metabolik:    'Metabolik',
   farmakologi:  'Farmakologi',
+  gizi:         'Gizi',
 };
 
 export const CATEGORY_ORDER: TheoryCategory[] = [
   'sepsis', 'syok', 'ventilasi', 'respirasi',
   'neonatus', 'cairan', 'neurologi', 'renal',
-  'infeksi', 'metabolik', 'farmakologi',
+  'infeksi', 'metabolik', 'farmakologi', 'gizi',
 ];

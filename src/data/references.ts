@@ -279,4 +279,18 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://www.idai.or.id',
     verified: true,
   },
+  who_pocketbook2013: {
+    id: 39,
+    citation:
+      'World Health Organization. Pocket Book of Hospital Care for Children: Guidelines for the Management of Common Childhood Illnesses. 2nd ed. Geneva: WHO; 2013. (Bab 7: Malnutrisi berat)',
+    url: 'https://www.who.int/publications/i/item/9789241548373',
+    verified: true,
+  },
+  kemenkes_gizi_buruk2019: {
+    id: 40,
+    citation:
+      'Kementerian Kesehatan Republik Indonesia. Pedoman Pencegahan dan Tatalaksana Gizi Buruk pada Balita. Jakarta: Kemenkes RI; 2019.',
+    url: 'https://www.kemkes.go.id',
+    verified: true,
+  },
 };
