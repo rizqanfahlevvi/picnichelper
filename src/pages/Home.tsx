@@ -1,10 +1,7 @@
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ChevronRight, Calculator, Droplets, Pill, BarChart2, BookOpen,
          Activity, BookMarked, AlertTriangle } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../components/ui/sheet';
-import { PatientInput } from '../components/PatientInput';
-import { usePatientStore } from '../store/patientStore';
+import { PatientSummary } from '../components/PatientSummary';
 
 const QUICK_ACCESS = [
   { to: '/kalkulator',   icon: Calculator, tint: 'tint-resp',  label: 'Kalkulator ETT',  sub: 'Ukuran & kedalaman tube' },
@@ -20,65 +17,15 @@ const MODULES = [
 ];
 
 export function Home() {
-  const { nama, gender, ageUnit, ageInput, ageYears, weightKg, heightCm } = usePatientStore();
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const hasPatient = weightKg !== '' || ageInput !== '' || ageYears !== '';
-
-  // Label usia untuk tampilan
-  const ageDisplay = ageUnit === 'bulan' ? ageInput : ageUnit === 'tgl-lahir' ? ageYears : ageYears;
-  const ageUnitDisplay = ageUnit === 'bulan' ? 'bln' : 'th';
-
   return (
     <div className="ios-screen pb-6">
-
       <div style={{ padding: '24px 20px 8px' }}>
         <h1 className="ios-large-title">PICNIC Helper</h1>
         <p className="ios-subhead" style={{ marginTop: 4 }}>Pediatric ER &amp; Intensive Care Companion</p>
       </div>
 
-      {/* ── Pasien Aktif ─────────────────────────────────────────────── */}
-      <div className="ios-section">
-        <span className="label">Pasien Aktif</span>
-        <button className="action" onClick={() => setSheetOpen(true)}>{hasPatient ? 'Ubah' : 'Isi'}</button>
-      </div>
+      <PatientSummary />
 
-      <button className="ios-list w-full text-left" style={{ display: 'block' }} onClick={() => setSheetOpen(true)}>
-        {hasPatient ? (
-          <div>
-            {(nama || gender) && (
-              <div style={{ padding: '8px 14px 4px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                {nama && (
-                  <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--label-primary)' }}>{nama}</span>
-                )}
-                {gender && (
-                  <span style={{
-                    fontSize: 12, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--r-pill)',
-                    background: gender === 'L' ? 'rgba(0,122,255,0.12)' : 'rgba(255,45,85,0.12)',
-                    color: gender === 'L' ? 'var(--sys-blue)' : 'var(--sys-pink)',
-                  }}>
-                    {gender === 'L' ? 'Laki-laki' : 'Perempuan'}
-                  </span>
-                )}
-              </div>
-            )}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-              <DataCell val={ageDisplay}  unit={ageUnitDisplay} label="Usia"   borderRight />
-              <DataCell val={weightKg}    unit="kg"             label="Berat"  borderRight />
-              <DataCell val={heightCm}    unit="cm"             label="Tinggi" />
-            </div>
-          </div>
-        ) : (
-          <div style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <AlertTriangle size={16} style={{ color: 'var(--warning)', flexShrink: 0 }} />
-            <span className="ios-footnote">Belum ada data pasien — ketuk untuk mengisi</span>
-          </div>
-        )}
-      </button>
-      <p className="ios-caption" style={{ padding: '4px 20px 0', color: 'var(--label-tertiary)' }}>
-        Data dipakai bersama oleh semua kalkulator.
-      </p>
-
-      {/* ── Akses Cepat ──────────────────────────────────────────────── */}
       <div className="ios-section"><span className="label">Akses Cepat</span></div>
       <div className="ios-list">
         {QUICK_ACCESS.map((item, i) => (
@@ -93,7 +40,6 @@ export function Home() {
         ))}
       </div>
 
-      {/* ── Modul ────────────────────────────────────────────────────── */}
       <div className="ios-section"><span className="label">Modul</span></div>
       <div className="ios-list">
         {MODULES.map((item) => (
@@ -112,48 +58,6 @@ export function Home() {
         <AlertTriangle size={12} />
         <span>Untuk panduan klinis · bukan pengganti penilaian klinis profesional</span>
       </div>
-
-      {/* ── Sheet input pasien ───────────────────────────────────────── */}
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent side="bottom">
-          <SheetHeader><SheetTitle>Data Pasien</SheetTitle></SheetHeader>
-          <div style={{ padding: '8px 0 32px' }}>
-            <PatientInput />
-            <div style={{ padding: '12px 16px 0' }}>
-              <button
-                onClick={() => setSheetOpen(false)}
-                style={{
-                  width: '100%', minHeight: 'var(--hit)', borderRadius: 'var(--r-sm)',
-                  background: 'var(--accent)', color: '#fff',
-                  border: 'none', cursor: 'pointer',
-                  font: 'var(--type-body)', fontWeight: 600,
-                }}
-              >Simpan</button>
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </div>
-  );
-}
-
-function DataCell({ val, unit, label, borderRight }: {
-  val: string; unit: string; label: string; borderRight?: boolean;
-}) {
-  return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: '11px 8px 12px',
-      borderRight: borderRight ? '0.5px solid var(--separator)' : 'none',
-    }}>
-      {val ? (
-        <span style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--label-primary)', lineHeight: 1 }}>{val}</span>
-      ) : (
-        <span style={{ fontSize: 22, fontWeight: 300, color: 'var(--label-tertiary)', lineHeight: 1 }}>—</span>
-      )}
-      <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 3 }}>
-        {label}{val ? ` · ${unit}` : ''}
-      </span>
     </div>
   );
 }

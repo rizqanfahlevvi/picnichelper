@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronRight, AlertTriangle, Info } from 'lucide-react';
+import { Search, ChevronRight, AlertTriangle, Info, BookOpen } from 'lucide-react';
 import { usePatientStore } from '../../store/patientStore';
 import {
   DRUG_LIBRARY, DRUG_CATEGORY_LABEL, DRUG_CATEGORY_ORDER,
   type DrugEntry, type DrugCategory, type DrugRoute,
 } from '../../data/drugLibrary';
+import { REFERENCES } from '../../data/references';
 import { calculateDose, formatDose, isSingleDose } from '../../utils/drugDose';
 import { Disclaimer } from '../Disclaimer';
 
@@ -299,6 +300,35 @@ function DrugDetail({ drug }: { drug: DrugEntry }) {
           {drug.pharmacokinetics.excretion  && <InfoRow label="Ekskresi"   value={drug.pharmacokinetics.excretion} />}
         </AccordionItem>
       )}
+
+      {/* Referensi */}
+      {drug.references.length > 0 && (
+        <div style={{ borderTop: '0.5px solid var(--separator)', padding: '10px 14px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+            <BookOpen size={12} color="var(--label-tertiary)" />
+            <span style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--label-tertiary)' }}>
+              Referensi
+            </span>
+          </div>
+          {drug.references.map((refKey) => {
+            const ref = REFERENCES[refKey];
+            if (!ref) return null;
+            return (
+              <p key={refKey} style={{ font: 'var(--type-caption-2)', color: 'var(--label-tertiary)', lineHeight: 1.5, marginBottom: 4 }}>
+                <span style={{ fontWeight: 700, color: 'var(--label-secondary)' }}>[{ref.id}]</span>{' '}
+                {ref.citation}
+              </p>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Disclaimer */}
+      <div style={{ padding: '8px 14px 12px', borderTop: '0.5px solid var(--separator)' }}>
+        <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-tertiary)', fontStyle: 'italic' }}>
+          Untuk panduan klinis · bukan pengganti penilaian klinis profesional
+        </p>
+      </div>
     </div>
   );
 }
