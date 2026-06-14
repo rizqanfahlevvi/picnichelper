@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Wind, Zap, Droplets, FlaskConical, Beaker, HeartPulse, TestTube2, ChevronLeft } from 'lucide-react';
+import { Wind, Zap, Droplets, FlaskConical, Beaker, HeartPulse, TestTube2, Scale, ChevronLeft } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { PatientSummary } from '../components/PatientSummary';
 import { EttCalculator } from '../components/calculators/EttCalculator';
@@ -9,8 +9,9 @@ import { AbgInterpreter } from '../components/calculators/AbgInterpreter';
 import { ElectrolyteCalculator } from '../components/calculators/ElectrolyteCalculator';
 import { BloodPressureCalculator } from '../components/calculators/BloodPressureCalculator';
 import { RenalCalculator } from '../components/calculators/RenalCalculator';
+import { NutritionStatus } from '../components/monitoring/NutritionStatus';
 
-type CalcId = 'ett' | 'dosis' | 'syringe' | 'agd' | 'elektrolit' | 'bp' | 'renal';
+type CalcId = 'ett' | 'dosis' | 'syringe' | 'agd' | 'elektrolit' | 'bp' | 'renal' | 'gizi';
 
 interface CalcCard {
   id: CalcId;
@@ -56,6 +57,11 @@ const CALCULATORS: CalcCard[] = [
     id: 'renal', label: 'Kalkulator Renal',
     desc: 'eGFR Schwartz · Protein:Cr · UO',
     icon: TestTube2, tintClass: 'tint-renal', tintColor: 'var(--sys-mint)',
+  },
+  {
+    id: 'gizi', label: 'Status Gizi',
+    desc: 'Z-score WHO/CDC · BBI · HA · WA',
+    icon: Scale, tintClass: 'tint-score', tintColor: 'var(--sys-green)',
   },
 ];
 
@@ -104,6 +110,7 @@ export function Kalkulator() {
           {active === 'elektrolit'&& <ElectrolyteCalculator />}
           {active === 'bp'        && <BloodPressureCalculator />}
           {active === 'renal'     && <RenalCalculator />}
+          {active === 'gizi'      && <NutritionStatus />}
         </div>
       )}
     </div>
