@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PatientInput } from '../components/PatientInput';
+import { PatientSummary } from '../components/PatientSummary';
 import { DrugLibraryView } from '../components/drugsfluid/DrugLibraryView';
 import { FluidLibraryView } from '../components/drugsfluid/FluidLibraryView';
 import { FluidCalculator } from '../components/drugsfluid/FluidCalculator';
@@ -45,11 +45,10 @@ export function DrugsFluid() {
         </div>
       </div>
 
-      {/* Patient input (always visible for dose calc) */}
+      {/* Patient summary (compact, always visible untuk dose calc) */}
       {(tab === 'obat' || tab === 'kalkulator') && (
         <div style={{ marginBottom: 8 }}>
-          <div className="ios-section"><span className="label">Data Pasien</span></div>
-          <PatientInput />
+          <PatientSummary />
         </div>
       )}
 

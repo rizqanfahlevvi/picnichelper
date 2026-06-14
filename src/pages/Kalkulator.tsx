@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Wind, Zap, Droplets, FlaskConical, Beaker, HeartPulse, TestTube2, ChevronLeft } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { PatientInput } from '../components/PatientInput';
+import { PatientSummary } from '../components/PatientSummary';
 import { EttCalculator } from '../components/calculators/EttCalculator';
 import { EmergencyDrugsCalculator } from '../components/calculators/EmergencyDrugsCalculator';
 import { SyringePumpCalculator } from '../components/calculators/SyringePumpCalculator';
@@ -85,7 +85,7 @@ export function Kalkulator() {
         )}
       </div>
 
-      <PatientInput />
+      <PatientSummary />
 
       {active === null ? (
         /* ── Card grid ── */
