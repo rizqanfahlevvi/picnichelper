@@ -1336,6 +1336,239 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
   {
+    id: 'ibuprofen',
+    name: 'Ibuprofen',
+    aliases: ['Ibuprofen', 'Proris', 'Brufen', 'Bufect'],
+    category: 'analgesik',
+    mechanism: 'AINS — inhibisi siklooksigenase (COX-1 & COX-2) → menurunkan sintesis prostaglandin; efek analgesik, antipiretik, anti-inflamasi.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 20, maxPerKg: 40, unit: 'mg/kg',
+          frequency: 'terbagi 3–4 dosis/hari; dengan/sesudah makan (dosis/hari)',
+          indication: 'Nyeri, demam, artritis juvenil',
+          notes: 'Tidak direkomendasikan untuk BB < 7 kg. Artritis juvenil 30–40 mg/kg/hari; nyeri < 1 th 20–30 mg/kg/hari [16]. Dosis tetap per usia: 1–2 th 50 mg, 3–7 th 100 mg, 8–12 th 200 mg — 3–4×/hari.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap aspirin/AINS (asma, angioedema, urtikaria, rinitis)',
+      'Ulkus peptikum',
+    ],
+    warnings: [
+      'Gangguan saluran cerna & perdarahan GI',
+      'Hati-hati pada gangguan fungsi hati/ginjal, penyakit jantung, gangguan koagulasi',
+      'Retensi cairan & peningkatan tekanan darah',
+    ],
+    renalAdjustment: 'Hindari atau kurangi dosis pada gangguan ginjal (risiko nefrotoksik & retensi cairan).',
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'kodein',
+    name: 'Kodein Fosfat',
+    aliases: ['Codeine', 'Kodein'],
+    category: 'analgesik',
+    mechanism: 'Opioid lemah (prodrug — dimetabolisme menjadi morfin via CYP2D6). Analgesik nyeri ringan–sedang.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.5, maxPerKg: 1, unit: 'mg/kg',
+          frequency: 'tiap 4–6 jam prn',
+          indication: 'Nyeri ringan–sedang',
+          notes: '1–12 th: 0,5–1 mg/kg PO q4–6h prn. > 12 th: 10–20 mg/dosis q4–6h, maks 120 mg/hari [16]. Berikan bersama makanan/air.',
+        },
+      },
+    ],
+    contraindications: [
+      'Depresi pernapasan, penyakit obstruksi saluran napas, serangan asma akut',
+      'Risiko ileus paralitik',
+    ],
+    warnings: [
+      'PERINGATAN REGULATOR (FDA/EMA 2017): hindari pada anak < 12 tahun dan pasca-tonsilektomi/adenoidektomi — risiko depresi napas fatal pada metabolisme ultra-cepat CYP2D6',
+      'Ketergantungan pada penggunaan jangka panjang; konstipasi',
+      'Depresi napas pada overdosis — antidot: nalokson',
+    ],
+    renalAdjustment: 'ClCr 10–50 mL/menit: berikan 75% dosis.',
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'klorfeniramin',
+    name: 'Klorfeniramin Maleat (CTM)',
+    aliases: ['Chlorpheniramine', 'CTM', 'Klorfeniramin'],
+    category: 'lainnya',
+    mechanism: 'Antihistamin H₁ generasi pertama (sedatif). Memblok reseptor histamin → meredakan gejala alergi.',
+    routes: [
+      {
+        route: 'IM',
+        dose: {
+          minPerKg: 87.5, maxPerKg: 87.5, unit: 'mcg/kg',
+          frequency: 'dapat diulang hingga 4×/hari',
+          indication: 'Reaksi alergi (SC/IM)',
+          notes: 'SC/IM 87,5 mcg/kg. Oral per usia: 1–2 th 1 mg 2×/hari; 2–5 th 1 mg q4–6h (maks 6 mg/hari); 6–12 th 2 mg q4–6h (maks 12 mg/hari). Anafilaksis (penunjang) IV: < 1 th 250 mcg/kg; 1–5 th 2,5–5 mg; 6–12 th 5–10 mg, selama 1 menit [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Anak < 1 tahun',
+      'Retensi urin, ileus, obstruksi piloroduodenal',
+      'Glaukoma',
+    ],
+    warnings: [
+      'Mengantuk; stimulasi paradoks pada anak / dosis tinggi',
+      'Efek antikolinergik: mulut kering, retensi urin, pandangan kabur',
+      'Hati-hati pada epilepsi, gangguan hati/ginjal',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'metoklopramid',
+    name: 'Metoklopramid',
+    aliases: ['Metoclopramide', 'Primperan', 'Metokloperamid'],
+    category: 'antiemetik',
+    mechanism: 'Antagonis reseptor dopamin D₂ (sentral & perifer) dengan efek prokinetik; pada dosis tinggi juga agonis 5-HT₄.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0.1, maxPerKg: 0.15, unit: 'mg/kg',
+          frequency: 'tiap 8 jam (maks 0,5 mg/kg/hari)',
+          ivDuration: 'IV lambat 1–2 menit',
+          indication: 'Mual & muntah, GERD, gastroparesis',
+          notes: 'Dosis ditetapkan per pita BB (mis. BB 20–29 kg: 2,5 mg 3×/hari), maks 500 mcg/kg/hari [16]. Kemoterapi (dosis tinggi IV): awal 2–4 mg/kg lalu 3–5 mg/kg, maks 10 mg/kg/24 jam.',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.1, maxPerKg: 0.15, unit: 'mg/kg',
+          frequency: 'tiap 8 jam (maks 0,5 mg/kg/hari)',
+          indication: 'Mual & muntah, GERD',
+        },
+      },
+    ],
+    contraindications: [
+      'Obstruksi gastrointestinal, perdarahan/perforasi 3–4 hari pasca-bedah',
+      'Kejang',
+      'Feokromositoma',
+    ],
+    warnings: [
+      'Gejala ekstrapiramidal (terutama anak & remaja) — batasi durasi & dosis',
+      'Tardive dyskinesia pada pengobatan lama; sindrom neuroleptik maligna',
+      'Methemoglobinemia (lebih berat pada defisiensi G6PD)',
+    ],
+    renalAdjustment: 'ClCr 40–50 mL/menit: 75% dosis; 10–40: 50% dosis; < 10: 25–50% dosis.',
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'prometazin',
+    name: 'Prometazin',
+    aliases: ['Promethazine', 'Phenergan'],
+    category: 'antiemetik',
+    mechanism: 'Antihistamin H₁ golongan fenotiazin dengan efek antiemetik, sedatif, dan antikolinergik.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.5, maxPerKg: 1, unit: 'mg/kg',
+          frequency: 'tiap 6 jam prn',
+          indication: 'Sedasi / antiemetik / premedikasi',
+          notes: 'Sedasi (PO/IM/IV/rektal) 0,5–1 mg/kg/dosis q6h prn; antihistamin 0,1 mg/kg q6h; premedikasi 0,5–1 mg/kg [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Umur < 1 tahun (depresi napas fatal)',
+      'Gangguan kesadaran karena depresi serebral',
+      'Porfiria',
+    ],
+    warnings: [
+      'PERINGATAN: kontraindikasi pada anak < 2 tahun (FDA boxed warning) — risiko depresi napas fatal',
+      'Sedasi; dapat terjadi stimulasi paradoks pada anak / dosis besar',
+      'Jangan injeksi intra-arteri / ekstravasasi (nekrosis jaringan berat)',
+      'Efek antikolinergik: retensi urin, mulut kering',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'omeprazol',
+    name: 'Omeprazol',
+    aliases: ['Omeprazole', 'OMZ', 'Losec'],
+    category: 'lainnya',
+    mechanism: 'Penghambat pompa proton (H⁺/K⁺-ATPase) sel parietal lambung → menekan produksi asam lambung secara kuat & lama.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.7, maxPerKg: 3.5, unit: 'mg/kg',
+          frequency: '1–2×/hari (dosis/hari)',
+          indication: 'GERD, esofagitis, ulkus, profilaksis stress ulcer',
+          notes: 'GERD/esofagitis/ulkus: 0,7–3,5 mg/kg/hari selama 2–8 minggu. Infeksi H. pylori: 0,7–3,5 mg/kg/hari sekali sehari 1–2 minggu [16].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0.7, maxPerKg: 3.5, unit: 'mg/kg',
+          frequency: '1–2×/hari (dosis/hari)',
+          indication: 'Bila tidak dapat per oral',
+          notes: 'Tersedia serbuk injeksi 40 mg [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap omeprazole atau golongan benzimidazol (albendazol, mebendazol)',
+    ],
+    warnings: [
+      'Hipomagnesemia pada pemakaian lama — pantau kadar magnesium',
+      'Hati-hati pada kelainan hati',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'ranitidin',
+    name: 'Ranitidin',
+    aliases: ['Ranitidine', 'Zantac'],
+    category: 'lainnya',
+    mechanism: 'Antagonis reseptor H₂ histamin pada sel parietal → menurunkan sekresi asam lambung.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 1, maxPerKg: 1, unit: 'mg/kg',
+          frequency: 'tiap 6–8 jam',
+          indication: 'Ulkus, hipersekresi lambung, GERD',
+          notes: 'Anak: 2–4 mg/kg/kali q8–12h. Neonatus IV 1 mg/kg q6–8h, oral 2–4 mg/kg q8–12h [16].',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 2, maxPerKg: 4, unit: 'mg/kg',
+          frequency: 'tiap 8–12 jam',
+          indication: 'Ulkus, GERD (oral)',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap ranitidin',
+    ],
+    warnings: [
+      'CATATAN: ranitidin ditarik dari peredaran di banyak negara (2020) karena kontaminasi NDMA — banyak pedoman beralih ke PPI atau famotidin',
+      'Hati-hati pada gangguan fungsi hati & ginjal',
+      'Jarang: bradikardia, trombositopenia',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
     id: 'nalokson',
     name: 'Nalokson (Narcan)',
     aliases: ['Naloxone', 'Narcan'],
