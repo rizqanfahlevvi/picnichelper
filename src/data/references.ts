@@ -179,4 +179,76 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://www.idai.or.id',
     verified: true,
   },
+
+  // ── Teori Klinis ──────────────────────────────────────────────────────
+  ssc2020: {
+    id: 25,
+    citation:
+      'Weiss SL, Peters MJ, Alhazzani W, et al. Surviving Sepsis Campaign International Guidelines for the Management of Septic Shock and Sepsis-Associated Organ Dysfunction in Children. Pediatr Crit Care Med. 2020;21(2):e52–e106.',
+    url: 'https://doi.org/10.1097/PCC.0000000000002198',
+    verified: true,
+  },
+  palicc2023: {
+    id: 26,
+    citation:
+      'Pediatric Acute Lung Injury Consensus Conference Group (PALICC-2). Pediatric Acute Respiratory Distress Syndrome: Consensus Recommendations from the Pediatric Acute Lung Injury Consensus Conference-2. Pediatr Crit Care Med. 2023;24(2):143–168.',
+    url: 'https://doi.org/10.1097/PCC.0000000000003074',
+    verified: true,
+  },
+  who_dengue2012: {
+    id: 27,
+    citation:
+      'World Health Organization. Handbook for Clinical Management of Dengue. Geneva: WHO; 2012. (Klasifikasi dengue: tanpa warning signs, dengan warning signs, severe dengue; manajemen cairan resusitasi)',
+    url: 'https://www.who.int/publications/i/item/9789241504713',
+    verified: true,
+  },
+  ispad2022: {
+    id: 28,
+    citation:
+      'Wolfsdorf JI, Glaser N, Agus M, et al. ISPAD Clinical Practice Consensus Guidelines 2022: Diabetic ketoacidosis and hyperglycemic hyperosmolar state. Pediatr Diabetes. 2022;23(7):835–856.',
+    url: 'https://doi.org/10.1111/pedi.13406',
+    verified: true,
+  },
+  aap_bronchiolitis2014: {
+    id: 29,
+    citation:
+      'Ralston SL, Lieberthal AS, Meissner HC, et al. Clinical Practice Guideline: The Diagnosis, Management, and Prevention of Bronchiolitis. Pediatrics. 2014;134(5):e1474–e1502.',
+    url: 'https://doi.org/10.1542/peds.2014-2742',
+    verified: true,
+  },
+  gina2024: {
+    id: 30,
+    citation:
+      'Global Initiative for Asthma (GINA). Global Strategy for Asthma Management and Prevention. Updated 2024. (Tatalaksana eksaserbasi asma akut & status asmatikus pada anak)',
+    url: 'https://ginasthma.org',
+    verified: true,
+  },
+  who_dengue2009: {
+    id: 31,
+    citation:
+      'World Health Organization. Dengue: Guidelines for Diagnosis, Treatment, Prevention and Control. New edition. Geneva: WHO; 2009. (Klasifikasi dengue 2009: DF, DHF, DSS)',
+    url: 'https://www.who.int/publications/i/item/9789241547871',
+    verified: true,
+  },
+  idai_dengue2014: {
+    id: 32,
+    citation:
+      'Ikatan Dokter Anak Indonesia (IDAI). Pedoman Diagnosis dan Tata Laksana Infeksi Virus Dengue pada Anak. Jakarta: IDAI; 2014.',
+    url: 'https://www.idai.or.id',
+    verified: true,
+  },
+  aspen2017: {
+    id: 33,
+    citation:
+      'Mehta NM, Skillman HE, Irving SY, et al. Guidelines for the Provision and Assessment of Nutrition Support Therapy in the Pediatric Critically Ill Patient: Society of Critical Care Medicine and American Society for Parenteral and Enteral Nutrition. Pediatr Crit Care Med. 2017;18(7):675–715.',
+    url: 'https://doi.org/10.1097/PCC.0000000000001134',
+    verified: true,
+  },
+  idai_asma2016: {
+    id: 34,
+    citation:
+      'Ikatan Dokter Anak Indonesia (IDAI). Pedoman Nasional Asma Anak. 2nd ed. Jakarta: IDAI; 2016. (Tatalaksana eksaserbasi asma pada anak di IGD)',
+    url: 'https://www.idai.or.id',
+    verified: true,
+  },
 };
