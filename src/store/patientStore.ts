@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 // ─────────────────────────────────────────────────────────────────────────
 // Single Source of Truth untuk data pasien (CLAUDE.md).
@@ -34,7 +35,9 @@ interface PatientState {
   reset: () => void;
 }
 
-export const usePatientStore = create<PatientState>((set) => ({
+export const usePatientStore = create<PatientState>()(
+  persist(
+    (set) => ({
   category: 'anak',
   nama: '',
   gender: '',
@@ -56,4 +59,7 @@ export const usePatientStore = create<PatientState>((set) => ({
     nama: '', gender: '', ageUnit: 'tahun',
     ageInput: '', ageYears: '', weightKg: '', heightCm: '',
   }),
-}));
+    }),
+    { name: 'picnic-patient' },
+  ),
+);
