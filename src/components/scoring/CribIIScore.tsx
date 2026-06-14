@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { Cite } from '../Citation';
 import { calculateCribII, type CribIIInput, type CribIISex } from '../../utils/cribii';
 import { REFERENCES } from '../../data/references';
@@ -97,11 +98,53 @@ export function CribIIScore() {
         </>
       )}
 
+      <TheoryAccordion sections={CRIBII_THEORY} />
       <Disclaimer />
       <RefCard refKey="parry2003" />
     </div>
   );
 }
+
+const CRIBII_THEORY: TheorySection[] = [
+  {
+    title: 'CRIB-II — Konsep & Penggunaan',
+    content: `CRIB-II (Clinical Risk Index for Babies II) dikembangkan oleh Parry et al. (2003) untuk memprediksi mortalitas neonatus prematur saat masuk NICU.
+
+Dikembangkan dari populasi > 1000 neonatus di UK (UKISS study).
+
+5 variabel: usia gestasi, berat lahir, jenis kelamin, suhu masuk, base excess
+
+Digunakan untuk:
+• Membandingkan kinerja NICU antar unit (risk adjustment)
+• Komunikasi dengan keluarga tentang prognosis awal
+• Bukan sebagai panduan keputusan individual`,
+  },
+  {
+    title: 'Interpretasi Skor',
+    content: `Skor total 0–27 (semakin tinggi = risiko mortalitas lebih tinggi):
+
+• 0–5: Risiko rendah
+• 6–10: Risiko sedang
+• 11–15: Risiko tinggi
+• > 15: Risiko sangat tinggi
+
+Nilai prediktif paling kuat pada minggu pertama kehidupan.
+Tidak berlaku sebagai prediktor setelah stabilisasi (skor diambil saat masuk).`,
+  },
+  {
+    title: 'Faktor Risiko & Pertimbangan Klinis',
+    content: `Usia gestasi: faktor risiko terbesar — tiap minggu kurang dari 28 minggu meningkatkan risiko signifikan.
+
+Jenis kelamin: laki-laki memiliki skor lebih tinggi — pematangan paru lebih lambat dari perempuan.
+
+Suhu masuk: hipotermia (< 36.5°C) meningkatkan mortalitas — target suhu aksila 36.5–37.5°C segera setelah lahir.
+
+Base excess (BE): menggambarkan derajat asfiksia atau gangguan metabolik saat masuk.
+• BE < −10: asidosis metabolik berat → mortalitas meningkat signifikan
+
+Intervensi menurunkan risiko: surfaktan antenatal corticosteroid, magnesium sulfat neuroprotektif (< 34 minggu), resusitasi terstandar NRP.`,
+  },
+];
 
 function optionStyle(active: boolean): React.CSSProperties {
   return {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { Cite } from '../Citation';
 import { calculatePsofa, type PsofaInput } from '../../utils/psofa';
 import { REFERENCES } from '../../data/references';
@@ -126,6 +127,7 @@ export function PsofaScore() {
         </>
       )}
 
+      <TheoryAccordion sections={PSOFA_THEORY} />
       <Disclaimer />
       <div className="ios-card" style={{ padding: '12px 14px' }}>
         <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
@@ -136,6 +138,52 @@ export function PsofaScore() {
     </div>
   );
 }
+
+const PSOFA_THEORY: TheorySection[] = [
+  {
+    title: 'pSOFA — Latar Belakang',
+    content: `pSOFA (Pediatric Sequential Organ Failure Assessment) diadaptasi dari SOFA dewasa oleh Matics & Sanchez-Pinto (2017).
+
+Divalidasi pada > 6000 pasien PICU di Amerika Serikat.
+
+Tujuan:
+• Mengidentifikasi sepsis pediatri (disfungsi organ baru atau memburuk)
+• Prediksi mortalitas 28 hari
+• Definisi operasional sepsis pediatri dalam penelitian
+
+Perbedaan dari SOFA dewasa: nilai ambang MAP, kreatinin, dan trombosit disesuaikan per usia anak.`,
+  },
+  {
+    title: 'Interpretasi & Mortalitas',
+    content: `Setiap sistem organ skor 0–4 (total 0–24):
+
+Estimasi mortalitas berdasarkan Matics 2017:
+• Skor 0–5: mortalitas rendah (< 5%)
+• Skor 6–10: mortalitas sedang (5–20%)
+• Skor 11–15: mortalitas tinggi (20–50%)
+• Skor > 15: mortalitas sangat tinggi (> 50%)
+
+Tren skor (naik vs turun) lebih penting dari nilai absolut tunggal.
+pSOFA ≥ 2 dari baseline + infeksi yang dicurigai = definisi operasional sepsis pediatri.`,
+  },
+  {
+    title: 'Vasopresor — Dosis & Poin',
+    content: `Sistem kardiovaskular dinilai dari dosis vasopresor (mcg/kg/mnt):
+
+Dopamin:
+• ≤ 5 mcg/kg/mnt = poin 2
+• > 5 mcg/kg/mnt = poin 3
+
+Epinefrin atau Norepinefrin:
+• ≤ 0.1 mcg/kg/mnt = poin 3
+• > 0.1 mcg/kg/mnt = poin 4
+
+Dobutamin (berapa pun dosis): poin 2
+
+MAP rendah sesuai usia (tanpa vasopresor):
+• < 1 bln: MAP < 46; 1–11 bln: < 55; 1–4 th: < 60; 5–12 th: < 65; > 12 th: < 70 = poin 1`,
+  },
+];
 
 function Sec({ children }: { children: React.ReactNode }) {
   return (

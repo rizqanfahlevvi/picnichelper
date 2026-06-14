@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { Cite } from '../Citation';
 import { calculatePelod2, type Pelod2Input } from '../../utils/pelod2';
 import { REFERENCES } from '../../data/references';
@@ -161,6 +162,7 @@ export function Pelod2Score() {
         </>
       )}
 
+      <TheoryAccordion sections={PELOD2_THEORY} />
       <Disclaimer />
       <div className="ios-card" style={{ padding: '12px 14px' }}>
         <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
@@ -171,6 +173,47 @@ export function Pelod2Score() {
     </div>
   );
 }
+
+const PELOD2_THEORY: TheorySection[] = [
+  {
+    title: 'PELOD-2 — Konsep & Tujuan',
+    content: `PELOD-2 (Pediatric Logistic Organ Dysfunction-2) adalah skor disfungsi organ multi-sistem untuk memprediksi mortalitas di PICU.
+
+Dikembangkan oleh Leteurtre et al. (2013) dari 7 negara, 35 PICU.
+
+• Menilai 6 sistem organ: neurologis, kardiovaskular, renal, hepatik, hematologi, respirasi
+• Skor 0–33 (tiap variabel: 0, 1, 3, atau 5 poin)
+• Digunakan untuk: triase, komunikasi dengan keluarga, penelitian klinis, evaluasi beratnya penyakit
+
+PELOD-2 bukan alat keputusan individual — mortalitas adalah probabilitas populasi, bukan kepastian.`,
+  },
+  {
+    title: 'Interpretasi Skor & Mortalitas',
+    content: `Hubungan skor dengan mortalitas PICU (estimasi dari studi Leteurtre 2013):
+
+• Skor 0: mortalitas ~ 0.1%
+• Skor 5: mortalitas ~ 1%
+• Skor 10: mortalitas ~ 4%
+• Skor 15: mortalitas ~ 10–15%
+• Skor 20: mortalitas ~ 25–30%
+• Skor ≥ 25: mortalitas > 50%
+
+Skor dihitung dari nilai terburuk dalam 24 jam pertama masuk PICU (atau kapan pun selama rawatan untuk tren klinis).`,
+  },
+  {
+    title: 'Variabel & Batasan Klinis',
+    content: `GCS: nilai minimum aktual (bukan setelah sedasi bila tidak diperlukan klinis)
+Pupil: kedua reaktif = 0; satu atau keduanya tidak reaktif = 5
+
+MAP sesuai usia:
+• < 1 bulan: normal ≥ 46; < 31 = skor 3; + dopamin/epinefrin = skor 5
+• 1–11 bulan: normal ≥ 55; < 39 = skor 3
+• 1–11 tahun: normal ≥ 62; < 44 = skor 3
+• ≥ 12 tahun: normal ≥ 67; < 52 = skor 3
+
+Kreatinin normal berbeda per usia — kalkulator ini sudah menyesuaikan threshold per usia.`,
+  },
+];
 
 function Sec({ children }: { children: React.ReactNode }) {
   return (
