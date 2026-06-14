@@ -7,6 +7,8 @@ import {
   WHO_LHFA_GIRLS_0_2, WHO_LHFA_GIRLS_2_5,
   WHO_WFL_BOYS, WHO_WFL_GIRLS,
   WHO_WFH_BOYS, WHO_WFH_GIRLS,
+  WHO_BMI_BOYS_0_2, WHO_BMI_BOYS_2_5,
+  WHO_BMI_GIRLS_0_2, WHO_BMI_GIRLS_2_5,
   CDC_WTA_BOYS, CDC_WTA_GIRLS,
   CDC_HTA_BOYS, CDC_HTA_GIRLS,
   type LMSRow,
@@ -74,4 +76,11 @@ export function getCDC_WFA_Curve(sex: Sex): CurvePoint[] {
 
 export function getCDC_HFA_Curve(sex: Sex): CurvePoint[] {
   return buildCurve(sex === 'L' ? CDC_HTA_BOYS : CDC_HTA_GIRLS);
+}
+
+/** WHO BMI-for-Age (0–60 months, merged) */
+export function getWHO_BMIIA_Curve(sex: Sex): CurvePoint[] {
+  const boys = mergeLHFA(WHO_BMI_BOYS_0_2, WHO_BMI_BOYS_2_5);
+  const girls = mergeLHFA(WHO_BMI_GIRLS_0_2, WHO_BMI_GIRLS_2_5);
+  return buildCurve(sex === 'L' ? boys : girls);
 }

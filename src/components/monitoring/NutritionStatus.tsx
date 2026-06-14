@@ -8,7 +8,7 @@ import {
   type ZInterpretation,
 } from '../../utils/nutritionStatus';
 import {
-  getWHO_WFA_Curve, getWHO_LHFA_Curve, getWHO_WFH_Curve,
+  getWHO_WFA_Curve, getWHO_LHFA_Curve, getWHO_WFH_Curve, getWHO_BMIIA_Curve,
   getCDC_WFA_Curve, getCDC_HFA_Curve,
 } from '../../data/growthCurves';
 import { GrowthChart } from './GrowthChart';
@@ -162,14 +162,20 @@ export function NutritionStatus() {
 
       {/* Growth charts */}
       {showChart && (() => {
-        const xPad = ageM <= 60 ? 12 : 24;
+        const xPad = use5y ? 12 : 24;
         const xDom: [number, number] = [Math.max(0, ageM - xPad), ageM + xPad];
+        const wfaCurve   = use5y ? getWHO_WFA_Curve(sex)    : getCDC_WFA_Curve(sex);
+        const lhfaCurve  = use5y ? getWHO_LHFA_Curve(sex)   : getCDC_HFA_Curve(sex);
+        const wfhCurve   = getWHO_WFH_Curve(sex, ageM < 24);
+        const bmiCurve   = getWHO_BMIIA_Curve(sex);
+        const hDom: [number, number] = [Math.max(0, hCm - 10), hCm + 10];
         return (
           <div style={{ marginBottom: 16 }}>
             {hasWeight && (
               <GrowthChart
                 title={use5y ? 'Kurva BB/U (WHO 0–5 tahun)' : 'Kurva BB/U (CDC 2–20 tahun)'}
-                data={use5y ? getWHO_WFA_Curve(sex) : getCDC_WFA_Curve(sex)}
+                data={wfaCurve}
+                fullData={wfaCurve}
                 patientX={ageM}
                 patientY={wKg}
                 xLabel="Usia (bulan)"
@@ -182,7 +188,8 @@ export function NutritionStatus() {
                 title={use5y
                   ? (ageM < 24 ? 'Kurva PB/U (WHO 0–5 tahun)' : 'Kurva TB/U (WHO 0–5 tahun)')
                   : 'Kurva TB/U (CDC 2–20 tahun)'}
-                data={use5y ? getWHO_LHFA_Curve(sex) : getCDC_HFA_Curve(sex)}
+                data={lhfaCurve}
+                fullData={lhfaCurve}
                 patientX={ageM}
                 patientY={hCm}
                 xLabel="Usia (bulan)"
@@ -193,12 +200,25 @@ export function NutritionStatus() {
             {use5y && hasWeight && hasHeight && (
               <GrowthChart
                 title={ageM < 24 ? 'Kurva BB/PB (WHO 0–2 tahun)' : 'Kurva BB/TB (WHO 2–5 tahun)'}
-                data={getWHO_WFH_Curve(sex, ageM < 24)}
+                data={wfhCurve}
+                fullData={wfhCurve}
                 patientX={hCm}
                 patientY={wKg}
                 xLabel={ageM < 24 ? 'Panjang Badan (cm)' : 'Tinggi Badan (cm)'}
                 yLabel="Berat (kg)"
-                xDomain={[Math.max(0, hCm - 10), hCm + 10]}
+                xDomain={hDom}
+              />
+            )}
+            {use5y && bmi != null && (
+              <GrowthChart
+                title="Kurva IMT/U (WHO 0–5 tahun)"
+                data={bmiCurve}
+                fullData={bmiCurve}
+                patientX={ageM}
+                patientY={bmi}
+                xLabel="Usia (bulan)"
+                yLabel="IMT (kg/m²)"
+                xDomain={xDom}
               />
             )}
           </div>
