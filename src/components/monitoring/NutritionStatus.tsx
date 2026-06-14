@@ -8,7 +8,7 @@ import {
 } from '../../utils/nutritionStatus';
 
 export function NutritionStatus() {
-  const { weightKg, heightCm, ageMonths, gender, agePrecise, nama } = usePatientStore();
+  const { weightKg, heightCm, ageMonths, gender } = usePatientStore();
 
   const wKg = parseFloat(weightKg);
   const hCm = parseFloat(heightCm);
@@ -46,20 +46,6 @@ export function NutritionStatus() {
 
   return (
     <div style={{ padding: '0 16px 0' }}>
-      {/* Patient summary strip */}
-      {(nama || agePrecise) && (
-        <div style={{
-          padding: '8px 12px', marginBottom: 12,
-          background: 'var(--fill-secondary)', borderRadius: 'var(--r-card)',
-          font: 'var(--type-caption-1)', color: 'var(--label-secondary)',
-        }}>
-          {nama && <span style={{ fontWeight: 600, color: 'var(--label-primary)' }}>{nama}</span>}
-          {nama && agePrecise && ' · '}
-          {agePrecise && <span>{agePrecise}</span>}
-          {hasSex && <span> · {sex === 'L' ? 'Laki-laki' : 'Perempuan'}</span>}
-        </div>
-      )}
-
       {/* Source tag */}
       <div style={{
         font: 'var(--type-caption-2)', color: 'var(--label-tertiary)',

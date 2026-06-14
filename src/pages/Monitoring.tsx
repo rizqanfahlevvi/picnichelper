@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { VitalSignsChecker } from '../components/monitoring/VitalSignsChecker';
 import { WeaningChecklist } from '../components/monitoring/WeaningChecklist';
 import { NutritionStatus } from '../components/monitoring/NutritionStatus';
+import { PatientSummary } from '../components/PatientSummary';
 
 type MonitoringTab = 'vital' | 'weaning' | 'gizi';
 
@@ -19,6 +20,8 @@ export function Monitoring() {
       <div style={{ padding: '24px 20px 8px' }}>
         <h1 className="ios-large-title">Monitoring & Weaning</h1>
       </div>
+
+      <PatientSummary />
 
       <div className="ios-segmented" style={{ margin: '8px 16px 0' }}>
         {TABS.map((tab) => (
