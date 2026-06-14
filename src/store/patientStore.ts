@@ -2,8 +2,8 @@ import { create } from 'zustand';
 
 // ─────────────────────────────────────────────────────────────────────────
 // Single Source of Truth untuk data pasien (CLAUDE.md).
-// Data disimpan sebagai STRING (apa adanya dari input) supaya field bisa
-// kosong. Konversi ke number dilakukan EKSPLISIT di lapisan UI sebelum
+// Data disimpan sebagai STRING supaya field bisa kosong.
+// Konversi ke number dilakukan EKSPLISIT di lapisan UI sebelum
 // memanggil fungsi di /utils — string tidak boleh lolos ke /utils.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -15,22 +15,20 @@ interface PatientState {
   category: PatientCategory;
   nama: string;
   gender: Gender;
-  /** Usia dalam tahun (string mentah dari input) — relevan untuk kategori anak */
-  ageYears: string;
-  /** Input usia mentah (angka atau tanggal lahir tergantung ageUnit) */
-  ageInput: string;
   ageUnit: AgeUnit;
-  /** Berat dalam kg (string mentah dari input) */
+  /** Input usia mentah: angka (tahun/bulan) atau ISO date (tgl-lahir) */
+  ageInput: string;
+  /** Usia dalam tahun — dihitung dari ageInput, dipakai kalkulator */
+  ageYears: string;
   weightKg: string;
-  /** Tinggi badan dalam cm (string mentah dari input) — dipakai kalkulator renal */
   heightCm: string;
 
   setCategory: (c: PatientCategory) => void;
   setNama: (v: string) => void;
   setGender: (v: Gender) => void;
-  setAgeYears: (v: string) => void;
-  setAgeInput: (v: string) => void;
   setAgeUnit: (v: AgeUnit) => void;
+  setAgeInput: (v: string) => void;
+  setAgeYears: (v: string) => void;
   setWeightKg: (v: string) => void;
   setHeightCm: (v: string) => void;
   reset: () => void;
@@ -40,19 +38,22 @@ export const usePatientStore = create<PatientState>((set) => ({
   category: 'anak',
   nama: '',
   gender: '',
-  ageYears: '',
-  ageInput: '',
   ageUnit: 'tahun',
+  ageInput: '',
+  ageYears: '',
   weightKg: '',
   heightCm: '',
 
   setCategory: (category) => set({ category }),
-  setNama: (nama) => set({ nama }),
-  setGender: (gender) => set({ gender }),
-  setAgeYears: (ageYears) => set({ ageYears }),
+  setNama:     (nama)     => set({ nama }),
+  setGender:   (gender)   => set({ gender }),
+  setAgeUnit:  (ageUnit)  => set({ ageUnit, ageInput: '', ageYears: '' }),
   setAgeInput: (ageInput) => set({ ageInput }),
-  setAgeUnit: (ageUnit) => set({ ageUnit }),
+  setAgeYears: (ageYears) => set({ ageYears }),
   setWeightKg: (weightKg) => set({ weightKg }),
   setHeightCm: (heightCm) => set({ heightCm }),
-  reset: () => set({ nama: '', gender: '', ageYears: '', ageInput: '', ageUnit: 'tahun', weightKg: '', heightCm: '' }),
+  reset: () => set({
+    nama: '', gender: '', ageUnit: 'tahun',
+    ageInput: '', ageYears: '', weightKg: '', heightCm: '',
+  }),
 }));

@@ -20,9 +20,13 @@ const MODULES = [
 ];
 
 export function Home() {
-  const { ageYears, weightKg, heightCm } = usePatientStore();
+  const { nama, gender, ageUnit, ageInput, ageYears, weightKg, heightCm } = usePatientStore();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const hasPatient = ageYears !== '' || weightKg !== '' || heightCm !== '';
+  const hasPatient = weightKg !== '' || ageInput !== '' || ageYears !== '';
+
+  // Label usia untuk tampilan
+  const ageDisplay = ageUnit === 'bulan' ? ageInput : ageUnit === 'tgl-lahir' ? ageYears : ageYears;
+  const ageUnitDisplay = ageUnit === 'bulan' ? 'bln' : 'th';
 
   return (
     <div className="ios-screen pb-6">
@@ -38,16 +42,30 @@ export function Home() {
         <button className="action" onClick={() => setSheetOpen(true)}>{hasPatient ? 'Ubah' : 'Isi'}</button>
       </div>
 
-      <button
-        className="ios-list w-full text-left"
-        style={{ display: 'block' }}
-        onClick={() => setSheetOpen(true)}
-      >
+      <button className="ios-list w-full text-left" style={{ display: 'block' }} onClick={() => setSheetOpen(true)}>
         {hasPatient ? (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-            <DataCell val={ageYears} unit="th"  label="Usia"   borderRight />
-            <DataCell val={weightKg} unit="kg"  label="Berat"  borderRight />
-            <DataCell val={heightCm} unit="cm"  label="Tinggi" />
+          <div>
+            {(nama || gender) && (
+              <div style={{ padding: '8px 14px 4px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                {nama && (
+                  <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--label-primary)' }}>{nama}</span>
+                )}
+                {gender && (
+                  <span style={{
+                    fontSize: 12, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--r-pill)',
+                    background: gender === 'L' ? 'rgba(0,122,255,0.12)' : 'rgba(255,45,85,0.12)',
+                    color: gender === 'L' ? 'var(--sys-blue)' : 'var(--sys-pink)',
+                  }}>
+                    {gender === 'L' ? 'Laki-laki' : 'Perempuan'}
+                  </span>
+                )}
+              </div>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <DataCell val={ageDisplay}  unit={ageUnitDisplay} label="Usia"   borderRight />
+              <DataCell val={weightKg}    unit="kg"             label="Berat"  borderRight />
+              <DataCell val={heightCm}    unit="cm"             label="Tinggi" />
+            </div>
           </div>
         ) : (
           <div style={{ padding: '14px', display: 'flex', alignItems: 'center', gap: 8 }}>
