@@ -8,7 +8,7 @@ import {
   type ZInterpretation,
 } from '../../utils/nutritionStatus';
 import {
-  getWHO_WFA_Curve, getWHO_LHFA_Curve,
+  getWHO_WFA_Curve, getWHO_LHFA_Curve, getWHO_WFH_Curve,
   getCDC_WFA_Curve, getCDC_HFA_Curve,
 } from '../../data/growthCurves';
 import { GrowthChart } from './GrowthChart';
@@ -188,6 +188,17 @@ export function NutritionStatus() {
                 xLabel="Usia (bulan)"
                 yLabel={ageM < 24 ? 'Panjang (cm)' : 'Tinggi (cm)'}
                 xDomain={xDom}
+              />
+            )}
+            {use5y && hasWeight && hasHeight && (
+              <GrowthChart
+                title={ageM < 24 ? 'Kurva BB/PB (WHO 0–2 tahun)' : 'Kurva BB/TB (WHO 2–5 tahun)'}
+                data={getWHO_WFH_Curve(sex, ageM < 24)}
+                patientX={hCm}
+                patientY={wKg}
+                xLabel={ageM < 24 ? 'Panjang Badan (cm)' : 'Tinggi Badan (cm)'}
+                yLabel="Berat (kg)"
+                xDomain={[Math.max(0, hCm - 10), hCm + 10]}
               />
             )}
           </div>
