@@ -21,8 +21,8 @@ export function PatientSummary() {
       </div>
 
       <button
-        className="ios-list w-full text-left"
-        style={{ display: 'block', width: '100%', boxSizing: 'border-box' }}
+        className="ios-list text-left"
+        style={{ display: 'block' }}
         onClick={() => setOpen(true)}
       >
         {hasPatient ? (
