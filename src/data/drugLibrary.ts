@@ -1172,6 +1172,238 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
 
+  // ── Antibiotik ─────────────────────────────────────────────────────────
+  {
+    id: 'amikasin',
+    name: 'Amikasin',
+    aliases: ['Amikacin', 'Amikin'],
+    category: 'antibiotik',
+    mechanism: 'Aminoglikosida — mengikat subunit ribosom 30S → menghambat sintesis protein bakteri. Bakterisidal terhadap Gram-negatif aerob.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 15, maxPerKg: 15, unit: 'mg/kg',
+          maxAbsoluteMg: 1500,
+          frequency: 'dibagi tiap 8–12 jam (dosis/hari)',
+          ivDuration: 'infus 30–60 menit (anak); 1–2 jam (bayi)',
+          indication: 'Infeksi Gram-negatif berat, sepsis, ISK',
+          notes: '15 mg/kg/hari, maks 1,5 g/hari; hitung dari BB ideal [16]. 1 mgg–10 th: 25 mg/kg hari-1 lalu 18 mg/kg/hari; > 10 th: 20 mg/kg hari-1 lalu 15 mg/kg/hari.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap aminoglikosida',
+      'Insufisiensi ginjal',
+    ],
+    warnings: [
+      'Ototoksik & nefrotoksik — tergantung besar dosis & durasi',
+      'Pantau kadar: puncak (1 jam) & nadir/trough sebelum dosis berikut',
+      'Bayi prematur/cukup bulan: klirens ginjal imatur → waktu paruh memanjang',
+    ],
+    renalAdjustment: 'Perpanjang interval pemberian pada gangguan ginjal; pantau kadar obat dan fungsi ginjal.',
+    specialPopulations: {
+      neonates: 'IV/IM 7,5 mg/kg/dosis; interval per usia koreksi: < 28 mgg tiap 36 jam; 28–29 mgg tiap 24 jam; 30–35 mgg tiap 18 jam; ≥ 36 mgg tiap 12 jam [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'gentamisin',
+    name: 'Gentamisin',
+    aliases: ['Gentamicin', 'Garamycin'],
+    category: 'antibiotik',
+    mechanism: 'Aminoglikosida — inhibisi sintesis protein (subunit 30S). Bakterisidal terhadap Gram-negatif aerob; sinergi dengan beta-laktam pada infeksi Gram-positif.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 2, maxPerKg: 3, unit: 'mg/kg',
+          frequency: '< 2 mgg: 3 mg/kg tiap 12 jam; 2 mgg–12 th: 2 mg/kg tiap 8 jam',
+          ivDuration: 'IV lambat ≥ 3 menit atau infus',
+          indication: 'Sepsis, infeksi Gram-negatif, pielonefritis',
+          notes: 'Hitung dari BB ideal (neonatus pakai BB sesungguhnya). Pantau kadar puncak (1 jam) < 10 mg/L & trough < 2 mg/L [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Myasthenia gravis',
+    ],
+    warnings: [
+      'Ototoksik & nefrotoksik — tergantung besar dosis',
+      'Pantau kadar plasma, fungsi ginjal, pendengaran & keseimbangan',
+      'Hindari penggunaan jangka panjang',
+    ],
+    renalAdjustment: 'ClCr 40–60 mL/menit: tiap 12 jam; 20–40: tiap 24 jam; < 20: dosis awal lalu pantau kadar.',
+    specialPopulations: {
+      neonates: 'IV/IM 5 mg/kg/dosis; interval per BB & usia postnatal (mis. BB ≥ 1200 g: ≤ 7 hari tiap 36 jam, > 7 hari tiap 24 jam; BB < 1200 g: lebih panjang) [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'amoksisilin',
+    name: 'Amoksisilin',
+    aliases: ['Amoxicillin', 'Amoxsan', 'Amoxil'],
+    category: 'antibiotik',
+    mechanism: 'Aminopenisilin — menghambat sintesis dinding sel bakteri (ikatan PBP). Bakterisidal.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 25, maxPerKg: 50, unit: 'mg/kg',
+          frequency: 'dibagi tiap 8–12 jam (dosis/hari)',
+          indication: 'ISPA, otitis media, ISK, pneumonia',
+          notes: '> 3 bln & anak: 25–50 mg/kg/hari q8–12h; 1–3 bln: 20–30 mg/kg/hari q12h. Otitis media S. pneumoniae resisten: 80–90 mg/kg/hari q12h. Profilaksis endokarditis: 50 mg/kg 1 jam sebelum prosedur [16]. Dosis tetap: > 10 th 250 mg q8h, < 10 th 125 mg q8h.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap golongan penisilin',
+    ],
+    warnings: [
+      'Reaksi hipersensitivitas: urtikaria, angioedema, anafilaksis',
+      'Ruam eritematosa pada mononukleosis, leukemia limfositik kronik, infeksi HIV',
+      'Hati-hati pada gangguan ginjal (kejang pada dosis tinggi/gangguan ginjal)',
+    ],
+    specialPopulations: {
+      neonates: 'IV/IM 25 mg/kg/dosis (infeksi biasa) atau 50 mg/kg/dosis (meningitis/septikemia); interval per usia gestasi [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'amoksiklav',
+    name: 'Amoksisilin + Asam Klavulanat',
+    aliases: ['Co-amoxiclav', 'Augmentin', 'Clavamox', 'Amoxiclav'],
+    category: 'antibiotik',
+    mechanism: 'Amoksisilin (aminopenisilin) + asam klavulanat (inhibitor beta-laktamase) → memperluas cakupan terhadap bakteri penghasil beta-laktamase.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 25, maxPerKg: 25, unit: 'mg/kg',
+          frequency: 'tiap 6–8 jam (per dosis; dihitung sebagai amoksisilin)',
+          ivDuration: 'injeksi IV perlahan',
+          indication: 'Infeksi organisme penghasil beta-laktamase',
+          notes: '3 bln–12 th: 25 mg/kg q6h; < 3 bln: 25 mg/kg q8h; neonatus/prematur: 25 mg/kg q12h; > 12 th: 1 g q8h [16]. Oral (sebagai amoksisilin): 1–6 th 125 mg q8h; 6–12 th 250 mg q8h.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap penisilin',
+      'Riwayat ikterus / gangguan fungsi hati akibat amoksisilin-klavulanat',
+    ],
+    warnings: [
+      'Hepatotoksisitas / ikterus kolestatik',
+      'Reaksi hipersensitivitas; ruam pada mononukleosis',
+      'Hati-hati pada gangguan fungsi ginjal',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'ampisilin',
+    name: 'Ampisilin',
+    aliases: ['Ampicillin', 'Ampi'],
+    category: 'antibiotik',
+    mechanism: 'Aminopenisilin — menghambat sintesis dinding sel bakteri. Aktif terhadap Listeria, Enterococcus, beberapa Gram-negatif.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 50, unit: 'mg/kg',
+          frequency: 'tiap 4–6 jam (per dosis)',
+          ivDuration: 'IV lambat / infus',
+          indication: 'Sepsis, meningitis, infeksi Listeria/Enterococcus',
+          notes: 'Infeksi biasa 10–25 mg/kg/dosis q6h; berat 50 mg/kg/dosis q4h; meningitis 150–200 mg/kg/hari terbagi [16]. Oral 7,5–25 mg/kg/dosis q6h.',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap golongan penisilin',
+    ],
+    warnings: [
+      'Reaksi hipersensitivitas / anafilaksis',
+      'Ruam eritematosa pada mononukleosis, leukemia limfositik, HIV',
+    ],
+    specialPopulations: {
+      neonates: 'IV 25–50 mg/kg/dosis; usia 1 mgg tiap 12 jam; usia 2–4 mgg tiap 6–8 jam [16].',
+    },
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'ampisilin_sulbaktam',
+    name: 'Ampisilin + Sulbaktam',
+    aliases: ['Ampicillin-Sulbactam', 'Sulbactam', 'Unasyn'],
+    category: 'antibiotik',
+    mechanism: 'Ampisilin (aminopenisilin) + sulbaktam (inhibitor beta-laktamase) → memperluas cakupan terhadap bakteri penghasil beta-laktamase.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 100, maxPerKg: 200, unit: 'mg/kg',
+          maxAbsoluteMg: 8000,
+          frequency: 'dibagi tiap 6 jam (mg ampisilin/hari)',
+          ivDuration: 'IV perlahan 10–15 menit atau infus 15–30 menit',
+          indication: 'Infeksi kulit, intra-abdomen, ginekologik',
+          notes: 'Dosis sebagai ampisilin: bayi > 1 bln 100–150 mg/kg/hari; anak 100–200 mg/kg/hari; meningitis 200–400 mg/kg/hari; maks 8 g ampisilin/hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Hipersensitif terhadap ampisilin, sulbaktam, atau penisilin',
+    ],
+    warnings: [
+      'Ruam makulopapular pada infeksi EBV, leukemia limfositik akut, atau CMV',
+      'Pemberian pada anak < 12 tahun tidak disetujui FDA',
+      'Hati-hati pada alergi sefalosporin; sesuaikan dosis pada gangguan ginjal',
+    ],
+    renalAdjustment: 'ClCr 15–29 mL/menit: tiap 12 jam; ClCr 5–14: tiap 24 jam.',
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'klindamisin',
+    name: 'Klindamisin',
+    aliases: ['Clindamycin', 'Dalacin'],
+    category: 'antibiotik',
+    mechanism: 'Linkosamid — mengikat subunit ribosom 50S → menghambat sintesis protein bakteri. Aktif terhadap Gram-positif & anaerob.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 3, maxPerKg: 6, unit: 'mg/kg',
+          frequency: 'tiap 6 jam (per dosis)',
+          indication: 'Osteomielitis, peritonitis, infeksi anaerob',
+          notes: 'Oral 3–6 mg/kg q6h [16].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 15, maxPerKg: 40, unit: 'mg/kg',
+          frequency: 'dibagi 3–4 dosis (mg/kg/hari)',
+          ivDuration: 'hindari IV cepat; infus',
+          indication: 'Infeksi berat tulang/sendi, anaerob',
+          notes: 'Neonatus 15–20 mg/kg/hari; > 1 bln 15–40 mg/kg/hari terbagi 3–4 dosis; infeksi berat minimal 300 mg/hari [16].',
+        },
+      },
+    ],
+    contraindications: [
+      'Diare aktif',
+      'Injeksi mengandung benzilalkohol pada neonatus',
+    ],
+    warnings: [
+      'Diare / kolitis terkait C. difficile — segera hentikan bila terjadi',
+      'Pantau fungsi hati & ginjal pada terapi lama, neonatus, & bayi',
+      'Hindari pemberian IV cepat',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
   // ── Lainnya ────────────────────────────────────────────────────────────
   {
     id: 'kalsium_glukonat',
