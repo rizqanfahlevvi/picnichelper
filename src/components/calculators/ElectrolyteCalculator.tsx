@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState } from 'react';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { usePatientStore } from '../../store/patientStore';
 import {
   classifyNa, calc3pctNaClVol, calcFreeWaterDeficit,
@@ -105,44 +105,114 @@ function NaSection() {
 
       {/* Koreksi Hiponatremia */}
       {ec?.status === 'hypo' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Koreksi — 3% NaCl <Cite source="feld2018" />
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-            <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-primary)', flex: 1 }}>Target kenaikan Na</span>
-            <input
-              type="number" value={targetRise} onChange={(e) => setTargetRise(e.target.value)}
-              min="1" max="12"
-              style={{ width: 60, textAlign: 'right', borderRadius: 'var(--r-sm)', border: 'none', outline: 'none', background: 'var(--fill-tertiary)', color: 'var(--label-primary)', font: 'var(--type-body)', padding: '4px 8px', minHeight: 36 }}
-            />
-            <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>mEq/L</span>
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Koreksi Hiponatremia <Cite source="feld2018" /></SectionHeader>
+
+          {/* Kalkulasi volume */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Hitung Volume 3% NaCl
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-primary)', flex: 1 }}>Target kenaikan Na</span>
+              <input
+                type="number" value={targetRise} onChange={(e) => setTargetRise(e.target.value)}
+                min="1" max="12"
+                style={{ width: 60, textAlign: 'right', borderRadius: 'var(--r-sm)', border: 'none', outline: 'none', background: 'var(--fill-tertiary)', color: 'var(--label-primary)', font: 'var(--type-body)', padding: '4px 8px', minHeight: 36 }}
+              />
+              <span style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>mEq/L</span>
+            </div>
+            {wt > 0 && vol3pct != null ? (
+              <ResultRow label="Volume 3% NaCl" value={vol3pct} unit="mL" note="ΔNa × BB × 0.6 / 0.514" />
+            ) : (
+              <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien untuk menghitung.</p>
+            )}
           </div>
-          {wt > 0 && vol3pct != null ? (
-            <ResultRow label="Volume 3% NaCl" value={vol3pct} unit="mL" note="ΔNa × BB × 0.6 / 0.514" />
-          ) : (
-            <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien untuk hitung volume.</p>
-          )}
-          <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', marginTop: 8, lineHeight: 1.4 }}>
-            ⚠ Kecepatan max: 1–2 mEq/L/jam (sampai gejala teratasi). Total 24 jam maks 8–10 mEq/L untuk cegah ODS.
-          </p>
+
+          {/* Protokol simtomatik */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)', background: 'color-mix(in srgb, var(--sys-red) 5%, var(--bg-tertiary))' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--sys-red)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Protokol Simtomatik (Kejang / Koma)
+            </p>
+            <ProtocolStep n={1} text="3% NaCl 2 mEq/kg IV (≈ 4 mL/kg) dalam 10–20 menit" />
+            <ProtocolStep n={2} text="Ulangi bolus hingga 2× lagi bila kejang berlanjut" />
+            <ProtocolStep n={3} text="Target: Na naik 5 mEq/L atau gejala teratasi" />
+            <ProtocolStep n={4} text="Setelah gejala membaik → switch ke koreksi lambat (lihat di bawah)" />
+          </div>
+
+          {/* Protokol asimtomatik */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Protokol Asimtomatik / Koreksi Lambat
+            </p>
+            <ProtocolStep n={1} text="Tentukan target kenaikan Na (gunakan kalkulator di atas)" />
+            <ProtocolStep n={2} text="Berikan volume 3% NaCl dalam 24–48 jam (infus kontinu via syringe pump)" />
+            <ProtocolStep n={3} text="Kecepatan maks: 1–2 mEq/L/jam hanya di fase akut simtomatik; kronis max 0.5 mEq/L/jam" />
+            <ProtocolStep n={4} text="Alternatif bila Na tidak sangat rendah: NaCl 0.9% (154 mEq/L) atau NaCl 3% diencerkan" />
+            <ProtocolStep n={5} text="SIADH: restriksi cairan 500–800 mL/m²/hari sebagai mainstay; hindari koreksi terlalu cepat" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring
+            </p>
+            <MonitorItem text="Na serum tiap 2–4 jam selama koreksi aktif" />
+            <MonitorItem text="Output urin & berat badan tiap 4–6 jam" />
+            <MonitorItem text="Status neurologi: kesadaran, pupil, kejang" />
+            <MonitorItem text="Total koreksi 24 jam: MAKS 8–10 mEq/L (kronik), 10–12 mEq/L (akut)" />
+          </div>
+
+          <DangerBox text="Koreksi > 10 mEq/L/24 jam pada hiponatremia kronik → risiko Osmotic Demyelination Syndrome (ODS) / central pontine myelinolysis. Tidak dapat diperbaiki." />
         </div>
       )}
 
       {/* Koreksi Hipernatremia */}
       {ec?.status === 'hyper' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Koreksi — Defisit Air Bebas
-          </p>
-          {wt > 0 && fwd != null ? (
-            <ResultRow label="Free Water Deficit" value={fwd} unit="L" note="BB × 0.6 × (Na/145 − 1)" />
-          ) : (
-            <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien untuk hitung defisit.</p>
-          )}
-          <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', marginTop: 8, lineHeight: 1.4 }}>
-            ⚠ Turunkan Na maks 0.5 mEq/L/jam atau 10–12 mEq/L/24 jam untuk cegah edema serebral.
-          </p>
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Koreksi Hipernatremia</SectionHeader>
+
+          {/* Kalkulasi */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Hitung Defisit Air Bebas
+            </p>
+            {wt > 0 && fwd != null ? (
+              <>
+                <ResultRow label="Free Water Deficit" value={fwd} unit="L" note="BB × 0.6 × (Na/145 − 1)" />
+                <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginTop: 8 }}>
+                  Berikan defisit ini dalam 48–72 jam → {wt > 0 && fwd ? ((fwd * 1000) / 48).toFixed(0) : '—'} mL/jam selama 48 jam (belum termasuk maintenance)
+                </p>
+              </>
+            ) : (
+              <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien untuk menghitung.</p>
+            )}
+          </div>
+
+          {/* Protokol */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Protokol Koreksi
+            </p>
+            <ProtocolStep n={1} text="Hitung total cairan = maintenance + defisit (dibagi 48–72 jam)" />
+            <ProtocolStep n={2} text="Pilihan cairan: D5W, D5 0.2% NaCl, atau enteral water — BUKAN NaCl 0.9%" />
+            <ProtocolStep n={3} text="Bila ada hipovolemia: koreksi volum dahulu dengan NaCl 0.9% 10–20 mL/kg bolus, baru lanjut koreksi lambat" />
+            <ProtocolStep n={4} text="Rate awal: targetkan penurunan Na 10–12 mEq/L per 24 jam" />
+            <ProtocolStep n={5} text="Hipernatremia akut (< 24 jam): boleh koreksi lebih cepat (0.5–1 mEq/L/jam)" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring
+            </p>
+            <MonitorItem text="Na serum tiap 4–6 jam; sesuaikan rate setelah setiap pemeriksaan" />
+            <MonitorItem text="Output urin tiap jam (target 1–2 mL/kg/jam)" />
+            <MonitorItem text="Status neurologi: bila deteriorasi → cek Na segera (mungkin turun terlalu cepat)" />
+            <MonitorItem text="Glukosa darah tiap 4 jam bila menggunakan cairan D5%" />
+          </div>
+
+          <DangerBox text="Koreksi terlalu cepat → edema serebral → kejang, herniasi. Penurunan Na > 0.5 mEq/L/jam tidak dianjurkan kecuali hipernatremia akut." />
         </div>
       )}
 
@@ -172,40 +242,135 @@ function KSection() {
       />
 
       {ec?.status === 'hypo' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Koreksi — KCl IV <Cite source="pals2020" />
-          </p>
-          {wt > 0 && dose ? (
-            <>
-              <ResultRow label="Dosis KCl (rendah)" value={dose.lowMeq}  unit="mEq" note="0.2 mEq/kg" />
-              <div style={{ height: '0.5px', background: 'var(--separator)', margin: '8px 0' }} />
-              <ResultRow label="Dosis KCl (tinggi)" value={dose.highMeq} unit="mEq" note="0.5 mEq/kg" />
-            </>
-          ) : (
-            <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien.</p>
-          )}
-          <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', marginTop: 8, lineHeight: 1.4 }}>
-            ⚠ Kecepatan IV maks: 0.3 mEq/kg/jam (perifer) · 0.5 mEq/kg/jam (sentral, monitor EKG).
-          </p>
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Koreksi Hipokalemia <Cite source="pals2020" /></SectionHeader>
+
+          {/* Kalkulasi */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Dosis KCl IV per Dosis
+            </p>
+            {wt > 0 && dose ? (
+              <>
+                <ResultRow label="Dosis rendah" value={dose.lowMeq} unit="mEq" note="0.2 mEq/kg — untuk koreksi ringan / maintenance" />
+                <div style={{ height: '0.5px', background: 'var(--separator)', margin: '10px 0' }} />
+                <ResultRow label="Dosis standar" value={dose.highMeq} unit="mEq" note="0.5 mEq/kg — untuk koreksi sedang-berat" />
+              </>
+            ) : (
+              <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien.</p>
+            )}
+          </div>
+
+          {/* Route & persiapan */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Route & Persiapan Larutan
+            </p>
+            <InfoRow label="Oral (ringan + toleransi OK)" value="KCl oral 1–2 mEq/kg/hari — pilihan utama bila memungkinkan" />
+            <InfoRow label="IV perifer (maks 40 mEq/L)" value="Encerkan: mis. KCl 20 mEq + NaCl 0.9% 500 mL = 40 mEq/L" />
+            <InfoRow label="IV sentral (maks 80 mEq/L)" value="Hanya via CVC; konsentrasi lebih tinggi boleh dengan monitor EKG kontinu" />
+          </div>
+
+          {/* Kecepatan infus */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Kecepatan Infus (Rate Maks)
+            </p>
+            <InfoRow label="Via perifer" value="0.3 mEq/kg/jam — tidak boleh lebih cepat" />
+            <InfoRow label="Via sentral (ICU)" value="0.5 mEq/kg/jam — wajib monitor EKG kontinu" />
+            <InfoRow label="Durasi per dosis" value="1–4 jam (tergantung keparahan dan route)" />
+          </div>
+
+          {/* Protokol langkah */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah Klinis
+            </p>
+            <ProtocolStep n={1} text="Cek dan koreksi Mg TERLEBIH DAHULU jika hipomagnesemia ada — Mg defisiensi mencegah koreksi K" />
+            <ProtocolStep n={2} text="Pilih route: oral bila K ≥ 3.0 dan tidak simtomatik; IV bila < 3.0 atau ada aritmia/kelemahan otot" />
+            <ProtocolStep n={3} text="Hitung dosis (gunakan kalkulator di atas), encerkan sesuai route" />
+            <ProtocolStep n={4} text="Infus via syringe pump, jangan bolus cepat" />
+            <ProtocolStep n={5} text="Ulangi dosis hingga K > 3.5 mEq/L" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring
+            </p>
+            <MonitorItem text="EKG kontinu selama infus IV (terutama via sentral)" />
+            <MonitorItem text="K serum ulang 2–4 jam setelah tiap dosis" />
+            <MonitorItem text="Pantau gejala: kelemahan otot, kram, disritmia" />
+            <MonitorItem text="Kreatinin & urin output (koreksi K lebih lambat bila fungsi ginjal terganggu)" />
+          </div>
+
+          <DangerBox text="Jangan bolus KCl IV langsung — dapat menyebabkan cardiac arrest. Selalu via infus lambat dengan syringe pump." />
         </div>
       )}
 
       {ec?.status === 'hyper' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Tatalaksana Hiperkalemia <Cite source="pals2020" />
-          </p>
-          {[
-            { step: '1. Stabilisasi membran', detail: 'Ca glukonat 10%: 0.5–1 mL/kg IV lambat ≥ 10 menit (onset 1–3 mnt). Indikasi: K > 6.5 atau perubahan EKG.' },
-            { step: '2. Shift K ke intrasel', detail: 'Insulin reguler 0.1 U/kg + Dextrose 0.5 g/kg IV. Salbutamol nebulisasi (dosis nebulisasi rutin). NaHCO₃ bila asidosis metabolik.' },
-            { step: '3. Eliminasi K', detail: 'Kayexalate (sodium polystyrene sulfonate) per oral/rektal. Furosemid bila fungsi ginjal adekuat. Dialisis bila gagal ginjal berat.' },
-          ].map((s, i) => (
-            <div key={i} style={{ marginBottom: i < 2 ? 10 : 0 }}>
-              <p style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', marginBottom: 3 }}>{s.step}</p>
-              <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.4 }}>{s.detail}</p>
-            </div>
-          ))}
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Tatalaksana Hiperkalemia <Cite source="pals2020" /></SectionHeader>
+
+          {/* Indikasi emergensi */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)', background: 'color-mix(in srgb, var(--sys-red) 5%, var(--bg-tertiary))' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--sys-red)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
+              Indikasi Terapi Emergensi
+            </p>
+            <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.5 }}>
+              K &gt; 6.5 mEq/L ATAU perubahan EKG: T peaked tinggi, PR memanjang, QRS lebar, sine wave, VF
+            </p>
+          </div>
+
+          {/* Step 1 */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah 1 — Stabilisasi Membran (Onset 1–3 mnt)
+            </p>
+            <InfoRow label="Obat" value="Ca glukonat 10% IV" />
+            <InfoRow label="Dosis" value="0.5–1 mL/kg IV (maks 20 mL)" />
+            <InfoRow label="Cara pemberian" value="Infus lambat 5–10 menit, monitor EKG terus-menerus" />
+            <InfoRow label="Durasi efek" value="30–60 menit → ulangi jika EKG changes menetap" />
+            <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-tertiary)', marginTop: 6, lineHeight: 1.4 }}>
+              Catatan: CaCl2 10% lebih potent (3× elemental Ca/mL) tapi harus via CVC — risiko nekrosis jaringan bila ekstravasasi perifer
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah 2 — Shift K ke Intrasel (Onset 15–30 mnt, Durasi 2–4 jam)
+            </p>
+            <InfoRow label="Insulin reguler" value="0.1 U/kg IV + Dextrose 10% 5 mL/kg (atau D25% 2 mL/kg) bersamaan" />
+            <InfoRow label="Salbutamol nebulisasi" value="< 10 kg: 2.5 mg; ≥ 10 kg: 5 mg nebulisasi — onset 30 menit" />
+            <InfoRow label="NaHCO₃ (bila asidosis)" value="1–2 mEq/kg IV lambat — hanya bila pH < 7.2, tidak efektif tanpa asidosis" />
+            <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-tertiary)', marginTop: 6 }}>
+              Semua tindakan Step 2 bisa dilakukan bersamaan untuk efek maksimal
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah 3 — Eliminasi K (Onset Jam–Hari)
+            </p>
+            <InfoRow label="Kayexalate (resin penukar)" value="1 g/kg PO/PR (maks 30 g) — tidak untuk preterm/neonatus" />
+            <InfoRow label="Furosemide" value="1 mg/kg IV — hanya bila fungsi ginjal masih adekuat" />
+            <InfoRow label="Dialisis (HD/CRRT)" value="Indikasi: gagal ginjal, K > 7 mEq/L, atau refrakter terhadap Step 1–2" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring
+            </p>
+            <MonitorItem text="EKG kontinu sampai K < 5.5 mEq/L dan perubahan EKG resolusi" />
+            <MonitorItem text="K serum tiap 1–2 jam selama terapi aktif" />
+            <MonitorItem text="Gula darah tiap 30–60 mnt setelah insulin (risiko hipoglikemia)" />
+            <MonitorItem text="Tekanan darah, frekuensi napas, saturasi O₂" />
+          </div>
+
+          <DangerBox text="Step 1 (Ca) hanya stabilisasi sementara — TIDAK menurunkan K. Langkah 2 dan 3 HARUS segera menyusul." />
         </div>
       )}
 
@@ -288,22 +453,60 @@ function CaSection() {
       )}
 
       {ec?.status === 'hypo' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Koreksi — Ca Glukonat 10% IV <Cite source="pals2020" />
-          </p>
-          {wt > 0 && dose ? (
-            <>
-              <ResultRow label="Volume (dosis rendah)" value={dose.lowMl}  unit="mL" note="0.5 mL/kg" />
-              <div style={{ height: '0.5px', background: 'var(--separator)', margin: '8px 0' }} />
-              <ResultRow label="Volume (dosis tinggi)" value={dose.highMl} unit="mL" note="1 mL/kg (maks 20 mL)" />
-            </>
-          ) : (
-            <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien.</p>
-          )}
-          <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', marginTop: 8, lineHeight: 1.4 }}>
-            ⚠ Infus LAMBAT ≥ 10 menit dengan monitor EKG. Bisa menyebabkan bradikardia bila terlalu cepat.
-          </p>
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Koreksi Hipokalsemia <Cite source="pals2020" /></SectionHeader>
+
+          {/* Kalkulasi */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Volume Ca Glukonat 10% IV
+            </p>
+            {wt > 0 && dose ? (
+              <>
+                <ResultRow label="Dosis rendah (simtomatik ringan)" value={dose.lowMl} unit="mL" note="0.5 mL/kg" />
+                <div style={{ height: '0.5px', background: 'var(--separator)', margin: '10px 0' }} />
+                <ResultRow label="Dosis penuh (tetani / kejang)" value={dose.highMl} unit="mL" note="1 mL/kg (maks 20 mL)" />
+              </>
+            ) : (
+              <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien.</p>
+            )}
+          </div>
+
+          {/* Perbandingan sediaan */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Sediaan Ca: Glukonat vs Klorida
+            </p>
+            <InfoRow label="Ca glukonat 10%" value="9 mg elemental Ca/mL — aman via perifer (pilihan utama)" />
+            <InfoRow label="CaCl₂ 10%" value="27 mg elemental Ca/mL — 3× lebih potent, HARUS via CVC (nekrosis perifer)" />
+            <InfoRow label="Pengenceran IV" value="Encerkan 1:1 dengan D5% atau NaCl 0.9% sebelum infus" />
+          </div>
+
+          {/* Protokol */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah Pemberian
+            </p>
+            <ProtocolStep n={1} text="Pasang monitor EKG sebelum mulai infus" />
+            <ProtocolStep n={2} text="Infus lambat: 1 mL/kg/jam (max rate — jangan lebih cepat)" />
+            <ProtocolStep n={3} text="Durasi minimum: 10 menit untuk dosis penuh" />
+            <ProtocolStep n={4} text="JANGAN campur dengan NaHCO₃ dalam satu jalur — akan mengendap (Ca carbonate)" />
+            <ProtocolStep n={5} text="Setelah akut stabil: suplementasi oral Ca elemental 45–65 mg/kg/hari + Vitamin D" />
+            <ProtocolStep n={6} text="Bila refrakter → cek dan koreksi Mg (hipoMg → PTH tidak bisa sekresi)" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring
+            </p>
+            <MonitorItem text="EKG kontinu selama infus: bila bradikardia → perlambat atau hentikan" />
+            <MonitorItem text="Gejala klinis: cek Chvostek, Trousseau tiap jam" />
+            <MonitorItem text="Ca total / iCa ulang 4–6 jam setelah infus" />
+            <MonitorItem text="Pantau lokasi IV: Ca glukonat tetap bisa menyebabkan flebitis" />
+          </div>
+
+          <DangerBox text="Infus Ca terlalu cepat → bradikardia berat, henti jantung. Selalu infus lambat ≥ 10 menit dan monitor EKG terus-menerus." />
         </div>
       )}
 
@@ -333,39 +536,161 @@ function MgSection() {
       />
 
       {ec?.status === 'hypo' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Koreksi — MgSO₄ 50% IV <Cite source="greenbaum2020" />
-          </p>
-          {wt > 0 && dose ? (
-            <>
-              <ResultRow label="Dosis (rendah)" value={dose.lowMg}  unit="mg" note={`25 mg/kg · → ${dose.lowMl} mL MgSO₄ 50%`} />
-              <div style={{ height: '0.5px', background: 'var(--separator)', margin: '8px 0' }} />
-              <ResultRow label="Dosis (tinggi)" value={dose.highMg} unit="mg" note={`50 mg/kg · → ${dose.highMl} mL MgSO₄ 50%`} />
-            </>
-          ) : (
-            <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien.</p>
-          )}
-          <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', marginTop: 8, lineHeight: 1.4 }}>
-            ⚠ Infus lambat 15–30 menit. Maks dosis tunggal 2000 mg. Monitor: tekanan darah, refleks patella, frekuensi napas.
-          </p>
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Koreksi Hipomagnesemia <Cite source="greenbaum2020" /></SectionHeader>
+
+          {/* Kalkulasi */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Dosis MgSO₄ 50% IV
+            </p>
+            {wt > 0 && dose ? (
+              <>
+                <ResultRow label="Dosis rendah" value={dose.lowMg} unit="mg" note={`25 mg/kg → ${dose.lowMl} mL MgSO₄ 50%`} />
+                <div style={{ height: '0.5px', background: 'var(--separator)', margin: '10px 0' }} />
+                <ResultRow label="Dosis penuh" value={dose.highMg} unit="mg" note={`50 mg/kg → ${dose.highMl} mL MgSO₄ 50% (maks 2000 mg)`} />
+              </>
+            ) : (
+              <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>Masukkan berat badan pasien.</p>
+            )}
+          </div>
+
+          {/* Persiapan */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Persiapan & Cara Pemberian
+            </p>
+            <InfoRow label="Pengenceran" value="Encerkan MgSO₄ 50% ke konsentrasi 20–50 mg/mL (mis: 2 g + 50 mL NaCl 0.9% = 40 mg/mL)" />
+            <InfoRow label="Rate infus" value="Berikan dalam 15–30 menit via syringe pump — JANGAN bolus" />
+            <InfoRow label="Maks dosis tunggal" value="2000 mg (4 mL MgSO₄ 50% yang tidak diencerkan)" />
+            <InfoRow label="Ulangi" value="Boleh ulangi setelah 4–6 jam bila Mg masih rendah" />
+          </div>
+
+          {/* Protokol klinis */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah Klinis
+            </p>
+            <ProtocolStep n={1} text="Cek K dan Ca — koreksi Mg sering diperlukan bersama hipokalemia/hipokalsemia refrakter" />
+            <ProtocolStep n={2} text="Encerkan MgSO₄ 50% — jangan berikan pekat langsung" />
+            <ProtocolStep n={3} text="Infus 15–30 menit, pasang monitor tekanan darah kontinu" />
+            <ProtocolStep n={4} text="Cek refleks patella TIAP 15 MENIT selama infus (indikator toksisitas paling sensitif)" />
+            <ProtocolStep n={5} text="Bila refleks patella menghilang → STOP infus segera, berikan antidot Ca glukonat" />
+            <ProtocolStep n={6} text="Cek ulang Mg serum setelah 4–6 jam, ulangi dosis jika perlu" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring (Setiap 15 Menit)
+            </p>
+            <MonitorItem text="Refleks patella: hilang → toksisitas Mg → STOP infus" />
+            <MonitorItem text="Frekuensi napas: < 12/mnt → kurangi rate atau hentikan" />
+            <MonitorItem text="Tekanan darah: hipotensi → perlambat infus" />
+            <MonitorItem text="Saturasi O₂ dan status kesadaran" />
+          </div>
+
+          <DangerBox text="ANTIDOT: Ca glukonat 10% 0.5–1 mL/kg IV segera bila toksisitas (refleks hilang, depresi napas). Siapkan di samping pasien sebelum mulai infus MgSO₄." />
         </div>
       )}
 
       {ec?.status === 'hyper' && (
-        <div className="ios-card" style={{ padding: '14px 16px' }}>
-          <p style={{ font: 'var(--type-footnote)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
-            Tatalaksana Hipermagnesemia
-          </p>
-          <p style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)', lineHeight: 1.5 }}>
-            Hentikan semua suplementasi Mg. Bila simtomatik (depresi napas, bradikardia):
-            Ca glukonat 10% 0.5–1 mL/kg IV sebagai antidot. Diuresis paksa bila fungsi ginjal adekuat.
-          </p>
+        <div className="ios-card" style={{ overflow: 'hidden' }}>
+          <SectionHeader>Tatalaksana Hipermagnesemia</SectionHeader>
+
+          {/* Klasifikasi berdasarkan kadar */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Manifestasi Berdasarkan Kadar Mg
+            </p>
+            <InfoRow label="2.4–4 mg/dL" value="Flush, mual, letargi — monitor ketat" />
+            <InfoRow label="4–8 mg/dL" value="Depresi refleks, hipotensi, EKG changes" />
+            <InfoRow label="8–12 mg/dL" value="Depresi napas, henti napas — emergensi" />
+            <InfoRow label="> 15 mg/dL" value="Henti jantung — dialisis segera" />
+          </div>
+
+          {/* Protokol */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Langkah Tatalaksana
+            </p>
+            <ProtocolStep n={1} text="HENTIKAN semua sumber Mg (antasid, enema, infus MgSO₄)" />
+            <ProtocolStep n={2} text="Bila simtomatik: Ca glukonat 10% 0.5–1 mL/kg IV segera (antidot fisiologis, onset menit)" />
+            <ProtocolStep n={3} text="Hidrasi: NaCl 0.9% 10–20 mL/kg untuk meningkatkan ekskresi renal" />
+            <ProtocolStep n={4} text="Furosemide 1 mg/kg IV bila fungsi ginjal baik (mendorong ekskresi Mg)" />
+            <ProtocolStep n={5} text="Dialisis (HD/CRRT): indikasi gagal ginjal, Mg > 12 mg/dL, atau depresi napas berat" />
+          </div>
+
+          {/* Monitoring */}
+          <div style={{ padding: '12px 16px', borderBottom: '0.5px solid var(--separator)' }}>
+            <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, color: 'var(--label-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>
+              Monitoring
+            </p>
+            <MonitorItem text="Refleks patella tiap 15 menit" />
+            <MonitorItem text="Frekuensi napas, SpO₂, EKG" />
+            <MonitorItem text="Mg serum tiap 2–4 jam" />
+            <MonitorItem text="Siap intubasi bila ada tanda depresi napas" />
+          </div>
+
+          <DangerBox text="Ca glukonat adalah antidot, BUKAN terapi definitif. Harus diikuti dengan eliminasi Mg (diuresis atau dialisis)." />
         </div>
       )}
 
       <TheoryAccordion sections={MG_THEORY} />
     </>
+  );
+}
+
+// ── Shared UI helpers ─────────────────────────────────────────────────────
+function SectionHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ padding: '10px 16px 8px', borderBottom: '0.5px solid var(--separator)' }}>
+      <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
+        {children}
+      </p>
+    </div>
+  );
+}
+
+function ProtocolStep({ n, text }: { n: number; text: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+      <span style={{
+        flexShrink: 0, width: 20, height: 20, borderRadius: '50%',
+        background: 'var(--accent)', color: '#fff',
+        font: 'var(--type-caption-2)', fontWeight: 700,
+        display: 'grid', placeItems: 'center',
+      }}>{n}</span>
+      <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.5, marginTop: 1 }}>{text}</p>
+    </div>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 6, alignItems: 'flex-start' }}>
+      <span style={{ flexShrink: 0, font: 'var(--type-caption-1)', fontWeight: 600, color: 'var(--label-primary)', minWidth: 120 }}>{label}</span>
+      <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', lineHeight: 1.4 }}>{value}</span>
+    </div>
+  );
+}
+
+function MonitorItem({ text }: { text: string }) {
+  return (
+    <div style={{ display: 'flex', gap: 6, marginBottom: 5 }}>
+      <span style={{ flexShrink: 0, color: 'var(--accent)', font: 'var(--type-caption-1)' }}>•</span>
+      <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', lineHeight: 1.4 }}>{text}</p>
+    </div>
+  );
+}
+
+function DangerBox({ text }: { text: string }) {
+  return (
+    <div style={{ padding: '10px 16px', background: 'color-mix(in srgb, var(--sys-orange) 10%, var(--bg-tertiary))' }}>
+      <p style={{ font: 'var(--type-caption-2)', color: 'var(--sys-orange)', lineHeight: 1.5, fontWeight: 600 }}>
+        ⚠ {text}
+      </p>
+    </div>
   );
 }
 
@@ -427,42 +752,6 @@ function ResultRow({ label, value, unit, note, tint }: {
         </span>
         <span style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', marginLeft: 4 }}>{unit}</span>
       </div>
-    </div>
-  );
-}
-
-// ── Theory accordion ──────────────────────────────────────────────────────
-interface TheorySection { title: string; content: string; }
-
-function TheoryAccordion({ sections }: { sections: TheorySection[] }) {
-  const [open, setOpen] = useState<number | null>(null);
-  return (
-    <div className="ios-card" style={{ overflow: 'hidden' }}>
-      <div style={{ padding: '10px 14px 8px' }}>
-        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>Panduan Klinis</p>
-      </div>
-      {sections.map((s, i) => (
-        <div key={i} style={{ borderTop: '0.5px solid var(--separator)' }}>
-          <button
-            onClick={() => setOpen(open === i ? null : i)}
-            style={{
-              width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '11px 14px', background: 'none', border: 'none', cursor: 'pointer',
-              minHeight: 'var(--hit)',
-            }}
-          >
-            <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', textAlign: 'left' }}>{s.title}</span>
-            {open === i ? <ChevronUp size={16} color="var(--label-tertiary)" /> : <ChevronDown size={16} color="var(--label-tertiary)" />}
-          </button>
-          {open === i && (
-            <div style={{ padding: '0 14px 14px' }}>
-              <p style={{ font: 'var(--type-footnote)', color: 'var(--label-secondary)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
-                {s.content}
-              </p>
-            </div>
-          )}
-        </div>
-      ))}
     </div>
   );
 }

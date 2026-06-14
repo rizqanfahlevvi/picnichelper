@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Disclaimer } from '../Disclaimer';
+import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
 import { Cite } from '../Citation';
 import {
   calculateDownes,
@@ -112,6 +113,7 @@ export function DownesScore() {
         </div>
       </div>
 
+      <TheoryAccordion sections={DOWNES_THEORY} />
       <Disclaimer />
       <div className="ios-card" style={{ padding: '12px 14px' }}>
         <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
@@ -127,3 +129,51 @@ export function DownesScore() {
     </div>
   );
 }
+
+const DOWNES_THEORY: TheorySection[] = [
+  {
+    title: 'Downes Score — Interpretasi',
+    content: `Skoring Downes (1970) digunakan untuk menilai derajat distres napas pada neonatus dan bayi.
+
+Total skor 0–10:
+• 0–2: Ringan — observasi, O₂ minimal bila perlu
+• 3–5: Sedang — pertimbangkan O₂ + CPAP, evaluasi rutin
+• 6–10: Berat — intervensi segera (CPAP/intubasi)
+
+Skor ≥ 6 atau memburuk cepat → konsul NICU/PICU segera.`,
+  },
+  {
+    title: 'Parameter & Cara Penilaian',
+    content: `Frekuensi Napas:
+• < 60×/mnt = 0 · 60–80 = 1 · > 80 atau apnea = 2
+
+Retraksi (tarikan dinding dada):
+• Tidak ada = 0 · Ringan = 1 · Berat = 2
+
+Sianosis:
+• Tidak ada = 0 · Hilang dengan O₂ = 1 · Menetap walau O₂ = 2
+
+Masukan udara (auskultasi):
+• Normal = 0 · Menurun = 1 · Minimal/tidak ada = 2
+
+Merintih (grunting):
+• Tidak ada = 0 · Terdengar stetoskop = 1 · Terdengar telanjang = 2`,
+  },
+  {
+    title: 'Tatalaksana Berdasarkan Skor',
+    content: `Skor 0–2 (Ringan):
+→ Observasi ketat tiap 1–2 jam
+→ O₂ via hood/nasal kanul bila SpO₂ < 90%
+→ Pertahankan suhu, nutrisi enteral bila toleransi baik
+
+Skor 3–5 (Sedang):
+→ O₂ + pertimbangkan CPAP nasal 4–6 cmH₂O
+→ Cek AGD, rontgen dada, hitung darah lengkap
+→ Evaluasi ulang tiap 30–60 menit
+
+Skor 6–10 (Berat):
+→ Stabilisasi: airway, O₂ tinggi, akses IV
+→ Intubasi + ventilasi mekanik bila gagal CPAP
+→ Pertimbangkan surfaktan bila prematur dengan RDS`,
+  },
+];

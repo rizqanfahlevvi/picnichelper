@@ -21,11 +21,11 @@ export function AppLayout() {
   const title = PAGE_TITLES[pathname] ?? 'PICNIC Helper';
   const isHome = pathname === '/';
 
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
 
-  const { weightKg, ageYears, heightCm, nama, reset } = usePatientStore();
-  const hasPatientData = weightKg !== '' || ageYears !== '' || heightCm !== '' || nama !== '';
+  const { weightKg, ageYears, heightCm, reset } = usePatientStore();
+  const hasPatientData = weightKg !== '' || ageYears !== '' || heightCm !== '';
 
   function handleReset() {
     if (confirm('Hapus semua data pasien?')) reset();
@@ -41,7 +41,7 @@ export function AppLayout() {
           DESKTOP: Sidebar (≥ md)
       ══════════════════════════════════════════ */}
       <aside style={{
-        width: sidebarExpanded ? 220 : 64,
+        width: sidebarExpanded ? 220 : 60,
         flexShrink: 0,
         display: 'none',
         flexDirection: 'column',
@@ -151,7 +151,7 @@ export function AppLayout() {
             margin: '0 auto',
             padding: '0 0 16px',
           }} className="md-content-pad">
-            <FadeOutlet pathname={pathname} />
+            <TabFade pathname={pathname} />
           </div>
         </main>
 
@@ -204,7 +204,7 @@ export function AppLayout() {
         className="md-hidden"
         style={{
           position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 50,
-          paddingBottom: 'calc(60px + env(safe-area-inset-bottom, 0px))',
+          paddingBottom: 'calc(88px + env(safe-area-inset-bottom, 0px))',
           background: 'var(--bg-elevated)',
           borderRadius: '14px 14px 0 0',
           borderTop: '0.5px solid var(--separator)',
@@ -234,19 +234,34 @@ export function AppLayout() {
           .md-hidden       { display: none  !important; }
           .md-content-pad  { padding: 24px 24px 32px !important; }
         }
-        @keyframes page-fade-in {
-          from { opacity: 0; transform: translateY(4px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
+
       `}</style>
     </div>
   );
 }
 
-/* ── Fade Outlet ─────────────────────────────────────────────────────────── */
-function FadeOutlet({ pathname }: { pathname: string }) {
+/* ── Tab Fade ────────────────────────────────────────────────────────────── */
+function TabFade({ pathname }: { pathname: string }) {
+  const [visible, setVisible] = useState(true);
+  const [currentPath, setCurrentPath] = useState(pathname);
+
+  useEffect(() => {
+    if (pathname === currentPath) return;
+    // Fade out
+    setVisible(false);
+    const t = setTimeout(() => {
+      // Swap content then fade in
+      setCurrentPath(pathname);
+      setVisible(true);
+    }, 180);
+    return () => clearTimeout(t);
+  }, [pathname, currentPath]);
+
   return (
-    <div key={pathname} style={{ animation: 'page-fade-in 220ms var(--ease-out)' }}>
+    <div style={{
+      opacity: visible ? 1 : 0,
+      transition: 'opacity 180ms',
+    }}>
       <Outlet />
     </div>
   );

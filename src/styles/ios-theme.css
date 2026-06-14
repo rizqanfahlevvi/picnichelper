@@ -196,7 +196,7 @@ body {
 /* Bottom tab bar */
 .ios-tabbar {
   flex-shrink: 0; width: 100%;
-  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  height: calc(88px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-top: 8px;
   display: flex; align-items: flex-start;

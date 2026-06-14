@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { Disclaimer } from '../Disclaimer';
 import { TheoryAccordion, type TheorySection } from '../TheoryAccordion';
-import { Cite } from '../Citation';
 import { usePatientStore } from '../../store/patientStore';
 import {
   calculateSyringePumpRate,
   SYRINGE_PUMP_DRUGS,
   type DoseTimeUnit,
 } from '../../utils/syringePump';
-import { REFERENCES } from '../../data/references';
 
 const SYRINGE_THEORY: TheorySection[] = [
   {
@@ -106,7 +104,7 @@ export function SyringePumpCalculator() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={{ padding: '0 20px 4px' }}>
         <h2 className="ios-title-3">Syringe Pump</h2>
-        <p className="ios-footnote" style={{ marginTop: 2 }}>Kecepatan infus kontinu (mL/jam). Rentang dosis mengacu <Cite source="pals2020" />.</p>
+        <p className="ios-footnote" style={{ marginTop: 2 }}>Kecepatan infus kontinu (mL/jam).</p>
       </div>
 
       {/* Drug presets */}
@@ -211,17 +209,6 @@ export function SyringePumpCalculator() {
 
       <TheoryAccordion sections={SYRINGE_THEORY} />
       <Disclaimer />
-      <div className="ios-card" style={{ padding: '12px 14px' }}>
-        <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
-        <ol style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 0, listStyle: 'none', margin: 0 }}>
-          {(['pals2020'] as const).map((key) => (
-            <li key={key} style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
-              <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[key].id}]</span>{' '}
-              {REFERENCES[key].citation}
-            </li>
-          ))}
-        </ol>
-      </div>
     </div>
   );
 }
