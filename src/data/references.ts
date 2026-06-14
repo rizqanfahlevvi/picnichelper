@@ -150,4 +150,33 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1097/PCC.0000000000001735',
     verified: true,
   },
+
+  // ── Antifungal / Antiviral / Anti-TB ───────────────────────────────────
+  who_tb2022: {
+    id: 21,
+    citation:
+      'World Health Organization. Consolidated Guidelines on Tuberculosis. Module 5: Management of Tuberculosis in Children and Adolescents. Geneva: WHO; 2022. (Dosis anti-TB pediatri terkini: INH 10, RIF 15, PZA 35, EMB 20 mg/kg/hari)',
+    url: 'https://www.who.int/publications/i/item/9789240046764',
+    verified: true,
+  },
+  idsa_candida2016: {
+    id: 22,
+    citation:
+      'Pappas PG, Kauffman CA, Andes DR, et al. Clinical Practice Guideline for the Management of Candidiasis: 2016 Update by the Infectious Diseases Society of America. Clin Infect Dis. 2016;62(4):e1–e50. (Dosis flukonazol dan amfoterisin B pediatri)',
+    url: 'https://doi.org/10.1093/cid/civ933',
+    verified: true,
+  },
+  aap_redbook2021: {
+    id: 23,
+    citation:
+      'Kimberlin DW, Barnett ED, Lynfield R, Sawyer MH, eds. Red Book: 2021–2024 Report of the Committee on Infectious Diseases. 32nd ed. Itasca, IL: American Academy of Pediatrics; 2021. (Panduan antiviral pediatri: asiklovir, gansiklovir, dosis HIV/CMV/HSV)',
+    verified: true,
+  },
+  idai_tb2016: {
+    id: 24,
+    citation:
+      'Ikatan Dokter Anak Indonesia (IDAI). Petunjuk Teknis Tata Laksana Tuberkulosis pada Anak. Jakarta: IDAI; 2016. (Rekomendasi dosis OAT anak, regimen 2HRZE/4HR)',
+    url: 'https://www.idai.or.id',
+    verified: true,
+  },
 };

@@ -1639,6 +1639,356 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
 
+  // ── Antijamur ──────────────────────────────────────────────────────────
+  {
+    id: 'flukonazol',
+    name: 'Flukonazol',
+    aliases: ['Fluconazole', 'Diflucan'],
+    category: 'antijamur',
+    mechanism: 'Azol — menghambat 14α-demethylase (CYP51), mengganggu sintesis ergosterol membran jamur.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 6, maxPerKg: 12, unit: 'mg/kg',
+          maxAbsoluteMg: 800,
+          frequency: 'q24h (lihat catatan neonatus)',
+          indication: 'Candidiasis invasif, candidemia, meningitis kriptokokus',
+          notes: 'Neonatus: loading 12 mg/kg; interval sesuai usia gestasi — <29 mgg: q72h; 29–36 mgg: q48h; ≥37 mgg: q24h [22][16]. Anak/remaja: loading 12 mg/kg, lanjut 6–12 mg/kg/hari max 800 mg [22].',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 3, maxPerKg: 12, unit: 'mg/kg',
+          maxAbsoluteMg: 400,
+          frequency: 'q24h',
+          indication: 'Candidiasis oral, esofagus, infeksi invasif ringan-sedang',
+          notes: 'Candidiasis oral/esofagus: loading 6 mg/kg, lanjut 3–6 mg/kg/hari. Infeksi invasif: 6–12 mg/kg/hari max 400 mg [22][16].',
+        },
+      },
+    ],
+    warnings: [
+      'Monitor fungsi hati (hepatotoksik pada dosis tinggi/lama)',
+      'Perpanjang QTc — hindari bersama obat QT-prolonging',
+      'Inhibitor CYP2C9 & CYP3A4 kuat — banyak interaksi obat penting',
+    ],
+    references: ['idsa_candida2016', 'idai2012'],
+    verified: true,
+  },
+  {
+    id: 'amfoterisin_b',
+    name: 'Amfoterisin B',
+    aliases: ['Amphotericin B', 'AmB', 'AmBisome'],
+    category: 'antijamur',
+    mechanism: 'Poliena — berikatan dengan ergosterol membran jamur → pori transmembran → kematian sel. Spektrum terluas di antara antijamur.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 0.5, maxPerKg: 1.0, unit: 'mg/kg',
+          maxAbsoluteMg: 1500,
+          frequency: 'q24h (infus 2–6 jam)',
+          ivDuration: 'Infus lambat 2–6 jam. Test dose 0.1 mg/kg (max 1 mg) selama 1 jam sebelum dosis pertama',
+          indication: 'Candidiasis invasif berat, aspergilosis, kriptokokosis',
+          notes: 'AmB deoksikolat (konvensional): 0.5–1 mg/kg/hari [22][16]. AmB liposomal (AmBisome): 3–5 mg/kg/hari — nefrotoksik minimal, utamakan bila ada risiko ginjal atau gagal terapi konvensional [22]. Gunakan D5W (bukan NaCl 0.9%).',
+        },
+      },
+    ],
+    warnings: [
+      'Nefrotoksik — pantau kreatinin, BUN, elektrolit (K⁺, Mg²⁺) setiap hari',
+      'Demam/menggigil/hipotensi saat infus — premedikasi parasetamol ± difenhidramin',
+      'Test dose WAJIB sebelum infus pertama',
+      'JANGAN larutkan dalam NaCl 0.9% (presipitasi) — gunakan D5W',
+    ],
+    references: ['idsa_candida2016', 'idai2012'],
+    verified: true,
+  },
+
+  // ── Antiviral ──────────────────────────────────────────────────────────
+  {
+    id: 'asiklovir',
+    name: 'Asiklovir',
+    aliases: ['Acyclovir', 'Zovirax'],
+    category: 'antiviral',
+    mechanism: 'Analog nukleosida — dihambat oleh timidin kinase virus menjadi trifosfat aktif → menghambat DNA polimerase HSV/VZV.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 20, unit: 'mg/kg',
+          frequency: 'q8h (lihat catatan)',
+          ivDuration: 'Infus lambat ≥1 jam; hidrasi cukup untuk cegah nefrotoksisitas',
+          indication: 'HSV neonatus, ensefalitis HSV, varisela berat/imunokompromis',
+          notes: 'Neonatus HSV: 20 mg/kg/dosis q8h (= 60 mg/kg/hari); lokal 14 hari, CNS/diseminata 21 hari [23][16]. Ensefalitis HSV anak: 15–20 mg/kg/dosis q8h x14–21 hari [23]. Varisela imunokompromis: 10 mg/kg/dosis q8h [23].',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 20, maxPerKg: 20, unit: 'mg/kg',
+          maxAbsoluteMg: 800,
+          frequency: 'q6h x5 hari',
+          indication: 'Varisela ringan-sedang (imunokompeten, anak ≥2 tahun)',
+          notes: 'Varisela oral: 20 mg/kg/dosis q6h x5 hari, max 800 mg/dosis [23][16]. Mulai dalam 24 jam sejak lesi muncul.',
+        },
+      },
+    ],
+    warnings: [
+      'Nefrotoksik bila dehidrasi atau infus terlalu cepat — hidrasi cukup sebelum & selama terapi',
+      'Sesuaikan dosis pada gangguan ginjal',
+      'Konfirmasi diagnosis virologi (PCR/serologi) bila kondisi memungkinkan',
+    ],
+    references: ['aap_redbook2021', 'idai2012'],
+    verified: true,
+  },
+  {
+    id: 'gansiklovir',
+    name: 'Gansiklovir',
+    aliases: ['Ganciclovir', 'Cymevene'],
+    category: 'antiviral',
+    mechanism: 'Analog nukleosida — dihambat oleh UL97 kinase CMV → inhibisi DNA polimerase CMV.',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 5, maxPerKg: 6, unit: 'mg/kg',
+          frequency: 'q12h (induksi); q24h (maintenance)',
+          ivDuration: 'Infus lambat 1 jam',
+          indication: 'CMV kongenital simtomatik (neonatus), retinitis/kolitis CMV pada imunokompromis',
+          notes: 'Neonatus CMV kongenital simtomatik: 6 mg/kg/dosis q12h x6 minggu [23]; pertimbangkan valgansiklovir oral 16 mg/kg/dosis q12h bila toleran [23]. Anak imunokompromis — induksi: 5 mg/kg/dosis q12h x14–21 hari; maintenance: 5 mg/kg/hari q24h atau 6 mg/kg 5×/minggu [23][16].',
+        },
+      },
+    ],
+    warnings: [
+      'Mielosupresi berat (neutropenia, trombositopenia) — pantau CBC 2× per minggu',
+      'Nefrotoksik — sesuaikan dosis bila CrCl < 70 mL/mnt/1.73m²',
+      'Teratogenik & karsinogenik potensial — gunakan kontrasepsi ketat',
+      'Gunakan HANYA pada indikasi CMV terverifikasi (PCR/budaya)',
+    ],
+    references: ['aap_redbook2021', 'idai2012'],
+    verified: true,
+  },
+
+  // ── Anti-Tuberkulosis ──────────────────────────────────────────────────
+  {
+    id: 'isoniazid',
+    name: 'Isoniazid (INH)',
+    aliases: ['Isoniazid', 'INH', 'H — regimen OAT'],
+    category: 'antibiotik',
+    mechanism: 'Menghambat sintesis asam mikolat dinding sel Mycobacterium tuberculosis (InhA/KatG).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 7, maxPerKg: 15, unit: 'mg/kg',
+          maxAbsoluteMg: 300,
+          frequency: 'q24h (sekali sehari)',
+          indication: 'TB aktif (regimen HRZE/HR), profilaksis LTBI',
+          notes: 'WHO 2022 & IDAI: 10 mg/kg/hari (rentang 7–15), max 300 mg/hari [21][24][16]. Profilaksis LTBI: 10 mg/kg/hari x6–9 bulan. WAJIB tambahkan piridoksin (B6) 1–2 mg/kg/hari untuk cegah neuropati perifer [21].',
+        },
+      },
+    ],
+    warnings: [
+      'Hepatotoksik — pantau SGOT/SGPT sebelum mulai & bila ada gejala (mual, jaundice)',
+      'Neuropati perifer — suplementasi piridoksin (B6) WAJIB',
+      'Meningkatkan kadar fenitoin — monitor level fenitoin bila dipakai bersamaan',
+    ],
+    references: ['who_tb2022', 'idai_tb2016', 'idai2012'],
+    verified: true,
+  },
+  {
+    id: 'rifampisin',
+    name: 'Rifampisin (RIF)',
+    aliases: ['Rifampicin', 'Rifampin', 'R — regimen OAT'],
+    category: 'antibiotik',
+    mechanism: 'Menghambat RNA polimerase bakteri yang bergantung DNA (rpoB); bakterisidal terhadap M. tuberculosis.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 20, unit: 'mg/kg',
+          maxAbsoluteMg: 600,
+          frequency: 'q24h, 30 mnt sebelum makan',
+          indication: 'TB aktif (semua fase), profilaksis meningitis H. influenzae/N. meningitidis',
+          notes: 'WHO 2022 & IDAI: 15 mg/kg/hari (rentang 10–20), max 600 mg/hari [21][24][16]. Warna urin/air mata/keringat merah-oranye (normal, beri tahu orang tua) [21].',
+        },
+      },
+    ],
+    warnings: [
+      'Hepatotoksik — pantau fungsi hati',
+      'Induktor enzim kuat (CYP3A4, CYP2C9) — menurunkan kadar banyak obat penting',
+      'Menurunkan efektivitas: kortikosteroid, kontrasepsi hormonal, ARV (hindari kombinasi), fenitoin, warfarin',
+      'Jangan beri dalam 2 jam bersama antasida',
+    ],
+    references: ['who_tb2022', 'idai_tb2016', 'idai2012'],
+    verified: true,
+  },
+  {
+    id: 'pirazinamid',
+    name: 'Pirazinamid (PZA)',
+    aliases: ['Pyrazinamide', 'Z — regimen OAT'],
+    category: 'antibiotik',
+    mechanism: 'Pro-drug → asam pirazinoat → mengganggu metabolisme energi M. tuberculosis di lingkungan asam (sterilisasi kavitas).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 30, maxPerKg: 40, unit: 'mg/kg',
+          maxAbsoluteMg: 2000,
+          frequency: 'q24h',
+          indication: 'TB aktif — fase intensif 2 bulan (regimen 2HRZE)',
+          notes: 'WHO 2022 & IDAI: 35 mg/kg/hari (rentang 30–40), max 2000 mg/hari [21][24][16]. Diberikan hanya 2 bulan pertama pada regimen standar [21].',
+        },
+      },
+    ],
+    warnings: [
+      'Hepatotoksik — pantau SGOT/SGPT',
+      'Hiperurisemia — pantau asam urat bila ada keluhan gout/artralgia',
+      'Artralgia sering; dapat diatasi dengan analgesik',
+    ],
+    references: ['who_tb2022', 'idai_tb2016', 'idai2012'],
+    verified: true,
+  },
+  {
+    id: 'etambutol',
+    name: 'Etambutol (EMB)',
+    aliases: ['Ethambutol', 'E — regimen OAT'],
+    category: 'antibiotik',
+    mechanism: 'Menghambat arabinosil transferase → gangguan sintesis arabinogalaktan dinding sel M. tuberculosis.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 15, maxPerKg: 25, unit: 'mg/kg',
+          maxAbsoluteMg: 1000,
+          frequency: 'q24h',
+          indication: 'TB aktif — fase intensif (regimen 2HRZE), TB MDR',
+          notes: 'WHO 2022 & IDAI: 20 mg/kg/hari (rentang 15–25), max 1000 mg/hari [21][24][16]. Pemantauan visus & persepsi warna WAJIB tiap bulan [21].',
+        },
+      },
+    ],
+    warnings: [
+      'Neuritis optik — KONTRAINDIKASI pada anak <5 tahun (tidak dapat melaporkan gangguan visus)',
+      'Pantau ketajaman visus dan persepsi warna setiap bulan selama terapi',
+      'Sesuaikan dosis pada gangguan ginjal (GFR < 30: perpanjang interval)',
+    ],
+    references: ['who_tb2022', 'idai_tb2016', 'idai2012'],
+    verified: true,
+  },
+  {
+    id: 'kotrimoksazol',
+    name: 'Kotrimoksazol (TMP-SMX)',
+    aliases: ['Co-trimoxazole', 'Trimethoprim-Sulfamethoxazole', 'TMP-SMX', 'Bactrim', 'Septrin'],
+    category: 'antibiotik',
+    mechanism: 'Kombinasi inhibisi ganda: TMP menghambat DHFR; SMX menghambat DHPS → blokir sintesis folat bakteri secara sinergis.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 8, maxPerKg: 10, unit: 'mg/kg',
+          maxAbsoluteMg: 320,
+          frequency: 'q12h',
+          indication: 'ISK, Shigella, ISPA, profilaksis PCP',
+          notes: 'Dosis berdasarkan komponen TMP. Infeksi standar: TMP 8–10 mg/kg/hari dibagi q12h [16][17]. Profilaksis PCP (HIV/imunokompromis): TMP 5 mg/kg/hari (max 160 mg TMP) sekali/hari, 3×/minggu [23][16]. Sediaan: tablet 80/400 mg; suspensi 40/200 mg per 5 mL.',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 15, maxPerKg: 20, unit: 'mg/kg',
+          frequency: 'dibagi q6–8h x21 hari',
+          indication: 'PCP (Pneumocystis jirovecii pneumonia) berat',
+          notes: 'PCP berat: TMP 15–20 mg/kg/hari IV dibagi q6–8h x21 hari [23][16]. Beralih ke oral bila kondisi membaik.',
+        },
+      },
+    ],
+    warnings: [
+      'KONTRAINDIKASI pada neonatus <4 minggu (risiko kernikterus)',
+      'Hindari pada defisiensi G6PD (hemolisis)',
+      'Pantau fungsi ginjal & hitung darah pada penggunaan jangka panjang',
+      'Hentikan segera bila muncul rash (risiko Steven-Johnson/TEN)',
+    ],
+    references: ['aap_redbook2021', 'idai2012', 'lexicomp_ped'],
+    verified: true,
+  },
+  {
+    id: 'eritromisin',
+    name: 'Eritromisin',
+    aliases: ['Erythromycin'],
+    category: 'antibiotik',
+    mechanism: 'Makrolida — berikatan dengan 50S ribosom (23S rRNA) → menghambat translokasi peptida → bakteriostatik.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 30, maxPerKg: 50, unit: 'mg/kg',
+          maxAbsoluteMg: 2000,
+          frequency: 'dibagi q6–8h',
+          indication: 'Infeksi Chlamydia, Bordetella pertussis, pneumonia atipikal, alergi penisilin',
+          notes: 'Anak: 30–50 mg/kg/hari dibagi q6–8h, max 2000 mg/hari [16][17]. Pertussis: 40–50 mg/kg/hari dibagi q6h x14 hari [23]. Neonatus: 10 mg/kg/dosis q6h — waspadai HPS pada <2 minggu [23].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 15, maxPerKg: 50, unit: 'mg/kg',
+          maxAbsoluteMg: 2000,
+          frequency: 'dibagi q6h',
+          ivDuration: 'Infus lambat 30–60 menit',
+          indication: 'Bila tidak toleran oral',
+          notes: 'IV: 15–50 mg/kg/hari dibagi q6h, infus lambat untuk mengurangi flebitis [16].',
+        },
+      },
+    ],
+    warnings: [
+      'Hipertrofi pilorus infantil (HPS) — hindari pada neonatus <2 minggu bila ada alternatif',
+      'Perpanjang QTc — hindari kombinasi dengan obat QT-prolonging lain',
+      'Inhibitor CYP3A4 — interaksi dengan banyak obat (teofilin, warfarin, siklosporin)',
+      'Mual/muntah sering; berikan bersama makanan',
+    ],
+    references: ['idai2012', 'lexicomp_ped', 'aap_redbook2021'],
+    verified: true,
+  },
+  {
+    id: 'doksisiklin',
+    name: 'Doksisiklin',
+    aliases: ['Doxycycline', 'Vibramycin'],
+    category: 'antibiotik',
+    mechanism: 'Tetrasiklin — berikatan dengan 30S ribosom → menghambat masuknya aminoasil-tRNA → bakteriostatik spektrum luas.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 2, maxPerKg: 4, unit: 'mg/kg',
+          maxAbsoluteMg: 200,
+          frequency: 'dibagi q12–24h',
+          indication: 'Rickettsia, Chlamydia, Mycoplasma, Lyme disease (anak ≥8 tahun)',
+          notes: 'HANYA untuk anak ≥8 tahun [16][17]. Infeksi standar: 2–4 mg/kg/hari dibagi q12–24h, max 200 mg/hari. Rickettsia/RMSF: 4.4 mg/kg/hari dibagi q12h x7–14 hari [23]. Pada RMSF mengancam jiwa: AAP mengizinkan penggunaan pada anak <8 tahun (satu kursus pendek) [23].',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 2, maxPerKg: 4, unit: 'mg/kg',
+          maxAbsoluteMg: 200,
+          frequency: 'dibagi q12h',
+          ivDuration: 'Infus lambat 1–4 jam',
+          indication: 'Sama dengan oral, bila tidak toleran per oral',
+          notes: 'IV: dosis sama dengan oral; infus lambat untuk mengurangi flebitis [17].',
+        },
+      },
+    ],
+    warnings: [
+      'KONTRAINDIKASI pada anak <8 tahun — diskolorasi gigi permanen & hambatan pertumbuhan tulang',
+      'Pengecualian: RMSF/Rickettsia mengancam jiwa — satu kursus pendek dapat dipertimbangkan [23]',
+      'Fotosensitisasi — hindari paparan matahari langsung',
+      'Jangan berikan dalam 2 jam bersama antasida/susu/produk kalsium — mengurangi absorpsi 50%',
+    ],
+    references: ['idai2012', 'lexicomp_ped', 'aap_redbook2021'],
+    verified: true,
+  },
+
   // ── Lainnya ────────────────────────────────────────────────────────────
   {
     id: 'kalsium_glukonat',
