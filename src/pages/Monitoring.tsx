@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { VitalSignsChecker } from '../components/monitoring/VitalSignsChecker';
 import { WeaningChecklist } from '../components/monitoring/WeaningChecklist';
+import { NutritionStatus } from '../components/monitoring/NutritionStatus';
 
-type MonitoringTab = 'vital' | 'weaning';
+type MonitoringTab = 'vital' | 'weaning' | 'gizi';
 
 const TABS: { id: MonitoringTab; label: string }[] = [
   { id: 'vital',   label: 'Tanda Vital' },
   { id: 'weaning', label: 'Weaning'     },
+  { id: 'gizi',    label: 'Status Gizi' },
 ];
 
 export function Monitoring() {
@@ -33,6 +35,7 @@ export function Monitoring() {
       <div style={{ marginTop: 16 }}>
         {activeTab === 'vital'   && <VitalSignsChecker />}
         {activeTab === 'weaning' && <WeaningChecklist />}
+        {activeTab === 'gizi'    && <NutritionStatus />}
       </div>
     </div>
   );

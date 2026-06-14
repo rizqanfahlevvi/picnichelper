@@ -251,4 +251,32 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://www.idai.or.id',
     verified: true,
   },
+  who_growth2006: {
+    id: 35,
+    citation:
+      'World Health Organization. WHO Child Growth Standards: Length/height-for-age, weight-for-age, weight-for-length, weight-for-height and body mass index-for-age. Methods and development. Geneva: WHO; 2006.',
+    url: 'https://www.who.int/tools/child-growth-standards/standards',
+    verified: true,
+  },
+  cdc_growth2000: {
+    id: 36,
+    citation:
+      'Kuczmarski RJ, Ogden CL, Guo SS, et al. 2000 CDC Growth Charts for the United States: Methods and development. Vital Health Stat. 2002;11(246):1–190.',
+    url: 'https://www.cdc.gov/growthcharts',
+    verified: true,
+  },
+  who_growthref2007: {
+    id: 37,
+    citation:
+      'de Onis M, Onyango AW, Borghi E, et al. Development of a WHO growth reference for school-aged children and adolescents. Bull World Health Organ. 2007;85(9):660–7.',
+    url: 'https://doi.org/10.2471/blt.07.043497',
+    verified: true,
+  },
+  idai_gizi2011: {
+    id: 38,
+    citation:
+      'Ikatan Dokter Anak Indonesia (IDAI). Rekomendasi Ikatan Dokter Anak Indonesia: Asuhan Nutrisi Pediatrik. Jakarta: IDAI; 2011.',
+    url: 'https://www.idai.or.id',
+    verified: true,
+  },
 };
