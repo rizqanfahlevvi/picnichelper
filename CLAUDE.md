@@ -61,7 +61,24 @@ Monitoring & Weaning · Referensi.
       Tombol "Menu" membuka komponen Sheet (shadcn) berisi sisa rute
       (Teori, Skoring, Monitoring & Weaning, Referensi).
 
-## Cara kerja denganku (pengguna = pengarah, bukan pengetik)
+## Sitasi & Referensi — WAJIB di setiap komponen klinis
+- ✓ **Sitasi inline** gaya Vancouver `[1]` langsung di sebelah teks/nilai/rumus yang dirujuk.
+- ✓ **Blok referensi** di bagian bawah setiap komponen kalkulator/teori/skoring,
+      format: `[n] Penulis. Judul. Jurnal/Pedoman. Tahun.`
+- ✓ Referensi terhubung ke halaman `/referensi` (menggunakan ID dari `src/data/references.ts`).
+- ✗ JANGAN tambah fitur/konten klinis tanpa sitasi yang valid dan terverifikasi.
+- ✗ JANGAN gunakan sitasi dari memori — gunakan referensi yang sudah ada di
+      `src/data/references.ts` atau minta pengguna konfirmasi sumber baru.
+
+## Data Pasien — label & UX
+- Label section data pasien: **"Data Pasien"** (bukan "Pasien Aktif").
+- Tampilan compact (PatientSummary): kartu ringkasan nama/gender + grid usia·berat·tinggi.
+  - Jika input via tanggal lahir: tampilkan usia spesifik, mis. **"2 th 3 bln"**.
+  - Jika input bulan: tampilkan dalam bulan, mis. **"18 bln"**.
+- Form edit (PatientInput) hanya tampil di dalam Sheet (modal), tidak inline di halaman.
+- PatientSummary dipakai di SEMUA halaman yang butuh data pasien (Kalkulator, Drugs & Fluids, dll).
+
+
 1. Sebelum menulis kode, **jelaskan rencanamu dalam poin-poin** (folder, file,
    rumus + sumbernya). Tunggu persetujuanku.
 2. **Satu tugas per sesi.** Selesaikan & uji sebelum lanjut fitur lain.

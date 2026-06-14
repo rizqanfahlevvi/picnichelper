@@ -5,35 +5,44 @@ import { PatientInput } from './PatientInput';
 import { usePatientStore } from '../store/patientStore';
 
 export function PatientSummary() {
-  const { nama, gender, ageUnit, ageInput, ageYears, weightKg, heightCm } = usePatientStore();
+  const { nama, gender, agePrecise, ageYears, ageInput, ageUnit, ageMonths, weightKg, heightCm } = usePatientStore();
   const [open, setOpen] = useState(false);
 
   const hasPatient = weightKg !== '' || ageInput !== '' || ageYears !== '';
-  const ageDisplay = ageUnit === 'bulan' ? ageInput : ageYears;
-  const ageUnitDisplay = ageUnit === 'bulan' ? 'bln' : 'th';
+
+  // Tampilan usia: agePrecise jika ada (dari tgl lahir), sinau fallback ke ageInput
+  const ageDisplay = agePrecise || (ageUnit === 'bulan' ? (ageMonths || ageInput) + ' bln' : ageYears ? ageYears + ' th' : '');
 
   return (
     <>
       <div className="ios-section">
-        <span className="label">Pasien Aktif</span>
+        <span className="label">Data Pasien</span>
         <button className="action" onClick={() => setOpen(true)}>{hasPatient ? 'Ubah' : 'Isi'}</button>
       </div>
 
       <button
         className="ios-list w-full text-left"
-        style={{ display: 'block' }}
+        style={{ display: 'block', width: '100%', boxSizing: 'border-box' }}
         onClick={() => setOpen(true)}
       >
         {hasPatient ? (
-          <div>
+          <div style={{ width: '100%', overflow: 'hidden' }}>
             {(nama || gender) && (
-              <div style={{ padding: '8px 14px 4px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                padding: '8px 14px 4px',
+                display: 'flex', alignItems: 'center', gap: 8,
+                flexWrap: 'wrap', overflow: 'hidden',
+              }}>
                 {nama && (
-                  <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--label-primary)' }}>{nama}</span>
+                  <span style={{
+                    fontSize: 15, fontWeight: 600, color: 'var(--label-primary)',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%',
+                  }}>{nama}</span>
                 )}
                 {gender && (
                   <span style={{
                     fontSize: 12, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--r-pill)',
+                    flexShrink: 0,
                     background: gender === 'L' ? 'rgba(0,122,255,0.12)' : 'rgba(255,45,85,0.12)',
                     color: gender === 'L' ? 'var(--sys-blue)' : 'var(--sys-pink)',
                   }}>
@@ -42,10 +51,10 @@ export function PatientSummary() {
                 )}
               </div>
             )}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-              <DataCell val={ageDisplay}  unit={ageUnitDisplay} label="Usia"   borderRight />
-              <DataCell val={weightKg}    unit="kg"             label="Berat"  borderRight />
-              <DataCell val={heightCm}    unit="cm"             label="Tinggi" />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', width: '100%' }}>
+              <DataCell val={ageDisplay} label="Usia"   borderRight />
+              <DataCell val={weightKg ? weightKg + ' kg' : ''} label="Berat"  borderRight />
+              <DataCell val={heightCm ? heightCm + ' cm' : ''} label="Tinggi" />
             </div>
           </div>
         ) : (
@@ -79,22 +88,28 @@ export function PatientSummary() {
   );
 }
 
-function DataCell({ val, unit, label, borderRight }: {
-  val: string; unit: string; label: string; borderRight?: boolean;
+function DataCell({ val, label, borderRight }: {
+  val: string; label: string; borderRight?: boolean;
 }) {
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: '11px 8px 12px',
+      justifyContent: 'center', padding: '11px 6px 12px',
       borderRight: borderRight ? '0.5px solid var(--separator)' : 'none',
+      minWidth: 0, overflow: 'hidden',
     }}>
       {val ? (
-        <span style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--label-primary)', lineHeight: 1 }}>{val}</span>
+        <span style={{
+          fontSize: 20, fontWeight: 700, letterSpacing: '-0.01em',
+          color: 'var(--label-primary)', lineHeight: 1,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          maxWidth: '100%',
+        }}>{val}</span>
       ) : (
-        <span style={{ fontSize: 22, fontWeight: 300, color: 'var(--label-tertiary)', lineHeight: 1 }}>—</span>
+        <span style={{ fontSize: 20, fontWeight: 300, color: 'var(--label-tertiary)', lineHeight: 1 }}>—</span>
       )}
       <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 3 }}>
-        {label}{val ? ` · ${unit}` : ''}
+        {label}
       </span>
     </div>
   );

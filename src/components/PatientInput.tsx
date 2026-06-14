@@ -11,14 +11,20 @@ const AGE_UNITS: { id: AgeUnit; label: string }[] = [
   { id: 'tgl-lahir', label: 'Tgl Lahir' },
 ];
 
-function calcAgeYearsFromDate(isoDate: string): string {
-  if (!isoDate) return '';
+function calcFromDate(isoDate: string): { years: string; months: string; precise: string } {
+  if (!isoDate) return { years: '', months: '', precise: '' };
   const birth = new Date(isoDate);
   const today = new Date();
   let years = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) years--;
-  return years >= 0 ? String(years) : '';
+  let months = today.getMonth() - birth.getMonth();
+  if (today.getDate() < birth.getDate()) months--;
+  if (months < 0) { years--; months += 12; }
+  if (years < 0) return { years: '', months: '', precise: '' };
+  const totalMonths = years * 12 + months;
+  const precise = years > 0
+    ? (months > 0 ? `${years} th ${months} bln` : `${years} th`)
+    : `${totalMonths} bln`;
+  return { years: String(years), months: String(totalMonths), precise };
 }
 
 const inputStyle: React.CSSProperties = {
@@ -57,19 +63,27 @@ export function PatientInput() {
   function handleAgeInput(val: string) {
     store.setAgeInput(val);
     if (store.ageUnit === 'tgl-lahir') {
-      store.setAgeYears(calcAgeYearsFromDate(val));
+      const { years, months, precise } = calcFromDate(val);
+      store.setAgeYears(years);
+      store.setAgeMonths(months);
+      store.setAgePrecise(precise);
     } else if (store.ageUnit === 'tahun') {
+      const n = parseFloat(val);
       store.setAgeYears(val);
+      store.setAgeMonths(isNaN(n) ? '' : String(Math.round(n * 12)));
+      store.setAgePrecise(val ? `${val} th` : '');
     } else {
-      // bulan → konversi ke tahun untuk kalkulator
-      const bulan = parseFloat(val);
-      store.setAgeYears(isNaN(bulan) ? '' : String(Math.floor(bulan / 12)));
+      // bulan
+      const n = parseFloat(val);
+      const yrs = isNaN(n) ? '' : String(Math.floor(n / 12));
+      store.setAgeYears(yrs);
+      store.setAgeMonths(val);
+      store.setAgePrecise(val ? `${val} bln` : '');
     }
   }
 
   return (
     <div>
-      {/* Kategori */}
       <div className="ios-segmented" style={{ margin: '0 16px 12px' }}>
         {CATEGORIES.map((c) => (
           <button key={c.id} aria-selected={store.category === c.id} onClick={() => store.setCategory(c.id)}>
@@ -79,7 +93,6 @@ export function PatientInput() {
       </div>
 
       <div className="ios-card" style={{ padding: '2px 0' }}>
-        {/* Nama */}
         <Row label="Nama" noBorder>
           <input
             type="text" value={store.nama}
@@ -89,7 +102,6 @@ export function PatientInput() {
           />
         </Row>
 
-        {/* Jenis Kelamin */}
         <Row label="Jenis Kelamin">
           <div style={{ display: 'flex', gap: 6 }}>
             {(['L', 'P'] as Gender[]).filter(Boolean).map(g => (
@@ -101,7 +113,6 @@ export function PatientInput() {
           </div>
         </Row>
 
-        {/* Usia */}
         <Row label="Usia">
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
             <div style={{ display: 'flex', gap: 4 }}>
@@ -128,10 +139,14 @@ export function PatientInput() {
                 style={inputStyle}
               />
             )}
+            {store.agePrecise && store.ageUnit === 'tgl-lahir' && (
+              <span style={{ fontSize: 12, color: 'var(--label-tertiary)' }}>
+                Usia: {store.agePrecise}
+              </span>
+            )}
           </div>
         </Row>
 
-        {/* Berat Badan */}
         <Row label="Berat Badan (kg)">
           <input
             type="number" value={store.weightKg}
@@ -142,7 +157,6 @@ export function PatientInput() {
           />
         </Row>
 
-        {/* Tinggi Badan */}
         <Row label="Tinggi Badan (cm)">
           <input
             type="number" value={store.heightCm}

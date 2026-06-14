@@ -19,8 +19,12 @@ interface PatientState {
   ageUnit: AgeUnit;
   /** Input usia mentah: angka (tahun/bulan) atau ISO date (tgl-lahir) */
   ageInput: string;
-  /** Usia dalam tahun — dihitung dari ageInput, dipakai kalkulator */
+  /** Usia dalam tahun (string) — dipakai kalkulator */
   ageYears: string;
+  /** Usia dalam bulan (string) — dipakai kalkulator yang butuh presisi */
+  ageMonths: string;
+  /** Label usia spesifik untuk tampilan, mis. "2 th 3 bln" atau "18 bln" */
+  agePrecise: string;
   weightKg: string;
   heightCm: string;
 
@@ -30,6 +34,8 @@ interface PatientState {
   setAgeUnit: (v: AgeUnit) => void;
   setAgeInput: (v: string) => void;
   setAgeYears: (v: string) => void;
+  setAgeMonths: (v: string) => void;
+  setAgePrecise: (v: string) => void;
   setWeightKg: (v: string) => void;
   setHeightCm: (v: string) => void;
   reset: () => void;
@@ -38,27 +44,31 @@ interface PatientState {
 export const usePatientStore = create<PatientState>()(
   persist(
     (set) => ({
-  category: 'anak',
-  nama: '',
-  gender: '',
-  ageUnit: 'tahun',
-  ageInput: '',
-  ageYears: '',
-  weightKg: '',
-  heightCm: '',
+      category: 'anak',
+      nama: '',
+      gender: '',
+      ageUnit: 'tahun',
+      ageInput: '',
+      ageYears: '',
+      ageMonths: '',
+      agePrecise: '',
+      weightKg: '',
+      heightCm: '',
 
-  setCategory: (category) => set({ category }),
-  setNama:     (nama)     => set({ nama }),
-  setGender:   (gender)   => set({ gender }),
-  setAgeUnit:  (ageUnit)  => set({ ageUnit, ageInput: '', ageYears: '' }),
-  setAgeInput: (ageInput) => set({ ageInput }),
-  setAgeYears: (ageYears) => set({ ageYears }),
-  setWeightKg: (weightKg) => set({ weightKg }),
-  setHeightCm: (heightCm) => set({ heightCm }),
-  reset: () => set({
-    nama: '', gender: '', ageUnit: 'tahun',
-    ageInput: '', ageYears: '', weightKg: '', heightCm: '',
-  }),
+      setCategory:   (category)   => set({ category }),
+      setNama:       (nama)       => set({ nama }),
+      setGender:     (gender)     => set({ gender }),
+      setAgeUnit:    (ageUnit)    => set({ ageUnit, ageInput: '', ageYears: '', ageMonths: '', agePrecise: '' }),
+      setAgeInput:   (ageInput)   => set({ ageInput }),
+      setAgeYears:   (ageYears)   => set({ ageYears }),
+      setAgeMonths:  (ageMonths)  => set({ ageMonths }),
+      setAgePrecise: (agePrecise) => set({ agePrecise }),
+      setWeightKg:   (weightKg)   => set({ weightKg }),
+      setHeightCm:   (heightCm)   => set({ heightCm }),
+      reset: () => set({
+        nama: '', gender: '', ageUnit: 'tahun',
+        ageInput: '', ageYears: '', ageMonths: '', agePrecise: '', weightKg: '', heightCm: '',
+      }),
     }),
     { name: 'picnic-patient' },
   ),
