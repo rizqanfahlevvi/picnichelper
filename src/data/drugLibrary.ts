@@ -21,6 +21,7 @@ export type DrugCategory =
   | 'antiemetik'
   | 'kortikosteroid'
   | 'antiparasit'      // antimalaria, antihelmintik
+  | 'antiretroviral'   // ARV / HIV
   | 'antidotum'        // toksikologi & kelasi
   | 'lainnya';
 
@@ -2330,6 +2331,329 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     verified: true,
   },
 
+  // ── Antiretroviral (ARV / HIV) ─────────────────────────────────────────
+  // Catatan: dosis ARV berbasis pita berat/luas permukaan tubuh (m²)/usia —
+  // dikelola spesialis. Memakai fixedDose agar tidak salah hitung per-kg.
+  {
+    id: 'zidovudin',
+    name: 'Zidovudin (AZT)',
+    aliases: ['Zidovudine', 'AZT', 'ZDV', 'Retrovir'],
+    category: 'antiretroviral',
+    mechanism: 'NRTI — analog timidin, menghambat reverse transcriptase HIV.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Neonatus 2 mg/kg/dosis · Anak 180–240 mg/m²/dosis',
+          frequency: 'q6–12h (lihat catatan)',
+          indication: 'Infeksi HIV, pencegahan penularan ibu-anak (PMTCT)',
+          notes: 'Neonatus <6 mgg: 2 mg/kg q6h. Prematur: 2 mg/kg q12h, naik ke q8h pada usia 2 mgg (≥30 mgg gestasi) atau 4 mgg (<30 mgg) [16]. Anak 6 mgg–<18 th: 180–240 mg/m²/dosis q12h [16]. Remaja/dewasa: 300 mg 2×/hari [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif zidovudin, anemia'],
+    warnings: [
+      'Supresi sumsum tulang (anemia makrositik/neutropenia) — pantau hematokrit, leukosit, fungsi hati [16]',
+      'TIDAK boleh bersama stavudin (antagonistik) [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'lamivudin',
+    name: 'Lamivudin (3TC)',
+    aliases: ['Lamivudine', '3TC', 'Epivir'],
+    category: 'antiretroviral',
+    mechanism: 'NRTI — analog sitidin, menghambat reverse transcriptase HIV (juga aktif terhadap HBV).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Bayi 2–4 mg/kg · Anak 4 mg/kg (maks 300 mg/hari)',
+          frequency: '2× sehari',
+          indication: 'Infeksi HIV (kombinasi ≥2 ARV lain)',
+          notes: '<1 bln: 2 mg/kg 2×/hari. 1–3 bln: 4 mg/kg 2×/hari (max 300 mg/hari). 3 bln–12 th: 4 mg/kg 2×/hari. >12 th: 150 mg 2×/hari [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif; pankreatitis; gangguan ginjal berat; sirosis hati berat'],
+    warnings: [
+      'Asidosis laktat & hepatomegali dengan steatosis (potensi mengancam jiwa) [16]',
+      'Kekambuhan hepatitis B kronik saat terapi dihentikan — awasi koinfeksi HIV/HBV [16]',
+      'Trimetoprim meningkatkan kadar lamivudin plasma [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'nevirapin',
+    name: 'Nevirapin (NVP)',
+    aliases: ['Nevirapine', 'NVP', 'Viramune'],
+    category: 'antiretroviral',
+    mechanism: 'NNRTI — berikatan langsung & menghambat reverse transcriptase HIV.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Neonatus PMTCT 2 mg/kg · Anak 120–200 mg/m²/dosis',
+          frequency: 'lihat catatan (eskalasi bertahap)',
+          indication: 'Infeksi HIV, profilaksis PMTCT',
+          notes: 'Neonatus <14 hari (PMTCT): 2 mg/kg dosis tunggal [16]. Anak ≥15 hari: <8 th 200 mg/m²/dosis (max 200 mg) 2×/hari; ≥8 th 120–150 mg/m²/dosis (max 200 mg) 2×/hari [16]. WAJIB mulai dosis rendah 1×/hari x14 hari lalu eskalasi 2×/hari (cegah lesi kulit). Total tidak >400 mg/hari [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif nevirapin'],
+    warnings: [
+      'Reaksi hipersensitivitas termasuk Sindrom Stevens-Johnson [16]',
+      'Hepatotoksisitas (mayoritas dalam 12 minggu pertama; sepertiga setelahnya — pantau fungsi hati berkelanjutan) [16]',
+      'Bila terapi terputus >7 hari, ulangi induksi 1×/hari x14 hari [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'lopinavir_ritonavir',
+    name: 'Lopinavir/Ritonavir (LPV/r)',
+    aliases: ['Lopinavir', 'Ritonavir', 'LPV/r', 'Kaletra', 'Aluvia'],
+    category: 'antiretroviral',
+    mechanism: 'Penghambat protease HIV (lopinavir); ritonavir sebagai booster farmakokinetik (inhibitor CYP3A4).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Bayi 16/4 mg/kg · Anak 230/57.5 mg/m² atau per pita BB',
+          frequency: '2× sehari',
+          indication: 'Infeksi HIV',
+          notes: 'Bayi 14 hari–6 bln: 300/75 mg/m² atau 16/4 mg/kg 2×/hari. Anak >6 bln: 230/57.5 mg/m²/dosis 2×/hari; atau per BB — <15 kg 12/3 mg/kg, 15–40 kg 10/2.5 mg/kg, >40 kg 400/100 mg 2×/hari [16]. Dosis 1×/hari TIDAK direkomendasikan. Solusio oral diberi bersama makanan [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif lopinavir/ritonavir'],
+    warnings: [
+      'Perpanjangan interval PR & QT, torsade de pointes [16]',
+      'Hiperlipidemia, hiperglikemia, maldistribusi lemak [16]',
+      'Jangan kombinasi dengan EFV/NVP/FPV/NFV pada bayi <6 bln; bila dengan ddI beri 1–2 jam terpisah [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'efavirenz',
+    name: 'Efavirenz (EFV)',
+    aliases: ['Efavirenz', 'EFV', 'Stocrin', 'Sustiva'],
+    category: 'antiretroviral',
+    mechanism: 'NNRTI — menghambat reverse transcriptase HIV.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Anak ≥3 th & ≥10 kg: 200–600 mg per pita BB',
+          frequency: '1× sehari (saat akan tidur)',
+          indication: 'Infeksi HIV (anak ≥3 tahun, ≥10 kg)',
+          notes: 'Per pita BB 1×/hari: 10–<15 kg 200 mg; 15–<20 kg 250 mg; 20–<25 kg 300 mg; 25–<32.5 kg 350 mg; 32.5–<40 kg 400 mg; ≥40 kg 600 mg [16]. Beri saat perut kosong, sebelum tidur. Neonatus & anak <3 th: tidak diperbolehkan [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif efavirenz; gangguan hati berat; kehamilan (teratogenik)'],
+    warnings: [
+      'Teratogenik — JANGAN pada ibu hamil [16]',
+      'Gejala SSP (pusing, mimpi abnormal) — beri sebelum tidur untuk tolerabilitas [16]',
+      'Lesi kulit, peningkatan transaminase [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'abacavir',
+    name: 'Abacavir (ABC)',
+    aliases: ['Abacavir', 'ABC', 'Ziagen'],
+    category: 'antiretroviral',
+    mechanism: 'NRTI — analog guanosin, menghambat reverse transcriptase HIV.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Anak 8 mg/kg (maks 300 mg) 2× sehari',
+          frequency: '2× sehari',
+          indication: 'Infeksi HIV (anak ≥3 bulan)',
+          notes: 'Anak: 8 mg/kg (max 300 mg) 2×/hari; atau per pita BB — 14–21 kg ½ tab pagi+½ malam, >21–<30 kg ½+1 tab, ≥30 kg 1+1 tab [16]. Bayi <3 bln: tidak diperbolehkan [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif abacavir'],
+    warnings: [
+      'Reaksi hipersensitivitas yang dapat MEMATIKAN (demam, lesi, gejala napas/GI) — edukasi pasien/orang tua [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'stavudin',
+    name: 'Stavudin (d4T)',
+    aliases: ['Stavudine', 'd4T', 'Zerit'],
+    category: 'antiretroviral',
+    mechanism: 'NRTI — analog timidin, menghambat reverse transcriptase HIV.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Neonatus 0.5 mg/kg · Anak 1 mg/kg 2× sehari',
+          frequency: '2× sehari',
+          indication: 'Infeksi HIV',
+          notes: 'Neonatus/bayi (lahir–13 hari): 0.5 mg/kg 2×/hari. Anak (14 hari–BB >30 kg): 1 mg/kg 2×/hari. Remaja ≥30 kg/dewasa: 30 mg 2×/hari [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif stavudin'],
+    warnings: [
+      'TIDAK boleh bersama zidovudin (antagonistik) [16]',
+      'Pankreatitis, asidosis laktat dengan steatosis hati, neuropati perifer [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'didanosin',
+    name: 'Didanosin (ddI)',
+    aliases: ['Didanosine', 'ddI', 'DDI', 'Videx'],
+    category: 'antiretroviral',
+    mechanism: 'NRTI — analog adenosin, menghambat reverse transcriptase HIV.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Bayi/anak 50–120 mg/m²/dosis · per pita BB pada anak besar',
+          frequency: 'q12h atau 1× sehari (formulasi EC)',
+          indication: 'Infeksi HIV (kombinasi 2 ARV lain)',
+          notes: 'Neonatus/bayi 2 mgg–<3 bln: 50 mg/m² q12h; 3–8 bln: 100 mg/m² q12h; >8 bln: 120 mg/m² q12h [16]. Anak besar (Videx EC, ≥20 kg): 20–<25 kg 200 mg, 25–<60 kg 250 mg, ≥60 kg 400 mg 1×/hari [16]. Beri perut kosong (30 mnt sebelum / ≥1 jam sesudah makan).',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif didanosin'],
+    warnings: [
+      'Pankreatitis (terkait dosis), neuropati perifer, hiperurikemia [16]',
+      'Asidosis laktat & hepatomegali dengan steatosis [16]',
+      'Periksa retina tiap 6 bulan atau bila ada perubahan penglihatan [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'tenofovir',
+    name: 'Tenofovir (TDF)',
+    aliases: ['Tenofovir', 'TDF', 'Viread'],
+    category: 'antiretroviral',
+    mechanism: 'NtRTI — analog nukleotida, menghambat reverse transcriptase HIV (juga aktif terhadap HBV).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Remaja ≥12 th & >35 kg: 300 mg 1× sehari',
+          frequency: '1× sehari',
+          indication: 'Infeksi HIV (remaja ≥12 tahun, >35 kg)',
+          notes: 'Remaja ≥12 th & >35 kg: 300 mg 1×/hari [16]. Anak <12 th: tidak diperbolehkan (sediaan hanya tablet 300 mg; dosis investigasi 8 mg/kg 1×/hari) [16]. Neonatus/bayi: tidak diperbolehkan [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif tenofovir'],
+    warnings: [
+      'Insufisiensi ginjal, sindrom Fanconi [16]',
+      'Berkurangnya kepadatan mineral tulang [16]',
+      'Cek HBV sebelum mulai; eksaserbasi akut HBV bila TDF dihentikan [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'emtricitabin',
+    name: 'Emtricitabin (FTC)',
+    aliases: ['Emtricitabine', 'FTC', 'Emtriva'],
+    category: 'antiretroviral',
+    mechanism: 'NRTI — analog sitidin, menghambat reverse transcriptase HIV (juga aktif terhadap HBV).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: 'Anak 6 mg/kg (maks 200 mg) 1× sehari',
+          frequency: '1× sehari',
+          indication: 'Infeksi HIV',
+          notes: 'Bayi: 3 mg/kg 1×/hari. Anak 3 bln–17 th: 6 mg/kg (max 200 mg) 1×/hari. Remaja ≥18 th/dewasa: 200 mg 1×/hari [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif emtricitabin'],
+    warnings: [
+      'Hiperpigmentasi telapak tangan/kaki (terutama kulit gelap) [16]',
+      'Cek HBV sebelum mulai; eksaserbasi hepatitis bila FTC dihentikan [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
+  // ── Anti-Lepra ─────────────────────────────────────────────────────────
+  {
+    id: 'dapson',
+    name: 'Dapson',
+    aliases: ['Dapsone', 'DDS'],
+    category: 'antibiotik',
+    mechanism: 'Sulfon — menghambat sintesis folat bakteri (analog PABA); bakteriostatik terhadap M. leprae.',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '<10 th: 25 mg/hari · 10–14 th: 50 mg/hari',
+          frequency: '1× sehari',
+          indication: 'Lepra pausibasiler (PB) & multibasiler (MB)',
+          notes: 'Kombinasi dengan rifampisin (± klofazimin untuk MB). PB: <10 th 25 mg/hari, 10–14 th 50 mg/hari — selama 6 bulan. MB: dosis sama, selama 12 bulan [16].',
+        },
+      },
+    ],
+    contraindications: ['Hipersensitif sulfon, anemia berat'],
+    warnings: [
+      'Hemolisis & methemoglobinemia — obati anemia dulu & pantau darah [16]',
+      'Defisiensi G6PD (termasuk bayi via ASI) [16]',
+      '"Dapsone syndrome": ruam, demam, ikterus, eosinofilia [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+  {
+    id: 'klofazimin',
+    name: 'Klofazimin',
+    aliases: ['Clofazimine', 'Lamprene'],
+    category: 'antibiotik',
+    mechanism: 'Pewarna riminofenazin — berikatan dengan DNA mikobakteri; antiinflamasi (untuk reaksi lepra).',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          fixedDose: '10–14 th: 50 mg selang sehari + 150 mg/bulan',
+          frequency: 'lihat catatan',
+          indication: 'Lepra multibasiler (MB), reaksi lepra tipe-II (ENL)',
+          notes: 'MB (+ dapson & rifampisin): 10–14 th 50 mg selang sehari + 150 mg sekali/bulan; <10 th 50 mg 2×/minggu + 100 mg/bulan — selama 12 bulan [16]. Reaksi tipe-II/ENL: 100–300 mg/hari dibagi 2–3, sampai ≥3 bulan [16]. Beri bersama makanan/susu.',
+        },
+      },
+    ],
+    warnings: [
+      'Perubahan warna kulit/kornea/cairan tubuh (reversibel); mewarnai lensa kontak [16]',
+      'Gangguan GI terkait dosis; dosis besar jangka panjang → obstruksi usus subakut [16]',
+    ],
+    references: ['idai2012'],
+    verified: true,
+  },
+
   // ── Lainnya ────────────────────────────────────────────────────────────
   {
     id: 'kalsium_glukonat',
@@ -2816,6 +3140,7 @@ export const DRUG_CATEGORY_LABEL: Record<DrugCategory, string> = {
   antiemetik:     'Antiemetik',
   kortikosteroid: 'Kortikosteroid',
   antiparasit:    'Antiparasit',
+  antiretroviral: 'Antiretroviral',
   antidotum:      'Antidotum',
   lainnya:        'Lainnya',
 };
@@ -2823,7 +3148,8 @@ export const DRUG_CATEGORY_LABEL: Record<DrugCategory, string> = {
 export const DRUG_CATEGORY_ORDER: DrugCategory[] = [
   'emergensi', 'vasoaktif', 'antikonvulsan', 'sedasi', 'analgesik',
   'bronkodilator', 'kortikosteroid', 'diuretik', 'antiemetik',
-  'antibiotik', 'antiviral', 'antijamur', 'antiparasit', 'antidotum', 'lainnya',
+  'antibiotik', 'antiviral', 'antijamur', 'antiparasit', 'antiretroviral',
+  'antidotum', 'lainnya',
 ];
 
 export function searchDrugs(query: string): DrugEntry[] {
