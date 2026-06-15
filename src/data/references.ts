@@ -347,4 +347,38 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1097/PCC.0b013e3181938795',
     verified: true,
   },
+  teasdale1974: {
+    id: 49,
+    citation:
+      'Teasdale G, Jennett B. Assessment of coma and impaired consciousness. A practical scale. Lancet. 1974;2(7872):81–84.',
+    url: 'https://doi.org/10.1016/s0140-6736(74)91639-0',
+    verified: true,
+  },
+  reilly1988: {
+    id: 50,
+    citation:
+      'Reilly PL, Simpson DA, Sprod R, Thomas L. Assessing the conscious level in infants and young children: a paediatric version of the Glasgow Coma Scale. Childs Nerv Syst. 1988;4(1):30–33.',
+    url: 'https://doi.org/10.1007/BF00274080',
+    verified: true,
+  },
+  monaghan2005: {
+    id: 51,
+    citation:
+      'Monaghan A. Detecting and managing deterioration in children. Paediatr Nurs. 2005;17(1):32–35.',
+    url: 'https://doi.org/10.7748/paed2005.02.17.1.32.c954',
+    verified: true,
+  },
+  apgar1953: {
+    id: 52,
+    citation:
+      'Apgar V. A proposal for a new method of evaluation of the newborn infant. Curr Res Anesth Analg. 1953;32(4):260–267.',
+    verified: true,
+  },
+  aap_apgar2015: {
+    id: 53,
+    citation:
+      'American Academy of Pediatrics Committee on Fetus and Newborn; American College of Obstetricians and Gynecologists Committee on Obstetric Practice. The Apgar score. Pediatrics. 2015;136(4):819–822.',
+    url: 'https://doi.org/10.1542/peds.2015-2651',
+    verified: true,
+  },
 };

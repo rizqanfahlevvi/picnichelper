@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Activity, Baby, BarChart2, ChevronLeft, Heart } from 'lucide-react';
+import { Activity, AlertTriangle, Baby, BarChart2, Brain, ChevronLeft, Heart, Star } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { PatientSummary } from '../components/PatientSummary';
 import { DownesScore } from '../components/scoring/DownesScore';
 import { Pelod2Score } from '../components/scoring/Pelod2Score';
-import { PsofaScore } from '../components/scoring/PsofaScore';
+import { PsofaScore }  from '../components/scoring/PsofaScore';
 import { CribIIScore } from '../components/scoring/CribIIScore';
+import { PGCSScore }   from '../components/scoring/PGCSScore';
+import { PEWSScore }   from '../components/scoring/PEWSScore';
+import { ApgarScore }  from '../components/scoring/ApgarScore';
 
-type SkoringId = 'downes' | 'pelod2' | 'psofa' | 'cribii';
+type SkoringId = 'pgcs' | 'pews' | 'apgar' | 'downes' | 'pelod2' | 'psofa' | 'cribii';
 
 interface SkoringCard {
   id: SkoringId;
@@ -19,26 +22,13 @@ interface SkoringCard {
 }
 
 const SCORING_CARDS: SkoringCard[] = [
-  {
-    id: 'downes', label: 'Downes Score',
-    desc: 'Distres napas neonatus',
-    icon: Baby, tintClass: 'tint-resp', tintColor: 'var(--sys-teal)',
-  },
-  {
-    id: 'pelod2', label: 'PELOD-2',
-    desc: 'Disfungsi organ pediatri',
-    icon: BarChart2, tintClass: 'tint-score', tintColor: 'var(--sys-orange)',
-  },
-  {
-    id: 'psofa', label: 'pSOFA',
-    desc: 'Sepsis organ failure — anak',
-    icon: Activity, tintClass: 'tint-vital', tintColor: 'var(--sys-red)',
-  },
-  {
-    id: 'cribii', label: 'CRIB-II',
-    desc: 'Risiko klinis neonatus',
-    icon: Heart, tintClass: 'tint-drug', tintColor: 'var(--sys-pink)',
-  },
+  { id: 'pgcs',   label: 'pGCS',         desc: 'Kesadaran — modifikasi pediatri', icon: Brain,         tintClass: 'tint-resp',  tintColor: 'var(--sys-blue)'   },
+  { id: 'pews',   label: 'PEWS',         desc: 'Deteksi dini deteriorasi',        icon: AlertTriangle, tintClass: 'tint-vital', tintColor: 'var(--sys-red)'    },
+  { id: 'apgar',  label: 'Apgar',        desc: 'Evaluasi bayi baru lahir',        icon: Star,          tintClass: 'tint-drug',  tintColor: 'var(--sys-yellow)' },
+  { id: 'downes', label: 'Downes Score', desc: 'Distres napas neonatus',          icon: Baby,          tintClass: 'tint-resp',  tintColor: 'var(--sys-teal)'   },
+  { id: 'pelod2', label: 'PELOD-2',      desc: 'Disfungsi organ pediatri',        icon: BarChart2,     tintClass: 'tint-score', tintColor: 'var(--sys-orange)' },
+  { id: 'psofa',  label: 'pSOFA',        desc: 'Sepsis organ failure — anak',     icon: Activity,      tintClass: 'tint-vital', tintColor: 'var(--sys-red)'    },
+  { id: 'cribii', label: 'CRIB-II',      desc: 'Risiko klinis neonatus',          icon: Heart,         tintClass: 'tint-drug',  tintColor: 'var(--sys-pink)'   },
 ];
 
 export function Skoring() {
@@ -75,6 +65,9 @@ export function Skoring() {
         </div>
       ) : (
         <div style={{ marginTop: 16 }}>
+          {active === 'pgcs'   && <PGCSScore />}
+          {active === 'pews'   && <PEWSScore />}
+          {active === 'apgar'  && <ApgarScore />}
           {active === 'downes' && <DownesScore />}
           {active === 'pelod2' && <Pelod2Score />}
           {active === 'psofa'  && <PsofaScore />}
