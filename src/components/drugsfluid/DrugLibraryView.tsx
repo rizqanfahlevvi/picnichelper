@@ -130,7 +130,7 @@ export function DrugLibraryView() {
           </p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '0 16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {paginated.map((drug) => (
             <DrugCard key={drug.id} drug={drug} onSelect={() => setSelectedDrug(drug)} />
           ))}
@@ -183,7 +183,7 @@ function DrugCard({ drug, onSelect }: { drug: DrugEntry; onSelect: () => void })
       onClick={onSelect}
       className="ios-card"
       style={{
-        width: '100%', textAlign: 'left', background: 'var(--bg-tertiary)',
+        textAlign: 'left', background: 'var(--bg-tertiary)',
         border: 'none', cursor: 'pointer', overflow: 'hidden',
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '12px 14px', minHeight: 'var(--hit)',

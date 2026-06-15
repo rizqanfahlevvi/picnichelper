@@ -266,7 +266,7 @@ function FluidModal({ fluid, onClose }: { fluid: FluidEntry; onClose: () => void
         width: 'min(520px, calc(100vw - 32px))',
         maxHeight: 'calc(100dvh - 80px)',
         display: 'flex', flexDirection: 'column',
-        background: 'var(--bg-primary)', borderRadius: 'var(--r-sheet)',
+        background: 'var(--bg-elevated)', borderRadius: 'var(--r-sheet)',
         boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
         overflow: 'hidden',
       }}>
@@ -275,7 +275,7 @@ function FluidModal({ fluid, onClose }: { fluid: FluidEntry; onClose: () => void
           display: 'flex', alignItems: 'flex-start', gap: 12,
           padding: '16px 16px 12px',
           borderBottom: '1px solid var(--separator)',
-          background: 'var(--bg-primary)',
+          background: 'var(--bg-elevated)',
           flexShrink: 0,
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
