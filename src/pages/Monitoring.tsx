@@ -1,41 +1,51 @@
 import { useState } from 'react';
-import { VitalSignsChecker } from '../components/monitoring/VitalSignsChecker';
-import { WeaningChecklist } from '../components/monitoring/WeaningChecklist';
 import { PatientSummary } from '../components/PatientSummary';
+import { PrepIntubasi }      from '../components/ventilasi/PrepIntubasi';
+import { SettingVentilator } from '../components/ventilasi/SettingVentilator';
+import { MonitoringVentilasi } from '../components/ventilasi/MonitoringVentilasi';
+import { WeaningEkstubasi }  from '../components/ventilasi/WeaningEkstubasi';
 
-type MonitoringTab = 'vital' | 'weaning';
+type VentilasiTab = 'prep' | 'setting' | 'monitoring' | 'weaning';
 
-const TABS: { id: MonitoringTab; label: string }[] = [
-  { id: 'vital',   label: 'Tanda Vital' },
-  { id: 'weaning', label: 'Weaning'     },
+const TABS: { id: VentilasiTab; label: string }[] = [
+  { id: 'prep',       label: 'Persiapan'  },
+  { id: 'setting',    label: 'Setting'    },
+  { id: 'monitoring', label: 'Monitoring' },
+  { id: 'weaning',    label: 'Weaning'    },
 ];
 
 export function Monitoring() {
-  const [activeTab, setActiveTab] = useState<MonitoringTab>('vital');
+  const [activeTab, setActiveTab] = useState<VentilasiTab>('prep');
 
   return (
     <div className="ios-screen pb-6">
       <div style={{ padding: '24px 20px 8px' }}>
-        <h1 className="ios-large-title">Monitoring & Weaning</h1>
+        <h1 className="ios-large-title">Ventilasi</h1>
       </div>
 
       <PatientSummary />
 
-      <div className="ios-segmented" style={{ margin: '8px 16px 0' }}>
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            aria-selected={activeTab === tab.id}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* Tab bar — horizontally scrollable for 4 tabs */}
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', padding: '8px 16px 0' }}>
+        <div className="ios-segmented" style={{ display: 'inline-flex', minWidth: '100%', whiteSpace: 'nowrap' }}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              aria-selected={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{ flex: '1 0 auto' }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div style={{ marginTop: 16 }}>
-        {activeTab === 'vital'   && <VitalSignsChecker />}
-        {activeTab === 'weaning' && <WeaningChecklist />}
+        {activeTab === 'prep'       && <PrepIntubasi />}
+        {activeTab === 'setting'    && <SettingVentilator />}
+        {activeTab === 'monitoring' && <MonitoringVentilasi />}
+        {activeTab === 'weaning'    && <WeaningEkstubasi />}
       </div>
     </div>
   );
