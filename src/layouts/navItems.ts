@@ -17,7 +17,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { to: '/',             label: 'Home',           icon: Home,       tint: 'tint-fluid',  primaryMobile: true },
   { to: '/kalkulator',   label: 'Kalkulator',     icon: Calculator, tint: 'tint-resp',   primaryMobile: true },
-  { to: '/drugs-fluids', label: 'Drugs & Fluids', shortLabel: 'Drugs & Fluids', tabLabel: 'Drugs', icon: Syringe, tint: 'tint-drug', primaryMobile: true },
+  { to: '/drugs-fluids', label: 'Drugs & Fluids', shortLabel: 'Drugs & Fluids', tabLabel: 'D & F', icon: Syringe, tint: 'tint-drug', primaryMobile: true },
   { to: '/skoring',      label: 'Skoring',        icon: BarChart2,  tint: 'tint-score',  primaryMobile: true },
   { to: '/teori',        label: 'Teori',          icon: BookOpen,   tint: 'tint-theory' },
   { to: '/monitoring',   label: 'Monitoring',     icon: Activity,   tint: 'tint-vital' },

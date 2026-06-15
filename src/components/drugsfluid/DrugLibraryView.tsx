@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, ChevronRight, AlertTriangle, Info, BookOpen, X } from 'lucide-react';
 import { usePatientStore } from '../../store/patientStore';
 import {
@@ -138,37 +139,26 @@ export function DrugLibraryView() {
 
       {/* Pagination */}
       {usePagination && totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, padding: '4px 16px 8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, padding: '4px 16px 8px' }}>
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '6px 12px', borderRadius: 8, border: 'none', cursor: page === 1 ? 'default' : 'pointer',
-              background: 'var(--fill-secondary)', color: page === 1 ? 'var(--label-tertiary)' : 'var(--accent)',
-              font: 'var(--type-caption-1)', fontWeight: 600,
+              padding: '6px 16px', borderRadius: 8, border: 'none', cursor: page === 1 ? 'default' : 'pointer',
+              background: 'var(--fill-secondary)', color: page === 1 ? 'var(--label-quaternary)' : 'var(--accent)',
+              fontSize: 'var(--type-footnote)', fontWeight: 600,
             }}
           >‹ Prev</button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              style={{
-                width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
-                background: p === page ? 'var(--accent)' : 'var(--fill-secondary)',
-                color: p === page ? '#fff' : 'var(--label-primary)',
-                font: 'var(--type-caption-1)', fontWeight: p === page ? 700 : 400,
-              }}
-            >{p}</button>
-          ))}
-
+          <span style={{ fontSize: 'var(--type-footnote)', color: 'var(--label-secondary)', fontWeight: 500 }}>
+            {page} / {totalPages}
+          </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '6px 12px', borderRadius: 8, border: 'none', cursor: page === totalPages ? 'default' : 'pointer',
-              background: 'var(--fill-secondary)', color: page === totalPages ? 'var(--label-tertiary)' : 'var(--accent)',
-              font: 'var(--type-caption-1)', fontWeight: 600,
+              padding: '6px 16px', borderRadius: 8, border: 'none', cursor: page === totalPages ? 'default' : 'pointer',
+              background: 'var(--fill-secondary)', color: page === totalPages ? 'var(--label-quaternary)' : 'var(--accent)',
+              fontSize: 'var(--type-footnote)', fontWeight: 600,
             }}
           >Next ›</button>
         </div>
@@ -243,7 +233,7 @@ function DrugCard({ drug, onSelect }: { drug: DrugEntry; onSelect: () => void })
 /* ── Drug Modal ─────────────────────────────────────────────────────────── */
 function DrugModal({ drug, onClose }: { drug: DrugEntry; onClose: () => void }) {
   const col = CATEGORY_COLOR[drug.category] ?? 'var(--accent)';
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -309,7 +299,8 @@ function DrugModal({ drug, onClose }: { drug: DrugEntry; onClose: () => void }) 
           <DrugDetail drug={drug} />
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
 

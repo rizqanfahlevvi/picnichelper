@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, AlertTriangle, Info, X, XCircle } from 'lucide-react';
 import {
   FLUID_LIBRARY, type FluidEntry, type FluidCategory,
@@ -246,22 +247,20 @@ function TonicityBadge({ tonicity }: { tonicity: string }) {
 }
 
 function FluidModal({ fluid, onClose }: { fluid: FluidEntry; onClose: () => void }) {
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
         onClick={onClose}
         style={{
-          position: 'fixed', inset: 0, zIndex: 100,
-          background: 'rgba(0,0,0,0.45)',
-          backdropFilter: 'blur(2px)',
-          WebkitBackdropFilter: 'blur(2px)',
-        } as React.CSSProperties}
+          position: 'fixed', inset: 0, zIndex: 1000,
+          background: 'rgba(0,0,0,0.55)',
+        }}
       />
 
       {/* Modal card */}
       <div style={{
-        position: 'fixed', zIndex: 101,
+        position: 'fixed', zIndex: 1001,
         top: '50%', left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 'min(520px, calc(100vw - 32px))',
@@ -314,7 +313,8 @@ function FluidModal({ fluid, onClose }: { fluid: FluidEntry; onClose: () => void
           <FluidDetail fluid={fluid} />
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
 
