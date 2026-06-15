@@ -111,7 +111,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
   {
     id: 'plas_lyte',
     name: 'Plasma-Lyte 148',
-    aliases: ['PlasmaLyte', 'Plasma Lyte', 'Normosol'],
+    aliases: ['PlasmaLyte', 'Plasma Lyte', 'Normosol', 'Physiolyte'],
     category: 'kristaloid_isotonik',
     composition: {
       na: 140, k: 5, cl: 98, mg: 3, acetate: 27, lactate: 23,
@@ -239,6 +239,96 @@ export const FLUID_LIBRARY: FluidEntry[] = [
     ],
     notes: 'Pilihan maintenance yang lebih aman dari D5½NS pada anak sakit rawat inap (menurunkan risiko hiponatremia iatrogenik).',
     references: ['aap_maintenance2018', 'holliday1957'],
+  },
+
+  {
+    id: 'd5_nacl0225',
+    name: 'D5 + NaCl 0.225% (D5 ¼ NS)',
+    aliases: ['D5¼NS', 'D5 Quarter NS', 'D5 1/4 NS', 'D5 ¼ NS'],
+    category: 'kristaloid_hipotonik',
+    composition: {
+      na: 38.5, cl: 38.5, glucose: 50,
+      osmolarity: 330, tonicity: 'hipotonik', pH: 4.5, kcalPerL: 170,
+    },
+    indications: [
+      'Cairan maintenance neonatus dan bayi muda (kombinasi glukosa + elektrolit minimal)',
+      'Koreksi dehidrasi hipertonik dengan kadar Na sangat tinggi',
+    ],
+    cautions: [
+      'Kandungan Na sangat rendah (38.5 mEq/L) → risiko hiponatremia iatrogenik pada anak sakit',
+      'Panduan AAP 2018 merekomendasikan cairan isotonik untuk maintenance rawat inap — gunakan hanya bila ada indikasi spesifik',
+      'Jangan gunakan sebagai resusitasi',
+    ],
+    notes: 'Mengandung Na 38.5 mEq/L dan Cl 38.5 mEq/L (¼ dari NS). Glukosa 5% (50 g/L) menyediakan 170 kcal/L. Lebih hipotonik dari D5½NS — gunakan hanya bila ada indikasi klinis jelas.',
+    references: ['aap_maintenance2018', 'holliday1957', 'gomella2020'],
+  },
+  {
+    id: 'kaen_3a',
+    name: 'KAEN 3A',
+    aliases: ['KaEN 3A', 'Otsuka KAEN 3A', 'Maintenance Tanpa K'],
+    category: 'kristaloid_hipotonik',
+    composition: {
+      na: 60, cl: 50, lactate: 10, glucose: 27,
+      osmolarity: 230, tonicity: 'hipotonik', pH: 5.5, kcalPerL: 90,
+    },
+    indications: [
+      'Cairan maintenance pediatri fase awal (tanpa kalium)',
+      'Digunakan bila kadar K belum diketahui atau perlu dihindari (oliguria, hiperkalemia)',
+      'Rawat inap anak dengan kebutuhan maintenance + kalori ringan',
+    ],
+    cautions: [
+      'Tidak mengandung K — tambahkan KCl sesuai kebutuhan setelah diuresis adekuat dan K normal',
+      'Hipotonik → risiko hiponatremia iatrogenik pada anak sakit (ADH meningkat)',
+      'Jangan gunakan sebagai cairan resusitasi',
+      'Monitor Na serum secara berkala selama infus',
+    ],
+    notes: 'Brand Otsuka Indonesia. Komponen per liter: Na 60 mEq, Cl 50 mEq, Laktat 10 mEq, Glukosa 27 g. Osmolarity 230 mOsm/L — lebih hipotonik dari plasma.',
+    references: ['holliday1957', 'aap_maintenance2018'],
+  },
+  {
+    id: 'kaen_3b',
+    name: 'KAEN 3B',
+    aliases: ['KaEN 3B', 'Otsuka KAEN 3B', 'Maintenance Dengan K'],
+    category: 'kristaloid_hipotonik',
+    composition: {
+      na: 50, k: 20, cl: 50, lactate: 20, glucose: 27,
+      osmolarity: 290, tonicity: 'hipotonik', pH: 5.5, kcalPerL: 90,
+    },
+    indications: [
+      'Cairan maintenance pediatri dengan kebutuhan kalium (setelah diuresis adekuat)',
+      'Rawat inap anak yang memerlukan maintenance + replacement kalium',
+    ],
+    cautions: [
+      'Mengandung K 20 mEq/L → JANGAN berikan pada oliguria atau hiperkalemia',
+      'Hipotonik → risiko hiponatremia iatrogenik pada anak sakit',
+      'Jangan gunakan sebagai cairan resusitasi',
+      'Pastikan output urin adekuat sebelum memulai',
+    ],
+    notes: 'Brand Otsuka Indonesia. Komponen per liter: Na 50 mEq, K 20 mEq, Cl 50 mEq, Laktat 20 mEq, Glukosa 27 g. Osmolarity 290 mOsm/L. Pilihan setelah fase awal bila K diperlukan.',
+    references: ['holliday1957', 'aap_maintenance2018'],
+  },
+  {
+    id: 'aminosteril_infant',
+    name: 'Aminosteril Infant 6%',
+    aliases: ['Aminosteril', 'Amino Infant', 'Asam Amino Infant', 'Fresenius Infant'],
+    category: 'nutrisi',
+    composition: {
+      osmolarity: 500, tonicity: 'hipertonik',
+    },
+    indications: [
+      'Sumber asam amino untuk nutrisi parenteral neonatus dan bayi (< 1 tahun)',
+      'TPN (Total Parenteral Nutrition) pada prematur dan neonatus kritis yang tidak dapat enteral',
+      'Suplementasi protein pada pasien PICU/NICU yang membutuhkan nutrisi parenteral',
+    ],
+    cautions: [
+      'Osmolarity ~500 mOsm/L → sebaiknya via akses vena sentral (flebitis perifer)',
+      'Tidak mengandung karbohidrat dan elektrolit — kombinasikan dengan dextrose dan elektrolit sesuai kebutuhan',
+      'Hitung kebutuhan protein: neonatus 2.5–3.5 g/kg/hari, bayi 2–3 g/kg/hari',
+      'Monitor fungsi ginjal dan hati selama pemberian',
+      'Jangan campur langsung dengan Ca dan fosfat tanpa perhitungan kompatibilitas (risiko presipitasi)',
+    ],
+    notes: 'Larutan asam amino 6% khusus neonatus dan bayi (Fresenius Kabi). Mengandung profil asam amino esensial dan non-esensial yang disesuaikan untuk kebutuhan pediatri, termasuk taurin dan sistein. Osmolarity ±500 mOsm/L — gunakan via CVC bila memungkinkan.',
+    references: ['gomella2020'],
   },
 
   // ── Kristaloid Hipertonik ───────────────────────────────────────────────
