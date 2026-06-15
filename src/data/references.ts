@@ -326,4 +326,25 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1542/peds.2018-3083',
     verified: true,
   },
+  yang1991: {
+    id: 46,
+    citation:
+      'Yang KL, Tobin MJ. A prospective study of indexes predicting the outcome of trials of weaning from mechanical ventilation. N Engl J Med. 1991;324(21):1445–1450.',
+    url: 'https://doi.org/10.1056/NEJM199105233242101',
+    verified: true,
+  },
+  palicc2015: {
+    id: 47,
+    citation:
+      'Pediatric Acute Lung Injury Consensus Conference Group. Pediatric acute respiratory distress syndrome: consensus recommendations from the Pediatric Acute Lung Injury Consensus Conference. Pediatr Crit Care Med. 2015;16(5):428–439.',
+    url: 'https://doi.org/10.1097/PCC.0000000000000350',
+    verified: true,
+  },
+  newth2009: {
+    id: 48,
+    citation:
+      'Newth CJ, Venkataraman S, Willson DF, et al. Weaning and extubation readiness in pediatric patients. Pediatr Crit Care Med. 2009;10(1):1–11.',
+    url: 'https://doi.org/10.1097/PCC.0b013e3181938795',
+    verified: true,
+  },
 };

@@ -20,7 +20,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/drugs-fluids', label: 'Drugs & Fluids', shortLabel: 'Drugs & Fluids', tabLabel: 'D & F', icon: Syringe, tint: 'tint-drug', primaryMobile: true },
   { to: '/skoring',      label: 'Skoring',        icon: BarChart2,  tint: 'tint-score',  primaryMobile: true },
   { to: '/teori',        label: 'Teori',          icon: BookOpen,   tint: 'tint-theory' },
-  { to: '/monitoring',   label: 'Monitoring',     icon: Activity,   tint: 'tint-vital' },
+  { to: '/monitoring',   label: 'Ventilasi',      icon: Activity,   tint: 'tint-vital' },
   { to: '/referensi',    label: 'Referensi',      icon: BookMarked, tint: 'tint-theory' },
 ];
 

@@ -11,7 +11,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/drugs-fluids': 'Drugs & Fluids',
   '/skoring':      'Skoring Klinis',
   '/teori':        'Teori & Klinis',
-  '/monitoring':   'Monitoring & Weaning',
+  '/monitoring':   'Ventilasi',
   '/referensi':    'Referensi',
 };
 
