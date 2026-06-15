@@ -2,20 +2,10 @@ import { useState } from 'react';
 import { CheckCircle2, Circle, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { usePatientStore } from '../../store/patientStore';
 import { TRIAS_BY_CATEGORY, type TriasDrug } from '../../data/triasDrugs';
+import { ettSizeByAge, roundToHalf } from '../../utils/ett';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { REFERENCES } from '../../data/references';
-
-// ── ETT calculation ──────────────────────────────────────────────────────────
-function ettFromAge(ageYears: number) {
-  const uncuffed = ageYears / 4 + 4;
-  const cuffed   = ageYears / 4 + 3.5;
-  return {
-    uncuffed: Math.round(uncuffed * 2) / 2,
-    cuffed:   Math.round(cuffed   * 2) / 2,
-    depth:    Math.round((uncuffed * 3) * 10) / 10,
-  };
-}
 
 // ── Trias Drug Card ──────────────────────────────────────────────────────────
 function DrugCard({
@@ -219,7 +209,8 @@ export function PrepIntubasi() {
     setCheckedAlat(prev => ({ ...prev, [i]: !prev[i] }));
   }
 
-  const ett = age > 0 ? ettFromAge(age) : null;
+  const ettRaw = age > 0 ? ettSizeByAge(age) : null;
+  const ett = ettRaw ? { ...ettRaw, depth: roundToHalf(ettRaw.uncuffed * 3) } : null;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

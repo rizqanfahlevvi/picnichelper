@@ -1,67 +1,22 @@
 import { useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { usePatientStore } from '../../store/patientStore';
+import {
+  KONDISI_OPTIONS, VENTILATOR_SETTINGS, calcTi,
+  type KondisiVentilator,
+} from '../../data/ventilatorSettings';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { REFERENCES } from '../../data/references';
 
-type Kondisi =
-  | 'normal'
-  | 'rds'
-  | 'asma'
-  | 'hie'
-  | 'neonate_prematur'
-  | 'neonate_aterm';
-
-interface Setting {
-  tvMin: number;
-  tvMax: number;
-  rrMin: number;
-  rrMax: number;
-  peepMin: number;
-  peepMax: number;
-  fio2Label: string;
-  ie: string;
-  mode: string;
-  notes: string;
-}
-
-const KONDISI_OPTIONS: { id: Kondisi; label: string; desc: string }[] = [
-  { id: 'normal',          label: 'Normal / Post-op',       desc: 'Induksi elektif, paru sehat' },
-  { id: 'rds',             label: 'RDS / ARDS',             desc: 'Sindrom distres napas akut (PALICC-2)' },
-  { id: 'asma',            label: 'Asma / Bronkospasme',    desc: 'Obstruksi jalan napas bawah' },
-  { id: 'hie',             label: 'HIE',                    desc: 'Hypoxic Ischemic Encephalopathy' },
-  { id: 'neonate_prematur',label: 'Neonatus Prematur',      desc: 'Usia gestasi < 37 minggu' },
-  { id: 'neonate_aterm',   label: 'Neonatus Aterm',         desc: 'Usia gestasi ≥ 37 minggu' },
-];
-
-const SETTINGS: Record<Kondisi, Setting> = {
-  normal:           { tvMin: 6,  tvMax: 8,  rrMin: 15, rrMax: 25, peepMin: 4, peepMax: 5,  fio2Label: '0.4–0.5',  ie: '1:2',     mode: 'VCV atau PCV',        notes: 'Titrasi FiO₂ untuk SpO₂ ≥ 95%' },
-  rds:              { tvMin: 4,  tvMax: 6,  rrMin: 25, rrMax: 40, peepMin: 6, peepMax: 10, fio2Label: '0.6–1.0',  ie: '1:1.5–2', mode: 'PCV atau HFO',        notes: 'Lung protective: TV rendah, PEEP tinggi. Titrate FiO₂ untuk SpO₂ 91–95% [47]' },
-  asma:             { tvMin: 6,  tvMax: 8,  rrMin: 10, rrMax: 16, peepMin: 3, peepMax: 5,  fio2Label: '0.4–0.6',  ie: '1:3–4',   mode: 'VCV',                 notes: 'I:E panjang untuk ekspirasi penuh, hindari air-trapping. RR rendah.' },
-  hie:              { tvMin: 5,  tvMax: 7,  rrMin: 30, rrMax: 50, peepMin: 4, peepMax: 5,  fio2Label: '0.21–0.4', ie: '1:2',     mode: 'VCV atau PCV',        notes: 'Normokarbik (PaCO₂ 35–45). Hindari hiperventilasi. FiO₂ serendah mungkin.' },
-  neonate_prematur: { tvMin: 4,  tvMax: 5,  rrMin: 40, rrMax: 60, peepMin: 4, peepMax: 6,  fio2Label: '0.21–titrate', ie: '1:1.5–2', mode: 'PCV atau HFO', notes: 'Target SpO₂ 91–95%. Gunakan surfaktan sesuai indikasi [48].' },
-  neonate_aterm:    { tvMin: 4,  tvMax: 6,  rrMin: 30, rrMax: 50, peepMin: 4, peepMax: 5,  fio2Label: '0.21–0.4', ie: '1:1.5–2', mode: 'PCV',                 notes: 'Normokarbik. FiO₂ terendah efektif.' },
-};
-
-function calcTi(rr: number, ie: string): string {
-  // Parse I:E string, return Ti in seconds
-  // ie is like "1:2" or "1:1.5–2" → use first numeric ratio
-  const match = ie.match(/1:([\d.]+)/);
-  if (!match) return '—';
-  const ratio = parseFloat(match[1]);
-  const cycleDur = 60 / rr;
-  const ti = cycleDur / (1 + ratio);
-  return ti.toFixed(2) + ' s';
-}
 
 export function SettingVentilator() {
   const { weightKg } = usePatientStore();
-  const [kondisi, setKondisi]   = useState<Kondisi>('normal');
+  const [kondisi, setKondisi]   = useState<KondisiVentilator>('normal');
   const [localWeight, setLocalWeight] = useState(weightKg);
 
   const weight = parseFloat(localWeight) || 0;
-  const s = SETTINGS[kondisi];
+  const s = VENTILATOR_SETTINGS[kondisi];
 
   const tvMinMl = (s.tvMin * weight).toFixed(0);
   const tvMaxMl = (s.tvMax * weight).toFixed(0);

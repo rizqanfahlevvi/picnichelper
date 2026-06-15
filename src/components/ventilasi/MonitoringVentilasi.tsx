@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePatientStore } from '../../store/patientStore';
 import { TRIAS_BY_CATEGORY, type TriasDrug } from '../../data/triasDrugs';
+import { calcMaintenanceRate } from '../../utils/maintenanceDose';
 import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { REFERENCES } from '../../data/references';
@@ -21,7 +22,6 @@ const MONITORING_LIST = [
 ];
 
 // ── Maintenance drug calculator ───────────────────────────────────────────────
-// Only drugs that have maintenanceDose defined
 type MaintenanceDrug = TriasDrug & Required<Pick<TriasDrug, 'maintenanceDose'>>;
 
 function getAllMaintDrugs(): MaintenanceDrug[] {
@@ -36,20 +36,9 @@ function MaintenanceCalc({ weightKg }: { weightKg: number }) {
 
   const hasWeight = weightKg > 0;
   const md = drug.maintenanceDose;
-
-  // convert dose to mg first, then to mL/hr
-  const isMcg  = md.unit === 'mcg/kg/jam' || md.unit === 'mcg/kg/mnt';
-  const perMin = md.unit === 'mcg/kg/mnt';
-
-  function calcMlHr(dose: number): number {
-    // dose in mcg/kg/jam or mg/kg/jam
-    const dosePerHour = perMin ? dose * 60 : dose;
-    const doseMgHr = isMcg ? (dosePerHour * weightKg) / 1000 : dosePerHour * weightKg;
-    return doseMgHr / drug.concentration;
-  }
-
-  const mlHrMin = hasWeight ? calcMlHr(md.min) : 0;
-  const mlHrMax = hasWeight ? calcMlHr(md.max) : 0;
+  const rate = calcMaintenanceRate(drug, weightKg);
+  const mlHrMin = rate?.mlPerHrMin ?? 0;
+  const mlHrMax = rate?.mlPerHrMax ?? 0;
 
   const catLabel: Record<string, string> = { analgetik: 'Analgetik', sedasi: 'Sedasi', relaksan: 'Relaksan' };
 
