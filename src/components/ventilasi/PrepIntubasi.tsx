@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { CheckCircle2, Circle, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
-// CheckCircle2 + Circle used in checklist; AlertTriangle/ChevronDown/Up in drug warnings
 import { usePatientStore } from '../../store/patientStore';
 import { TRIAS_BY_CATEGORY, type TriasDrug } from '../../data/triasDrugs';
 import { ettSizeByAge, roundToHalf } from '../../utils/ett';
@@ -299,26 +298,41 @@ export function PrepIntubasi() {
                 <span style={{ font: 'var(--type-footnote)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
                   {catLabel}
                 </span>
-                <select
-                  value={selectedDrug[cat]}
-                  onChange={e => setSelectedDrug(prev => ({ ...prev, [cat]: e.target.value }))}
-                  style={{
-                    padding: '5px 28px 5px 10px',
-                    borderRadius: 'var(--r-sm)',
-                    border: '1px solid var(--separator)',
-                    background: 'var(--fill-secondary)',
-                    color: 'var(--label-primary)',
-                    font: 'var(--type-footnote)',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    appearance: 'auto',
-                    minWidth: 140,
-                  }}
-                >
-                  {drugs.map(d => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
-                  ))}
-                </select>
+                {/* iOS-style picker button: native select hidden under custom styled wrapper */}
+                <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+                  <select
+                    value={selectedDrug[cat]}
+                    onChange={e => setSelectedDrug(prev => ({ ...prev, [cat]: e.target.value }))}
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      paddingLeft: 10,
+                      paddingRight: 28,
+                      paddingTop: 6,
+                      paddingBottom: 6,
+                      borderRadius: 'var(--r-sm)',
+                      border: '0.5px solid var(--separator)',
+                      background: 'var(--fill-secondary)',
+                      color: 'var(--label-primary)',
+                      font: 'var(--type-footnote)',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      minWidth: 140,
+                      boxShadow: 'var(--shadow-1)',
+                    }}
+                  >
+                    {drugs.map(d => (
+                      <option key={d.id} value={d.id}>{d.name}</option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={14}
+                    style={{
+                      position: 'absolute', right: 8, pointerEvents: 'none',
+                      color: 'var(--label-tertiary)',
+                    }}
+                  />
+                </div>
               </div>
               {/* Selected drug detail card */}
               {activeDrug && <DrugDetailCard drug={activeDrug} weightKg={weight} />}

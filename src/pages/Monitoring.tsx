@@ -25,8 +25,8 @@ export function Monitoring() {
 
       <PatientSummary />
 
-      {/* Tab bar — 4 tabs equal width, no scroll */}
-      <div style={{ padding: '8px 16px 0' }}>
+      {/* Tab bar — ios-segmented already has margin: 0 16px built in */}
+      <div style={{ paddingTop: 8 }}>
         <div className="ios-segmented">
           {TABS.map((tab) => (
             <button
