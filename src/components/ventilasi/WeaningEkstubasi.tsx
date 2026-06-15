@@ -239,12 +239,192 @@ const EKSTUBASI_STEPS = [
   'Deflate cuff perlahan (jika ETT cuffed) menggunakan syringe.',
   'Tarik ETT dengan gerakan tegas saat puncak inspirasi.',
   'Pasang O₂ mask segera; pantau SpO₂ dan RR secara kontinu.',
-  'Observasi ketat 1–4 jam: croup/stridor → nebulisasi epinefrin 0.5 mg/kg (maks 5 mg) + deksametason 0.5 mg/kg IV.',
+  'Observasi ketat 1–4 jam untuk komplikasi (stridor, bronkospasme, distres).',
 ];
+
+// ── Post-extubation drug calculator ──────────────────────────────────────────
+interface PostExtDrug {
+  name: string;
+  indication: string;
+  doseLabel: string;
+  unit: 'mg/kg' | 'mcg/kg';
+  minPerKg: number;
+  maxPerKg: number;
+  maxAbsolute?: number;
+  minAbsolute?: number;
+  route: string;
+  frequency: string;
+  concLabel: string;
+  concMgMl: number;
+  isMcg?: boolean;
+  notes?: string;
+}
+
+const POST_EXT_DRUGS: PostExtDrug[] = [
+  {
+    name: 'Deksametason',
+    indication: 'Edema laring / stridor post-ekstubasi',
+    doseLabel: '0.25–0.5 mg/kg IV',
+    unit: 'mg/kg',
+    minPerKg: 0.25,
+    maxPerKg: 0.5,
+    maxAbsolute: 10,
+    route: 'IV pelan 5–10 menit',
+    frequency: 'q6–8 jam × 3 dosis (jika perlu)',
+    concLabel: '5 mg/mL',
+    concMgMl: 5,
+    notes: 'Mulai 30 mnt sebelum ekstubasi bila risiko tinggi, atau segera saat stridor muncul',
+  },
+  {
+    name: 'Epinefrin Nebulisasi',
+    indication: 'Croup / stridor post-ekstubasi',
+    doseLabel: '0.5 mg/kg/dosis nebulisasi (maks 5 mg)',
+    unit: 'mg/kg',
+    minPerKg: 0.5,
+    maxPerKg: 0.5,
+    maxAbsolute: 5,
+    route: 'Nebulisasi dalam 3–5 mL NaCl 0.9%',
+    frequency: 'Dapat diulang tiap 20–30 menit bila perlu',
+    concLabel: '1 mg/mL (1:1000)',
+    concMgMl: 1,
+    notes: 'Efek awal 10–30 mnt; observasi rebound 2–3 jam setelah pemberian',
+  },
+  {
+    name: 'Salbutamol Nebulisasi',
+    indication: 'Bronkospasme / wheezing post-ekstubasi',
+    doseLabel: '0.15 mg/kg/dosis (min 2.5 mg, maks 5 mg)',
+    unit: 'mg/kg',
+    minPerKg: 0.15,
+    maxPerKg: 0.15,
+    maxAbsolute: 5,
+    minAbsolute: 2.5,
+    route: 'Nebulisasi dalam 3–4 mL NaCl 0.9%',
+    frequency: 'q20–30 menit × 3 dosis (akut), lanjut q4–6 jam',
+    concLabel: '5 mg/mL',
+    concMgMl: 5,
+    notes: 'Monitor takikardi dan hipokalemia pada pemberian sering',
+  },
+  {
+    name: 'Hidrokortison',
+    indication: 'Insufisiensi adrenal / stridor refrakter',
+    doseLabel: '1–2 mg/kg IV',
+    unit: 'mg/kg',
+    minPerKg: 1,
+    maxPerKg: 2,
+    maxAbsolute: 100,
+    route: 'IV bolus',
+    frequency: 'q6–8 jam bila perlu (terapi stress dose)',
+    concLabel: '50 mg/mL (after reconstitution)',
+    concMgMl: 50,
+    notes: 'Pertimbangkan pada pasien dengan steroid kronik atau risiko insufisiensi adrenal',
+  },
+];
+
+function PostExtubationDrugs({ weightKg }: { weightKg: number }) {
+  const [selected, setSelected] = useState(POST_EXT_DRUGS[0].name);
+  const drug = POST_EXT_DRUGS.find(d => d.name === selected)!;
+  const hasWeight = weightKg > 0;
+
+  function calcDose(perKg: number, drug: PostExtDrug): number {
+    let dose = perKg * weightKg;
+    if (drug.maxAbsolute !== undefined) dose = Math.min(dose, drug.maxAbsolute);
+    if (drug.minAbsolute !== undefined) dose = Math.max(dose, drug.minAbsolute);
+    return dose;
+  }
+
+  const minDose = hasWeight ? calcDose(drug.minPerKg, drug) : 0;
+  const maxDose = hasWeight ? calcDose(drug.maxPerKg, drug) : 0;
+  const minVol  = minDose / drug.concMgMl;
+  const maxVol  = maxDose / drug.concMgMl;
+  const sameMinMax = Math.abs(minDose - maxDose) < 0.001;
+
+  return (
+    <div className="ios-card" style={{ padding: '14px 16px' }}>
+      {/* Drug selector pills */}
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
+        {POST_EXT_DRUGS.map(d => (
+          <button
+            key={d.name}
+            onClick={() => setSelected(d.name)}
+            style={{
+              padding: '4px 12px', borderRadius: 'var(--r-pill)',
+              border: selected === d.name ? 'none' : '1px solid var(--separator)',
+              background: selected === d.name ? 'var(--accent)' : 'var(--fill-secondary)',
+              color: selected === d.name ? '#fff' : 'var(--label-primary)',
+              font: 'var(--type-caption-1)', fontWeight: selected === d.name ? 600 : 400,
+              cursor: 'pointer', transition: 'all var(--dur-fast)',
+            }}
+          >
+            {d.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Indication badge */}
+      <div style={{
+        display: 'inline-block', padding: '3px 10px', borderRadius: 'var(--r-pill)',
+        background: 'color-mix(in srgb, var(--sys-orange) 12%, transparent)',
+        marginBottom: 10,
+      }}>
+        <span style={{ font: 'var(--type-caption-2)', fontWeight: 600, color: 'var(--sys-orange)' }}>
+          {drug.indication}
+        </span>
+      </div>
+
+      {/* Dose result */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
+        <div style={{ background: 'var(--fill-secondary)', borderRadius: 'var(--r-sm)', padding: '10px 12px' }}>
+          <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-secondary)', marginBottom: 3 }}>Dosis</p>
+          <p style={{ font: 'var(--type-headline)', fontWeight: 700, color: 'var(--label-primary)' }}>
+            {drug.doseLabel}
+          </p>
+          {hasWeight && (
+            <p style={{ font: 'var(--type-caption-1)', color: 'var(--accent)', fontWeight: 600, marginTop: 2 }}>
+              {sameMinMax
+                ? `= ${minDose.toFixed(1)} mg`
+                : `= ${minDose.toFixed(1)}–${maxDose.toFixed(1)} mg`}
+            </p>
+          )}
+        </div>
+        <div style={{ background: 'var(--fill-secondary)', borderRadius: 'var(--r-sm)', padding: '10px 12px' }}>
+          <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-secondary)', marginBottom: 3 }}>Volume</p>
+          {hasWeight ? (
+            <>
+              <p style={{ font: 'var(--type-headline)', fontWeight: 700, color: 'var(--accent)' }}>
+                {sameMinMax ? `${minVol.toFixed(2)} mL` : `${minVol.toFixed(2)}–${maxVol.toFixed(2)} mL`}
+              </p>
+              <p style={{ font: 'var(--type-caption-2)', color: 'var(--label-tertiary)', marginTop: 2 }}>
+                {drug.concLabel}
+              </p>
+            </>
+          ) : (
+            <p style={{ font: 'var(--type-footnote)', color: 'var(--label-tertiary)' }}>Isi berat pasien</p>
+          )}
+        </div>
+      </div>
+
+      {/* Route + freq */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 8, borderTop: '0.5px solid var(--separator)' }}>
+        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+          <strong>Rute:</strong> {drug.route}
+        </p>
+        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
+          <strong>Frekuensi:</strong> {drug.frequency}
+        </p>
+        {drug.notes && (
+          <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginTop: 2 }}>
+            💡 {drug.notes}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // ── Main component ─────────────────────────────────────────────────────────────
 export function WeaningEkstubasi() {
   const { weightKg } = usePatientStore();
+  const weight = parseFloat(weightKg) || 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -289,12 +469,20 @@ export function WeaningEkstubasi() {
         </div>
       </div>
 
+      {/* ── Obat post-ekstubasi ── */}
+      <div>
+        <div className="ios-section" style={{ paddingTop: 8 }}>
+          <span className="label">Obat Post-Ekstubasi <Cite source="bnfc2023" /></span>
+        </div>
+        <PostExtubationDrugs weightKg={weight} />
+      </div>
+
       <Disclaimer />
 
       <div className="ios-card" style={{ padding: '12px 14px', marginBottom: 8 }}>
         <p style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)', marginBottom: 8 }}>Referensi</p>
         <ol style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 0, listStyle: 'none', margin: 0 }}>
-          {(['yang1991', 'pals2020', 'newth2009'] as const).map((key) => (
+          {(['yang1991', 'pals2020', 'newth2009', 'bnfc2023'] as const).map((key) => (
             <li key={key} style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
               <span style={{ fontWeight: 700, color: 'var(--label-primary)' }}>[{REFERENCES[key].id}]</span>{' '}
               {REFERENCES[key].citation}

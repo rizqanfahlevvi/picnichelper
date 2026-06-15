@@ -25,15 +25,14 @@ export function Monitoring() {
 
       <PatientSummary />
 
-      {/* Tab bar — horizontally scrollable for 4 tabs */}
-      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', padding: '8px 16px 0' }}>
-        <div className="ios-segmented" style={{ display: 'inline-flex', minWidth: '100%', whiteSpace: 'nowrap' }}>
+      {/* Tab bar — 4 tabs equal width, no scroll */}
+      <div style={{ padding: '8px 16px 0' }}>
+        <div className="ios-segmented">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               aria-selected={activeTab === tab.id}
               onClick={() => setActiveTab(tab.id)}
-              style={{ flex: '1 0 auto' }}
             >
               {tab.label}
             </button>

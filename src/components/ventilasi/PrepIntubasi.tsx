@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle2, Circle, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+// CheckCircle2 + Circle used in checklist; AlertTriangle/ChevronDown/Up in drug warnings
 import { usePatientStore } from '../../store/patientStore';
 import { TRIAS_BY_CATEGORY, type TriasDrug } from '../../data/triasDrugs';
 import { ettSizeByAge, roundToHalf } from '../../utils/ett';
@@ -7,97 +8,68 @@ import { Disclaimer } from '../Disclaimer';
 import { Cite } from '../Citation';
 import { REFERENCES } from '../../data/references';
 
-// ── Trias Drug Card ──────────────────────────────────────────────────────────
-function DrugCard({
-  drug, selected, onSelect, weightKg,
-}: {
-  drug: TriasDrug; selected: boolean; onSelect: () => void; weightKg: number;
-}) {
+// ── Drug detail card (selected drug info) ────────────────────────────────────
+function DrugDetailCard({ drug, weightKg }: { drug: TriasDrug; weightKg: number }) {
   const [showWarning, setShowWarning] = useState(false);
-
-  // Dose calculation
-  const isMcg = drug.rsiDose.unit === 'mcg/kg';
-  const doseMinRaw = drug.rsiDose.min * weightKg;  // mcg or mg
+  const isMcg    = drug.rsiDose.unit === 'mcg/kg';
+  const doseMinRaw = drug.rsiDose.min * weightKg;
   const doseMaxRaw = drug.rsiDose.max * weightKg;
-  // convert to mg for volume calc (concentration is always mg/mL)
-  const doseMinMg = isMcg ? doseMinRaw / 1000 : doseMinRaw;
-  const doseMaxMg = isMcg ? doseMaxRaw / 1000 : doseMaxRaw;
+  const doseMinMg  = isMcg ? doseMinRaw / 1000 : doseMinRaw;
+  const doseMaxMg  = isMcg ? doseMaxRaw / 1000 : doseMaxRaw;
   const volMin = doseMinMg / drug.concentration;
   const volMax = doseMaxMg / drug.concentration;
-
   const hasWeight = weightKg > 0;
 
   return (
-    <div
-      onClick={onSelect}
-      style={{
-        borderRadius: 'var(--r-card)',
-        border: selected
-          ? '2px solid var(--accent)'
-          : '1.5px solid var(--separator)',
-        background: selected
-          ? 'color-mix(in srgb, var(--accent) 8%, var(--bg-tertiary))'
-          : 'var(--bg-tertiary)',
-        padding: '10px 12px',
-        cursor: 'pointer',
-        transition: 'all var(--dur-fast)',
-        position: 'relative',
-      }}
-    >
-      {/* Drug name + onset */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 4 }}>
-        <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)', flex: 1 }}>
-          {drug.name}
-        </span>
-        {selected && (
-          <CheckCircle2 size={16} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }} />
-        )}
-      </div>
-
-      <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
+    <div style={{
+      borderRadius: 'var(--r-card)',
+      border: '1.5px solid var(--accent)',
+      background: 'color-mix(in srgb, var(--accent) 6%, var(--bg-tertiary))',
+      padding: '12px 14px',
+    }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
         <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
-          Onset: {drug.onset}
+          Onset: <strong>{drug.onset}</strong>
         </span>
-        <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>·</span>
+        <span style={{ color: 'var(--label-tertiary)' }}>·</span>
         <span style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)' }}>
-          Durasi: {drug.duration}
+          Durasi: <strong>{drug.duration}</strong>
         </span>
       </div>
 
-      {/* RSI dose */}
-      <div style={{ marginTop: 6 }}>
-        <span style={{
-          font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase',
-          letterSpacing: '0.04em', color: 'var(--label-secondary)',
-        }}>
+      <div style={{ marginBottom: hasWeight ? 6 : 0 }}>
+        <span style={{ font: 'var(--type-caption-2)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
           Dosis RSI
         </span>
         <div style={{ font: 'var(--type-footnote)', color: 'var(--label-primary)', marginTop: 2 }}>
           {drug.rsiDose.min}–{drug.rsiDose.max} {drug.rsiDose.unit}
           {hasWeight && (
-            <span style={{ color: 'var(--accent)', fontWeight: 600 }}>
-              {' '}→ {isMcg ? `${doseMinRaw.toFixed(0)}–${doseMaxRaw.toFixed(0)} mcg` : `${doseMinMg.toFixed(2)}–${doseMaxMg.toFixed(2)} mg`}
+            <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
+              {' '}→ {isMcg
+                ? `${doseMinRaw.toFixed(0)}–${doseMaxRaw.toFixed(0)} mcg`
+                : `${doseMinMg.toFixed(2)}–${doseMaxMg.toFixed(2)} mg`}
             </span>
           )}
         </div>
         {hasWeight && (
-          <div style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 1 }}>
-            Volume: {volMin.toFixed(2)}–{volMax.toFixed(2)} mL
-            <span style={{ color: 'var(--label-tertiary)' }}> (konsentrasi {drug.concentration} {drug.concentrationUnit})</span>
+          <div style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 2 }}>
+            Volume: <strong>{volMin.toFixed(2)}–{volMax.toFixed(2)} mL</strong>
+            <span style={{ color: 'var(--label-tertiary)' }}> ({drug.concentration} {drug.concentrationUnit})</span>
           </div>
         )}
       </div>
 
-      {/* Warnings toggle */}
+      {drug.notes && (
+        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-secondary)', marginTop: 6, borderTop: '0.5px solid var(--separator)', paddingTop: 6 }}>
+          {drug.notes}
+        </p>
+      )}
+
       {drug.warnings && drug.warnings.length > 0 && (
         <div style={{ marginTop: 6 }}>
           <button
-            onClick={(e) => { e.stopPropagation(); setShowWarning(v => !v); }}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              color: 'var(--sys-yellow)',
-            }}
+            onClick={() => setShowWarning(v => !v)}
+            style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'var(--sys-yellow)' }}
           >
             <AlertTriangle size={12} />
             <span style={{ font: 'var(--type-caption-2)', fontWeight: 600 }}>
@@ -202,7 +174,9 @@ export function PrepIntubasi() {
 
   const [checkedAlat, setCheckedAlat] = useState<Record<number, boolean>>({});
   const [selectedDrug, setSelectedDrug] = useState<Record<string, string>>({
-    analgetik: '', sedasi: '', relaksan: '',
+    analgetik: TRIAS_BY_CATEGORY.analgetik[0].id,
+    sedasi:    TRIAS_BY_CATEGORY.sedasi[0].id,
+    relaksan:  TRIAS_BY_CATEGORY.relaksan[0].id,
   });
 
   function toggleAlat(i: number) {
@@ -314,31 +288,43 @@ export function PrepIntubasi() {
           )}
         </div>
 
-        {(['analgetik', 'sedasi', 'relaksan'] as const).map((cat) => (
-          <div key={cat} style={{ marginBottom: 12 }}>
-            <p style={{
-              font: 'var(--type-footnote)', fontWeight: 700, textTransform: 'uppercase',
-              letterSpacing: '0.04em', color: 'var(--label-secondary)',
-              padding: '2px 16px 6px',
-            }}>
-              {cat === 'analgetik' ? 'Analgetik' : cat === 'sedasi' ? 'Sedasi / Induksi' : 'Muscle Relaxant'}
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '0 16px' }}>
-              {TRIAS_BY_CATEGORY[cat].map(drug => (
-                <DrugCard
-                  key={drug.id}
-                  drug={drug}
-                  selected={selectedDrug[cat] === drug.id}
-                  onSelect={() => setSelectedDrug(prev => ({
-                    ...prev,
-                    [cat]: prev[cat] === drug.id ? '' : drug.id,
-                  }))}
-                  weightKg={weight}
-                />
-              ))}
+        {(['analgetik', 'sedasi', 'relaksan'] as const).map((cat) => {
+          const catLabel = cat === 'analgetik' ? 'Analgetik' : cat === 'sedasi' ? 'Sedasi / Induksi' : 'Muscle Relaxant';
+          const drugs    = TRIAS_BY_CATEGORY[cat];
+          const activeDrug = drugs.find(d => d.id === selectedDrug[cat]);
+          return (
+            <div key={cat} style={{ marginBottom: 12, padding: '0 16px' }}>
+              {/* Row: label + dropdown */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ font: 'var(--type-footnote)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--label-secondary)' }}>
+                  {catLabel}
+                </span>
+                <select
+                  value={selectedDrug[cat]}
+                  onChange={e => setSelectedDrug(prev => ({ ...prev, [cat]: e.target.value }))}
+                  style={{
+                    padding: '5px 28px 5px 10px',
+                    borderRadius: 'var(--r-sm)',
+                    border: '1px solid var(--separator)',
+                    background: 'var(--fill-secondary)',
+                    color: 'var(--label-primary)',
+                    font: 'var(--type-footnote)',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    appearance: 'auto',
+                    minWidth: 140,
+                  }}
+                >
+                  {drugs.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
+              {/* Selected drug detail card */}
+              {activeDrug && <DrugDetailCard drug={activeDrug} weightKg={weight} />}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ── Obat Emergensi ── */}
