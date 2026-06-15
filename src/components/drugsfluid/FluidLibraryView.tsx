@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, AlertTriangle, Info, X } from 'lucide-react';
+import { Search, AlertTriangle, Info, X, XCircle } from 'lucide-react';
 import {
   FLUID_LIBRARY, type FluidEntry, type FluidCategory,
 } from '../../data/fluidLibrary';
@@ -374,6 +374,21 @@ function FluidDetail({ fluid }: { fluid: FluidEntry }) {
               <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                 <Info size={14} style={{ color: 'var(--sys-green)', marginTop: 2, flexShrink: 0 }} />
                 <span style={{ fontSize: 'var(--type-footnote)', color: 'var(--label-primary)', lineHeight: 1.5 }}>{ind}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Kontraindikasi */}
+      {fluid.contraindications && fluid.contraindications.length > 0 && (
+        <section>
+          <SectionLabel color="var(--sys-red)">Kontraindikasi</SectionLabel>
+          <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {fluid.contraindications.map((ci, i) => (
+              <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <XCircle size={14} style={{ color: 'var(--sys-red)', marginTop: 2, flexShrink: 0 }} />
+                <span style={{ fontSize: 'var(--type-footnote)', color: 'var(--label-primary)', lineHeight: 1.5 }}>{ci}</span>
               </div>
             ))}
           </div>
