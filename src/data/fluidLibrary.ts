@@ -54,6 +54,8 @@ export interface FluidEntry {
   cautions: string[];
   /** Catatan klinis tambahan */
   notes?: string;
+  /** Kunci referensi dari src/data/references.ts */
+  references?: string[];
 }
 
 export const FLUID_LIBRARY: FluidEntry[] = [
@@ -80,6 +82,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Hipernatremia bila diberikan berlebihan',
     ],
     notes: 'Cairan paling sering digunakan. Klorida 154 mEq/L (lebih tinggi dari plasma 103 mEq/L) → risiko asidosis hiperkloremik pada infus masif.',
+    references: ['pals2020', 'morgan2013'],
   },
   {
     id: 'rl',
@@ -103,6 +106,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Sedikit hipotonik (273 vs 308 mOsm/L) → tidak ideal pada edema serebral',
     ],
     notes: 'Komposisi paling menyerupai plasma. Laktat dikonversi ke bikarbonat di hati → efek buffer ringan. Pilihan lebih baik dari NS untuk resusitasi volume besar.',
+    references: ['pals2020', 'morgan2013'],
   },
   {
     id: 'plas_lyte',
@@ -124,6 +128,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Mengandung K 5 mEq/L — hati-hati hiperkalemia',
     ],
     notes: 'pH 7.4 dan komposisi elektrolit sangat mendekati plasma manusia. Pilihan ideal untuk resusitasi masif bila tersedia.',
+    references: ['pals2020', 'morgan2013'],
   },
 
   // ── Kristaloid Hipotonik ────────────────────────────────────────────────
@@ -146,6 +151,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Hindari sebagai bolus pada syok',
     ],
     notes: 'Biasanya diberikan sebagai D5 + NaCl 0.45% untuk maintenance. Tidak boleh digunakan sebagai cairan resusitasi.',
+    references: ['holliday1957', 'aap_maintenance2018', 'morgan2013'],
   },
   {
     id: 'd5w',
@@ -169,6 +175,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Pasien cedera otak: hindari (perburuk edema serebral)',
     ],
     notes: 'Setelah dimetabolisme glukosa, efeknya setara air bebas (hipotonik murni). D5% 1 L = 170 kkal.',
+    references: ['morgan2013', 'holliday1957'],
   },
   {
     id: 'd10w',
@@ -190,6 +197,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Pada neonatus: hitung GIR (Glucose Infusion Rate) tiap penyesuaian',
     ],
     notes: 'GIR (mg/kg/mnt) = konsentrasi glukosa (g/dL) × laju (mL/jam) ÷ (berat kg × 6). Neonatus aterm normal: GIR 4–6 mg/kg/mnt.',
+    references: ['gomella2020', 'morgan2013'],
   },
   {
     id: 'd5_nacl045',
@@ -210,6 +218,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Jangan gunakan sebagai resusitasi',
     ],
     notes: 'AAP 2018 merekomendasikan NaCl 0.9% + D5% (isotonik) untuk maintenance rawat inap pediatri menggantikan ½NS, kecuali ada indikasi khusus hipernatremia.',
+    references: ['aap_maintenance2018', 'holliday1957', 'morgan2013'],
   },
   {
     id: 'd5_nacl09',
@@ -229,6 +238,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Hipernatremia bila diberikan berlebihan',
     ],
     notes: 'Pilihan maintenance yang lebih aman dari D5½NS pada anak sakit rawat inap (menurunkan risiko hiponatremia iatrogenik).',
+    references: ['aap_maintenance2018', 'holliday1957'],
   },
 
   // ── Kristaloid Hipertonik ───────────────────────────────────────────────
@@ -254,6 +264,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Bolus singkat bisa via perifer',
     ],
     notes: '1 mL NaCl 3% mengandung 0.514 mEq Na. Rumus volume: ΔNa (mEq/L) × TBW (L) / 0.514. TBW anak = BB × 0.6.',
+    references: ['pals2020', 'morgan2013'],
   },
   {
     id: 'nahco3_84',
@@ -278,6 +289,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Hitung dosis: 1–2 mEq/kg IV pelan (> 30 menit)',
     ],
     notes: '1 mL NaHCO₃ 8.4% = 1 mEq. Osmolarity sangat tinggi (2000 mOsm/L) — selalu encerkan. Untuk neonatus, gunakan NaHCO₃ 4.2% atau encerkan 1:1.',
+    references: ['pals2020', 'gomella2020', 'morgan2013'],
   },
 
   // ── Koloid ─────────────────────────────────────────────────────────────
@@ -301,6 +313,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Pastikan tidak ada kontraindikasi (alergi protein hewani)',
     ],
     notes: 'Albumin 5% isotonik dan isosmotik. Waktu paruh intravaskular 16–24 jam. Pada sindrom nefrotik: kombinasikan dengan furosemid untuk cegah overload.',
+    references: ['pals2020', 'morgan2013'],
   },
   {
     id: 'albumin_25',
@@ -321,6 +334,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Dosis albumin 25%: 1 g/kg (1 g/kg = 4 mL/kg)',
     ],
     notes: '1 g albumin = 4 mL albumin 25%. Untuk sindrom nefrotik pediatri: albumin 1 g/kg infus pelan + furosemid 1 mg/kg di pertengahan infus.',
+    references: ['pals2020', 'morgan2013'],
   },
 
   // ── Produk Darah ────────────────────────────────────────────────────────
@@ -344,6 +358,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Monitor tanda reaksi transfusi: demam, urtikaria, dispnea, hemolisis',
     ],
     notes: 'Target Hb: > 7 g/dL (stabil), > 8–10 g/dL (ICU/jantung). Formula kenaikan Hb: volume (mL) = (Hb target − Hb aktual) × BB × 3 (untuk PRC Ht ≈ 60%).',
+    references: ['pals2020'],
   },
   {
     id: 'ffp',
@@ -366,6 +381,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Volume load signifikan — hati-hati pada gagal jantung',
     ],
     notes: 'Mengandung semua faktor koagulasi. 1 unit FFP ≈ 250 mL. Tidak dapat dipakai sebagai sumber volume/albumin — ada risiko lebih besar dari albumin.',
+    references: ['pals2020'],
   },
   {
     id: 'platelets',
@@ -387,6 +403,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Tidak berguna pada trombositopenia destruktif (ITP) — trombosit langsung dihancurkan',
     ],
     notes: 'Cek trombosit 1 jam pasca-transfusi (post-transfusion count) untuk menilai respons. Increment < 5.000 → pertimbangkan refraktori trombosit.',
+    references: ['pals2020'],
   },
   {
     id: 'cryoprecipitate',
@@ -408,6 +425,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Risiko infeksi lebih tinggi dari FFP (kurang diproses)',
     ],
     notes: 'Mengandung: fibrinogen, faktor VIII, faktor XIII, vWF, fibronektin. Simpan di suhu −18°C; setelah thaw harus diberikan dalam 4–6 jam.',
+    references: ['pals2020'],
   },
 
   // ── Khusus ────────────────────────────────────────────────────────────
@@ -434,6 +452,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Kadar serum: terapeutik 4–7 mEq/L; toksik > 9 mEq/L',
     ],
     notes: '1 g MgSO₄ = 4 mEq Mg. MgSO₄ 50% = 500 mg/mL = 2 mEq/mL. Untuk hipomagnesemia anak: 25–50 mg/kg (maks 2 g) IV dalam 15–30 menit, encerkan dulu.',
+    references: ['pals2020', 'morgan2013'],
   },
   {
     id: 'kcl_7pct',
@@ -456,6 +475,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Cek Mg: hipokalemia refrakter sering karena hipomagnesemia bersamaan',
     ],
     notes: '1 mL KCl 7.46% = 1 mEq K. Konsentrasi standar di infus: 20–40 mEq/L. Untuk koreksi IV anak: 0.2–0.5 mEq/kg/dosis, encerkan, infus pelan 2–4 jam.',
+    references: ['morgan2013', 'gomella2020'],
   },
   {
     id: 'nacl_3pct_bolus',
@@ -476,6 +496,7 @@ export const FLUID_LIBRARY: FluidEntry[] = [
       'Monitor Na tiap 2 jam',
     ],
     notes: 'Duplikat dari NaCl 3% dengan catatan protokol khusus bolus hiponatremia simtomatik. Referensi: ESPE Clinical Practice Guidelines 2018.',
+    references: ['pals2020', 'morgan2013'],
   },
 ];
 

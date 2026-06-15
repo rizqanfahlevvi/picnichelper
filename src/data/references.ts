@@ -307,4 +307,23 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://doi.org/10.1111/epi.13057',
     verified: true,
   },
+  morgan2013: {
+    id: 43,
+    citation:
+      'Morgan GE, Mikhail MS, Murray MJ. Clinical Anesthesiology. 5th ed. New York: McGraw-Hill; 2013. (Appendix: Intravenous fluid composition)',
+    verified: true,
+  },
+  gomella2020: {
+    id: 44,
+    citation:
+      'Gomella TL, Cunningham MD, Eyal FG. Neonatology: Management, Procedures, On-Call Problems, Diseases, and Drugs. 8th ed. New York: McGraw-Hill; 2020.',
+    verified: true,
+  },
+  aap_maintenance2018: {
+    id: 45,
+    citation:
+      'Feld LG, Neuspiel DR, Foster BA, et al. Clinical Practice Guideline: Maintenance Intravenous Fluids in Children. Pediatrics. 2018;142(6):e20183083.',
+    url: 'https://doi.org/10.1542/peds.2018-3083',
+    verified: true,
+  },
 };
