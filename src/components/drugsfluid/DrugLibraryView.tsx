@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronRight, AlertTriangle, Info, BookOpen } from 'lucide-react';
+import { Search, ChevronRight, AlertTriangle, Info, BookOpen, X } from 'lucide-react';
 import { usePatientStore } from '../../store/patientStore';
 import {
   DRUG_LIBRARY, DRUG_CATEGORY_LABEL, DRUG_CATEGORY_ORDER,
@@ -33,10 +33,13 @@ const CATEGORY_COLOR: Partial<Record<DrugCategory, string>> = {
   antibiotik:     'var(--sys-green)',
 };
 
+const PAGE_SIZE = 10;
+
 export function DrugLibraryView() {
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<DrugCategory | 'semua'>('semua');
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedDrug, setSelectedDrug] = useState<DrugEntry | null>(null);
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -51,6 +54,18 @@ export function DrugLibraryView() {
     });
   }, [query, activeCategory]);
 
+  // Pagination only when "semua" and no search query
+  const usePagination = activeCategory === 'semua' && !query.trim();
+  const totalPages = usePagination ? Math.ceil(filtered.length / PAGE_SIZE) : 1;
+  const paginated = usePagination
+    ? filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+    : filtered;
+
+  function handleCategoryChange(cat: DrugCategory | 'semua') {
+    setActiveCategory(cat);
+    setPage(1);
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, overflowX: 'hidden', width: '100%' }}>
       {/* Search */}
@@ -64,7 +79,7 @@ export function DrugLibraryView() {
           <input
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => { setQuery(e.target.value); setPage(1); }}
             placeholder="Cari nama obat atau merek…"
             style={{
               flex: 1, border: 'none', outline: 'none', background: 'transparent',
@@ -73,7 +88,7 @@ export function DrugLibraryView() {
           />
           {query && (
             <button
-              onClick={() => setQuery('')}
+              onClick={() => { setQuery(''); setPage(1); }}
               style={{ border: 'none', background: 'transparent', cursor: 'pointer',
                 color: 'var(--label-tertiary)', fontSize: 16, lineHeight: 1 }}
             >×</button>
@@ -81,127 +96,220 @@ export function DrugLibraryView() {
         </div>
       </div>
 
-      {/* Category filter — scroll horizontal hanya di dalam wrapper ini */}
+      {/* Category filter */}
       <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
-      <div style={{ display: 'flex', gap: 6, padding: '0 16px', width: 'max-content' }}>
-        <FilterPill label="Semua" active={activeCategory === 'semua'} onClick={() => setActiveCategory('semua')} />
-        {DRUG_CATEGORY_ORDER.filter((cat) =>
-          DRUG_LIBRARY.some((d) => d.verified && d.category === cat)
-        ).map((cat) => (
-          <FilterPill
-            key={cat}
-            label={DRUG_CATEGORY_LABEL[cat]}
-            active={activeCategory === cat}
-            color={CATEGORY_COLOR[cat]}
-            onClick={() => setActiveCategory(cat)}
-          />
-        ))}
-      </div>
+        <div style={{ display: 'flex', gap: 6, padding: '0 16px', width: 'max-content' }}>
+          <FilterPill label="Semua" active={activeCategory === 'semua'} onClick={() => handleCategoryChange('semua')} />
+          {DRUG_CATEGORY_ORDER.filter((cat) =>
+            DRUG_LIBRARY.some((d) => d.verified && d.category === cat)
+          ).map((cat) => (
+            <FilterPill
+              key={cat}
+              label={DRUG_CATEGORY_LABEL[cat]}
+              active={activeCategory === cat}
+              color={CATEGORY_COLOR[cat]}
+              onClick={() => handleCategoryChange(cat)}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Count */}
-      {query && (
-        <p style={{ padding: '0 20px', font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>
-          {filtered.length} obat ditemukan
-        </p>
-      )}
+      <p style={{ padding: '0 20px', font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>
+        {query ? `${filtered.length} obat ditemukan` : `${filtered.length} obat`}
+        {usePagination && ` · halaman ${page} dari ${totalPages}`}
+      </p>
 
       {/* Drug list */}
-      {filtered.length === 0 ? (
+      {paginated.length === 0 ? (
         <div className="ios-card" style={{ padding: '24px 16px', textAlign: 'center' }}>
-          <p style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>
-            Obat tidak ditemukan
-          </p>
+          <p style={{ font: 'var(--type-subheadline)', color: 'var(--label-secondary)' }}>Obat tidak ditemukan</p>
           <p style={{ font: 'var(--type-footnote)', color: 'var(--label-tertiary)', marginTop: 4 }}>
             Coba nama generik atau nama dagang
           </p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '0 16px' }}>
-          {filtered.map((drug) => (
-            <DrugCard
-              key={drug.id}
-              drug={drug}
-              expanded={expandedId === drug.id}
-              onToggle={() => setExpandedId(expandedId === drug.id ? null : drug.id)}
-            />
+          {paginated.map((drug) => (
+            <DrugCard key={drug.id} drug={drug} onSelect={() => setSelectedDrug(drug)} />
           ))}
         </div>
       )}
 
+      {/* Pagination */}
+      {usePagination && totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, padding: '4px 16px 8px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            style={{
+              padding: '6px 12px', borderRadius: 8, border: 'none', cursor: page === 1 ? 'default' : 'pointer',
+              background: 'var(--fill-secondary)', color: page === 1 ? 'var(--label-tertiary)' : 'var(--accent)',
+              font: 'var(--type-caption-1)', fontWeight: 600,
+            }}
+          >‹ Prev</button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPage(p)}
+              style={{
+                width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
+                background: p === page ? 'var(--accent)' : 'var(--fill-secondary)',
+                color: p === page ? '#fff' : 'var(--label-primary)',
+                font: 'var(--type-caption-1)', fontWeight: p === page ? 700 : 400,
+              }}
+            >{p}</button>
+          ))}
+
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            style={{
+              padding: '6px 12px', borderRadius: 8, border: 'none', cursor: page === totalPages ? 'default' : 'pointer',
+              background: 'var(--fill-secondary)', color: page === totalPages ? 'var(--label-tertiary)' : 'var(--accent)',
+              font: 'var(--type-caption-1)', fontWeight: 600,
+            }}
+          >Next ›</button>
+        </div>
+      )}
+
       <Disclaimer />
+
+      {/* Drug detail modal */}
+      {selectedDrug && (
+        <DrugModal drug={selectedDrug} onClose={() => setSelectedDrug(null)} />
+      )}
     </div>
   );
 }
 
 /* ── Drug Card ─────────────────────────────────────────────────────────── */
-function DrugCard({ drug, expanded, onToggle }: {
-  drug: DrugEntry; expanded: boolean; onToggle: () => void;
-}) {
+function DrugCard({ drug, onSelect }: { drug: DrugEntry; onSelect: () => void }) {
   const col = CATEGORY_COLOR[drug.category] ?? 'var(--accent)';
 
   return (
-    <div className="ios-card" style={{ overflow: 'hidden' }}>
-      {/* Header */}
-      <button
-        onClick={onToggle}
+    <button
+      onClick={onSelect}
+      className="ios-card"
+      style={{
+        width: '100%', textAlign: 'left', background: 'var(--bg-tertiary)',
+        border: 'none', cursor: 'pointer', overflow: 'hidden',
+        display: 'flex', alignItems: 'center', gap: 12,
+        padding: '12px 14px', minHeight: 'var(--hit)',
+        transition: 'transform var(--dur-fast)',
+        WebkitTapHighlightColor: 'transparent',
+      }}
+      onPointerDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+      onPointerUp={(e)   => { e.currentTarget.style.transform = 'scale(1)'; }}
+      onPointerLeave={(e)=> { e.currentTarget.style.transform = 'scale(1)'; }}
+    >
+      <div style={{ width: 8, height: 8, borderRadius: '50%', background: col, flexShrink: 0 }} />
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)' }}>
+            {drug.name}
+          </span>
+          <span style={{
+            font: 'var(--type-caption-2)', fontWeight: 600, color: col,
+            background: `color-mix(in srgb, ${col} 12%, transparent)`,
+            padding: '2px 8px', borderRadius: 'var(--r-pill)',
+          }}>
+            {DRUG_CATEGORY_LABEL[drug.category]}
+          </span>
+        </div>
+        <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginTop: 2 }}>
+          {drug.aliases.slice(0, 3).join(' · ')}
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+        {[...new Set(drug.routes.map((r) => r.route))].slice(0, 3).map((route) => (
+          <span key={route} style={{
+            font: 'var(--type-caption-2)', fontWeight: 700,
+            color: ROUTE_COLOR[route] ?? 'var(--label-secondary)',
+            background: `color-mix(in srgb, ${ROUTE_COLOR[route] ?? 'var(--accent)'} 10%, transparent)`,
+            padding: '1px 6px', borderRadius: 4, fontSize: 10,
+          }}>{route}</span>
+        ))}
+      </div>
+
+      <ChevronRight size={16} color="var(--label-tertiary)" style={{ flexShrink: 0 }} />
+    </button>
+  );
+}
+
+/* ── Drug Modal ─────────────────────────────────────────────────────────── */
+function DrugModal({ drug, onClose }: { drug: DrugEntry; onClose: () => void }) {
+  const col = CATEGORY_COLOR[drug.category] ?? 'var(--accent)';
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
         style={{
-          width: '100%', textAlign: 'left', background: 'transparent',
-          border: 'none', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 12,
-          padding: '12px 14px', minHeight: 'var(--hit)',
+          position: 'fixed', inset: 0, zIndex: 400,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 16,
         }}
       >
-        {/* Category indicator */}
-        <div style={{
-          width: 8, height: 8, borderRadius: '50%', background: col, flexShrink: 0,
-        }} />
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-            <span style={{ font: 'var(--type-subheadline)', fontWeight: 600, color: 'var(--label-primary)' }}>
-              {drug.name}
-            </span>
-            <span style={{
-              font: 'var(--type-caption-2)', fontWeight: 600,
-              color: col,
-              background: `color-mix(in srgb, ${col} 12%, transparent)`,
-              padding: '2px 8px', borderRadius: 'var(--r-pill)',
-            }}>
-              {DRUG_CATEGORY_LABEL[drug.category]}
-            </span>
+        {/* Modal */}
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            background: 'var(--bg-secondary)',
+            borderRadius: 'var(--r-sheet)',
+            width: '100%', maxWidth: 480,
+            maxHeight: '88dvh',
+            overflowY: 'auto',
+            boxShadow: 'var(--shadow-3, 0 16px 48px rgba(0,0,0,0.35))',
+          }}
+        >
+          {/* Modal header */}
+          <div style={{
+            position: 'sticky', top: 0,
+            background: 'var(--bg-secondary)',
+            borderBottom: '0.5px solid var(--separator)',
+            padding: '14px 16px 12px',
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
+            zIndex: 1,
+          }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
+                <span style={{ font: 'var(--type-headline)', fontWeight: 700, color: 'var(--label-primary)' }}>
+                  {drug.name}
+                </span>
+                <span style={{
+                  font: 'var(--type-caption-2)', fontWeight: 600, color: col,
+                  background: `color-mix(in srgb, ${col} 15%, transparent)`,
+                  padding: '2px 8px', borderRadius: 'var(--r-pill)',
+                }}>
+                  {DRUG_CATEGORY_LABEL[drug.category]}
+                </span>
+              </div>
+              <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)' }}>
+                {drug.aliases.slice(0, 4).join(' · ')}
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              style={{
+                flexShrink: 0, width: 28, height: 28, borderRadius: '50%',
+                background: 'var(--fill-secondary)', border: 'none', cursor: 'pointer',
+                display: 'grid', placeItems: 'center', color: 'var(--label-secondary)',
+              }}
+            >
+              <X size={14} />
+            </button>
           </div>
-          <p style={{ font: 'var(--type-caption-1)', color: 'var(--label-tertiary)', marginTop: 2 }}>
-            {drug.aliases.slice(0, 3).join(' · ')}
-          </p>
-        </div>
 
-        {/* Route badges */}
-        <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
-          {[...new Set(drug.routes.map((r) => r.route))].slice(0, 3).map((route) => (
-            <span key={route} style={{
-              font: 'var(--type-caption-2)', fontWeight: 700,
-              color: ROUTE_COLOR[route] ?? 'var(--label-secondary)',
-              background: `color-mix(in srgb, ${ROUTE_COLOR[route] ?? 'var(--accent)'} 10%, transparent)`,
-              padding: '1px 6px', borderRadius: 4, fontSize: 10,
-            }}>{route}</span>
-          ))}
-        </div>
-
-        <ChevronRight
-          size={16}
-          color="var(--label-tertiary)"
-          style={{ transition: 'transform var(--dur-fast)', transform: expanded ? 'rotate(90deg)' : 'none', flexShrink: 0 }}
-        />
-      </button>
-
-      {/* Expanded detail */}
-      {expanded && (
-        <div style={{ borderTop: '0.5px solid var(--separator)' }}>
+          {/* Modal body */}
           <DrugDetail drug={drug} />
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }
 

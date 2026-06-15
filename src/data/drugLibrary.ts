@@ -24,6 +24,9 @@ export type DrugCategory =
   | 'antiretroviral'   // ARV / HIV
   | 'antidotum'        // toksikologi & kelasi
   | 'onkologi'         // sitostatika & imunosupresan
+  | 'antihistamin'     // H1-antagonis generasi 1 & 2
+  | 'simtomatik'       // ekspektoran, mukolitik, antitusif, prokinetik, laksatif
+  | 'antihipertensi'   // CCB, ACE-I, vasodilator
   | 'lainnya';
 
 export type RouteCode = 'IV' | 'PO' | 'IM' | 'SC' | 'Inhalasi' | 'Rektal' | 'Intranasal' | 'Sublingual';
@@ -4122,6 +4125,630 @@ export const DRUG_LIBRARY: DrugEntry[] = [
     references: ['idai2012'],
     verified: true,
   },
+
+  // ── Analgesik tambahan ────────────────────────────────────────────────────
+  {
+    id: 'metamizole',
+    name: 'Metamizole (Dipyrone)',
+    aliases: ['Antalgin', 'Novalgin'],
+    category: 'analgesik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 15, unit: 'mg/kg',
+          frequency: 'setiap 6–8 jam',
+          maxAbsoluteMg: 1000,
+          notes: 'Usia ≥ 3 bulan. Hindari pada neonatus dan bayi < 3 bulan.',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 15, unit: 'mg/kg',
+          frequency: 'setiap 6–8 jam',
+          maxAbsoluteMg: 1000,
+          notes: 'Berikan IV pelan (> 15 menit) untuk menghindari hipotensi.',
+        },
+      },
+    ],
+    warnings: [
+      'Agranulositosis (jarang, < 1:1.000.000) — hentikan bila demam tinggi mendadak atau nyeri tenggorokan',
+      'Hipotensi bila IV cepat — berikan perlahan > 15 menit',
+      'Hindari pada alergi NSAID / aspirin (cross-reactivity)',
+      'Tidak direkomendasikan usia < 3 bulan',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+
+  // ── Antihistamin ─────────────────────────────────────────────────────────
+  {
+    id: 'cetirizine',
+    name: 'Cetirizine',
+    aliases: ['Zyrtec', 'Ryzen', 'Incidal'],
+    category: 'antihistamin',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'sekali sehari',
+          fixedDose: '6–11 bln: 2,5 mg/hari; 1–5 th: 2,5 mg × 2/hari atau 5 mg/hari; 6–11 th: 5 mg/hari atau 5 mg × 2/hari; ≥ 12 th: 10 mg/hari',
+          notes: 'H1-antagonis generasi ke-2, efek sedasi minimal.',
+        },
+      },
+    ],
+    warnings: ['Sedasi ringan (lebih sedikit dari generasi 1)', 'Hindari pada neonatus < 6 bulan'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'loratadine',
+    name: 'Loratadine',
+    aliases: ['Claritin', 'Lorano', 'Loratin'],
+    category: 'antihistamin',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'sekali sehari',
+          fixedDose: '2–11 th (BB < 30 kg): 5 mg/hari; ≥ 12 th atau BB ≥ 30 kg: 10 mg/hari',
+          notes: 'H1-antagonis generasi ke-2, non-sedatif. Tidak dianjurkan usia < 2 tahun.',
+        },
+      },
+    ],
+    warnings: ['Tidak dianjurkan usia < 2 tahun', 'Hindari pada gangguan hati berat'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'desloratadine',
+    name: 'Desloratadine',
+    aliases: ['Aerius', 'Deselex'],
+    category: 'antihistamin',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'sekali sehari',
+          fixedDose: '6–11 bln: 1 mg/hari; 1–5 th: 1,25 mg/hari; 6–11 th: 2,5 mg/hari; ≥ 12 th: 5 mg/hari',
+          notes: 'Metabolit aktif loratadine. Non-sedatif.',
+        },
+      },
+    ],
+    warnings: ['Tidak dianjurkan usia < 6 bulan', 'Kurangi dosis pada gagal ginjal atau hati berat'],
+    renalAdjustment: 'Dosis setiap 2 hari pada gagal ginjal',
+    references: ['bnfc2023'],
+    verified: true,
+  },
+
+  // ── Simtomatik ────────────────────────────────────────────────────────────
+  {
+    id: 'ambroxol',
+    name: 'Ambroxol',
+    aliases: ['Mucopect', 'Ambroxol', 'Lapimuc'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 1.2, maxPerKg: 1.6, unit: 'mg/kg',
+          frequency: '2–3 kali sehari',
+          maxAbsoluteMg: 90,
+          notes: '< 2 th: 7,5 mg × 2/hari; 2–5 th: 7,5 mg × 3/hari; 6–12 th: 15 mg × 2–3/hari; > 12 th: 30 mg × 3/hari.',
+        },
+      },
+    ],
+    warnings: ['Tidak ada bukti efektivitas kuat pada batuk akut — gunakan secara rasional'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'guaifenesin',
+    name: 'Guaifenesin',
+    aliases: ['Silex', 'OBH', 'Woods'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'setiap 4 jam (max 6× sehari)',
+          fixedDose: '2–5 th: 50–100 mg/dosis; 6–11 th: 100–200 mg/dosis; ≥ 12 th: 200–400 mg/dosis',
+          notes: 'Ekspektoran. Tidak dianjurkan usia < 2 tahun.',
+        },
+      },
+    ],
+    warnings: ['Hindari usia < 2 tahun', 'Bukti efektivitas terbatas pada batuk anak'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'dextromethorphan',
+    name: 'Dextromethorphan (DMP)',
+    aliases: ['Woods', 'Bisolvon antitusif'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.25, maxPerKg: 0.5, unit: 'mg/kg',
+          frequency: 'setiap 6–8 jam',
+          maxAbsoluteMg: 30,
+          notes: 'Antitusif sentral. Tidak dianjurkan usia < 4 tahun. Dosis harian maks 120 mg.',
+        },
+      },
+    ],
+    warnings: [
+      'Tidak dianjurkan usia < 4 tahun (risiko efek samping SSP)',
+      'Hati-hati bersamaan MAO inhibitor — risiko serotonin syndrome',
+      'Potensi penyalahgunaan pada dosis tinggi',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'nac_mukolitik',
+    name: 'N-Acetylcysteine (mukolitik)',
+    aliases: ['Fluimucil', 'ACC'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: '2–3 kali sehari',
+          fixedDose: '< 2 th: 100 mg × 2/hari; 2–6 th: 100 mg × 3/hari; 6–12 th: 200 mg × 2–3/hari; > 12 th: 200 mg × 3/hari atau 600 mg sekali sehari',
+          notes: 'Sebagai mukolitik. Untuk antidotum parasetamol lihat kategori Antidotum.',
+        },
+      },
+      {
+        route: 'Inhalasi',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: '2–4 kali sehari',
+          fixedDose: '3 mL larutan 20% atau 6 mL larutan 10% per nebulisasi',
+          notes: 'Via nebulizer. Dapat menyebabkan bronkospasme — premedikasi bronkodilator bila perlu.',
+        },
+      },
+    ],
+    warnings: [
+      'Inhalasi: risiko bronkospasme pada asma — premedikasi salbutamol dahulu',
+      'Bau sulfur kuat dapat mengurangi toleransi',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'domperidone',
+    name: 'Domperidone',
+    aliases: ['Motilium', 'Vometa'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.2, maxPerKg: 0.4, unit: 'mg/kg',
+          frequency: '3 kali sehari (sebelum makan)',
+          maxAbsoluteMg: 10,
+          notes: 'Prokinetik. BB > 35 kg: 10 mg × 3/hari. Dosis harian maks 30 mg. Durasi sesingkat mungkin.',
+        },
+      },
+    ],
+    warnings: [
+      'Perpanjangan interval QT — hindari bersamaan obat QT-prolonging',
+      'Hindari usia < 1 tahun',
+      'EMA 2014: restriksi akibat risiko kardiak — gunakan dosis efektif terendah',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'lactulose',
+    name: 'Lactulose',
+    aliases: ['Dulcolac', 'Lactulax'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: '1–2 kali sehari',
+          fixedDose: '< 1 th: 2,5 mL × 2/hari; 1–4 th: 5 mL × 2/hari; 5–9 th: 10 mL × 2/hari; 10–17 th: 15 mL × 2/hari',
+          notes: 'Laksatif osmotik. Titrasi sesuai respon. Efek 1–3 hari.',
+        },
+      },
+    ],
+    warnings: ['Kembung, flatus — kurangi dosis bila mengganggu', 'Hindari pada galaktosemia'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'loperamide',
+    name: 'Loperamide',
+    aliases: ['Imodium', 'Lodia'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'setelah setiap BAB cair',
+          fixedDose: '2–4 th (13–20 kg): 1 mg × 3/hari; 5–8 th (20–30 kg): 2 mg × 2/hari; 9–12 th: 2 mg × 3/hari; > 12 th: 4 mg awal, lanjut 2 mg/BAB (max 16 mg/hari)',
+          notes: 'TIDAK untuk diare berdarah atau demam tinggi. Tidak untuk usia < 2 tahun.',
+        },
+      },
+    ],
+    warnings: [
+      'KONTRAINDIKASI: usia < 2 tahun, diare berdarah/disentri, C. difficile',
+      'Ileus paralitik bila overdosis',
+      'Bukan pengganti rehidrasi',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'sukralfat',
+    name: 'Sukralfat',
+    aliases: ['Inpepsa', 'Ulcumaag'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: '4 kali sehari (1 jam sebelum makan & sebelum tidur)',
+          fixedDose: '< 15 kg: 500 mg × 4/hari; ≥ 15 kg: 1 g × 4/hari',
+          notes: 'Sirup 500 mg/5 mL. Tidak diserap sistemik.',
+        },
+      },
+    ],
+    warnings: [
+      'Konstipasi (efek samping tersering)',
+      'Kurangi absorpsi obat lain — beri jeda 2 jam',
+      'Hati-hati pada gagal ginjal: akumulasi aluminium',
+    ],
+    renalAdjustment: 'Hindari pada gagal ginjal berat',
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'simeticone',
+    name: 'Simeticone',
+    aliases: ['Mylanta', 'Gascon', 'Flemid'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'setelah makan & sebelum tidur',
+          fixedDose: '< 2 th: 20 mg × 4/hari; 2–12 th: 40 mg × 4/hari; > 12 th: 40–125 mg × 4/hari',
+          notes: 'Anti-flatulen. Tidak diserap sistemik. Aman untuk semua usia.',
+        },
+      },
+    ],
+    warnings: ['Efektivitas pada kolik bayi belum terbukti kuat dalam RCT'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'montelukast',
+    name: 'Montelukast',
+    aliases: ['Singulair', 'Montec', 'Respira'],
+    category: 'simtomatik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'sekali sehari (malam hari)',
+          fixedDose: '6 bln–5 th: 4 mg; 6–14 th: 5 mg; ≥ 15 th: 10 mg',
+          notes: 'Antagonis reseptor leukotrien. Untuk asma persisten dan rhinitis alergi. Tersedia granul, tablet kunyah, dan tablet.',
+        },
+      },
+    ],
+    warnings: [
+      'FDA 2020: peringatan neuropsikiatri (agitasi, depresi, pikiran suicidal — jarang) — evaluasi manfaat-risiko',
+      'Tidak untuk serangan asma akut',
+    ],
+    references: ['bnfc2023', 'gina2024'],
+    verified: true,
+  },
+
+  // ── Antibiotik tambahan ───────────────────────────────────────────────────
+  {
+    id: 'cefixime',
+    name: 'Cefixime',
+    aliases: ['Sporex', 'Fixiphar', 'Cefspan'],
+    category: 'antibiotik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 8, maxPerKg: 8, unit: 'mg/kg',
+          frequency: 'sekali sehari atau dibagi 2× sehari',
+          maxAbsoluteMg: 400,
+          notes: 'Sefalosporin generasi ke-3 oral. ISK, otitis media, faringitis.',
+        },
+      },
+    ],
+    warnings: ['Diare (efek samping tersering)', 'Tidak aktif terhadap MRSA atau Pseudomonas'],
+    renalAdjustment: 'GFR 21–60: 75% dosis; GFR < 20: 50% dosis',
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'cefadroxil',
+    name: 'Cefadroxil',
+    aliases: ['Cefadroxil', 'Bidroxil', 'Duxil'],
+    category: 'antibiotik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 25, maxPerKg: 50, unit: 'mg/kg',
+          frequency: 'dibagi 1–2× sehari',
+          maxAbsoluteMg: 2000,
+          notes: 'Sefalosporin generasi ke-1 oral. Faringitis streptokokus, infeksi kulit, ISK.',
+        },
+      },
+    ],
+    warnings: ['Reaksi silang alergi penisilin (~1–2%)', 'Diare, mual'],
+    renalAdjustment: 'Sesuaikan interval pada gagal ginjal',
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'azithromycin',
+    name: 'Azithromycin',
+    aliases: ['Zithromax', 'Azitrin', 'Zycin'],
+    category: 'antibiotik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 10, unit: 'mg/kg',
+          frequency: 'hari 1: 10 mg/kg; hari 2–5: 5 mg/kg sekali sehari',
+          maxAbsoluteMg: 500,
+          notes: 'Makrolid. Faringitis, pneumonia atipikal (Mycoplasma), otitis media, pertusis.',
+        },
+      },
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 10, maxPerKg: 10, unit: 'mg/kg',
+          frequency: 'sekali sehari, infus > 60 menit',
+          maxAbsoluteMg: 500,
+          notes: 'Untuk pneumonia berat yang memerlukan terapi intravena.',
+        },
+      },
+    ],
+    warnings: [
+      'Perpanjangan QT — hindari bersamaan obat QT-prolonging',
+      'Hepatotoksisitas (jarang)',
+      'Resistensi meningkat — gunakan sesuai indikasi',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'nitrofurantoin',
+    name: 'Nitrofurantoin',
+    aliases: ['Furadantin', 'Nitrofur'],
+    category: 'antibiotik',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 5, maxPerKg: 7, unit: 'mg/kg',
+          frequency: 'dibagi 4× sehari selama 7 hari',
+          maxAbsoluteMg: 400,
+          notes: 'Khusus ISK bawah (sistitis). Usia ≥ 3 bulan.',
+        },
+      },
+    ],
+    warnings: [
+      'TIDAK untuk ISK atas/pielonefritis atau sepsis',
+      'Neuropati perifer (penggunaan lama)',
+      'Pneumonitis hipersensitivitas (jarang)',
+      'KONTRAINDIKASI pada GFR < 45 mL/mnt',
+      'Hindari neonatus < 1 bulan',
+    ],
+    renalAdjustment: 'KONTRAINDIKASI pada GFR < 45 mL/menit/1,73m²',
+    references: ['bnfc2023'],
+    verified: true,
+  },
+
+  // ── Antikonvulsan tambahan ────────────────────────────────────────────────
+  {
+    id: 'levetiracetam',
+    name: 'Levetiracetam',
+    aliases: ['Keppra', 'Levetra', 'Vetira'],
+    category: 'antikonvulsan',
+    routes: [
+      {
+        route: 'IV',
+        dose: {
+          minPerKg: 20, maxPerKg: 60, unit: 'mg/kg',
+          frequency: 'loading: 20–60 mg/kg infus > 15 menit; maintenance: 20–40 mg/kg/hari dibagi 2×',
+          maxAbsoluteMg: 3000,
+          notes: 'Untuk status epileptikus: loading 20–60 mg/kg (max 3000 mg). Pilihan lini ke-2 setelah benzodiazepin.',
+        },
+      },
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 10, maxPerKg: 40, unit: 'mg/kg',
+          frequency: 'dibagi 2× sehari',
+          maxAbsoluteMg: 3000,
+          notes: 'Mulai 10 mg/kg/hari, eskalasi setiap 2 minggu sesuai respons.',
+        },
+      },
+    ],
+    warnings: [
+      'Agitasi, iritabilitas, perubahan perilaku (terutama anak)',
+      'Kurangi dosis pada gagal ginjal',
+      'Keunggulan: tidak ada interaksi enzim hepatik, tidak membutuhkan monitoring kadar rutin',
+    ],
+    renalAdjustment: 'GFR 50–79: 50–75% dosis; GFR 30–49: 25–50%; GFR < 30: 25%',
+    references: ['ilae2022', 'bnfc2023'],
+    verified: true,
+  },
+
+  // ── Bronkodilator tambahan ────────────────────────────────────────────────
+  {
+    id: 'ipratropium',
+    name: 'Ipratropium Bromida',
+    aliases: ['Atrovent', 'Ipravent'],
+    category: 'bronkodilator',
+    routes: [
+      {
+        route: 'Inhalasi',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'setiap 20 mnt × 3 dosis (jam pertama serangan), lanjut setiap 4–6 jam',
+          fixedDose: '< 5 th: 125–250 mcg/dosis; ≥ 5 th: 250–500 mcg/dosis nebulisasi',
+          notes: 'Antikolinergik. Kombinasi dengan salbutamol untuk asma berat akut. MDI: 2–4 semprot per dosis.',
+        },
+      },
+    ],
+    warnings: [
+      'Takikardia, mulut kering (minimal via inhalasi)',
+      'Hati-hati pada glaukoma sudut sempit',
+      'Bukan untuk maintenance jangka panjang',
+    ],
+    references: ['bnfc2023', 'gina2024'],
+    verified: true,
+  },
+  {
+    id: 'budesonide_inhaler',
+    name: 'Budesonide (Inhalasi)',
+    aliases: ['Pulmicort', 'Budelin'],
+    category: 'bronkodilator',
+    routes: [
+      {
+        route: 'Inhalasi',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: '2× sehari (maintenance asma)',
+          fixedDose: '< 12 th asma ringan: 100–200 mcg/hari; sedang: 200–400 mcg/hari; berat: 400–800 mcg/hari. Nebulisasi: 0,25–1 mg/dosis',
+          notes: 'ICS pilihan utama asma persisten. Gunakan MDI + spacer atau nebulizer.',
+        },
+      },
+    ],
+    warnings: [
+      'Kandidiasis oral — kumur setelah MDI',
+      'Dosis tinggi jangka panjang: supresi adrenal, gangguan pertumbuhan (minimal dosis rendah)',
+      'Tidak untuk serangan akut',
+    ],
+    references: ['bnfc2023', 'gina2024'],
+    verified: true,
+  },
+
+  // ── Antijamur tambahan ────────────────────────────────────────────────────
+  {
+    id: 'nystatin',
+    name: 'Nystatin',
+    aliases: ['Mycostatin', 'Candistin'],
+    category: 'antijamur',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: '4× sehari selama 7 hari',
+          fixedDose: 'Neonatus–1 th: 100.000 unit/dosis; 1–12 th: 100.000–500.000 unit/dosis; > 12 th: 500.000–1.000.000 unit/dosis',
+          notes: 'Kandidiasis oral dan GI. Tahan di mulut selama mungkin sebelum ditelan. Tidak diserap sistemik.',
+        },
+      },
+    ],
+    warnings: ['Mual, muntah ringan', 'Tidak efektif untuk infeksi kandida sistemik'],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+
+  // ── Antihipertensi ────────────────────────────────────────────────────────
+  {
+    id: 'captopril',
+    name: 'Captopril',
+    aliases: ['Capoten', 'Tensicap'],
+    category: 'antihipertensi',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.1, maxPerKg: 0.5, unit: 'mg/kg',
+          frequency: 'setiap 8–12 jam',
+          maxAbsoluteMg: 6,
+          notes: 'Mulai 0,1 mg/kg/dosis, titrasi setiap 1–2 minggu. Neonatus: mulai 0,01 mg/kg/dosis — sangat sensitif, monitor ketat.',
+        },
+      },
+    ],
+    warnings: [
+      'Hipotensi dosis pertama — monitor 2 jam',
+      'Hiperkalemia — hindari suplemen kalium',
+      'Batuk kering (efek kelas ACEi)',
+      'Angioedema (jarang, serius)',
+      'KONTRAINDIKASI kehamilan trimester 2–3',
+      'Neonatus sangat sensitif terhadap efek hipotensi',
+    ],
+    renalAdjustment: 'Kurangi dosis dan perpanjang interval pada gagal ginjal',
+    references: ['bnfc2023'],
+    verified: true,
+  },
+  {
+    id: 'amlodipine',
+    name: 'Amlodipine',
+    aliases: ['Norvasc', 'Tensivask', 'Amovask'],
+    category: 'antihipertensi',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0.05, maxPerKg: 0.3, unit: 'mg/kg',
+          frequency: 'sekali sehari',
+          maxAbsoluteMg: 10,
+          notes: 'CCB dihidropiridin. Usia ≥ 6 tahun: mulai 2,5 mg/hari. Evaluasi setelah 4 minggu.',
+        },
+      },
+    ],
+    warnings: [
+      'Edema pergelangan kaki',
+      'Data terbatas usia < 6 tahun',
+      'Hipotensi, palpitasi, flushing',
+    ],
+    references: ['bnfc2023'],
+    verified: true,
+  },
+
+  // ── Vitamin/Suplemen ──────────────────────────────────────────────────────
+  {
+    id: 'vitamin_d',
+    name: 'Vitamin D (Kolekalsiferol)',
+    aliases: ['Vidrop', 'D-Vit', 'Cavit D3'],
+    category: 'lainnya',
+    routes: [
+      {
+        route: 'PO',
+        dose: {
+          minPerKg: 0, maxPerKg: 0, unit: 'mg/kg',
+          frequency: 'sekali sehari',
+          fixedDose: 'Profilaksis: 0–12 bln: 400 IU/hari; 1–18 th: 600 IU/hari. Terapi defisiensi: 1000–5000 IU/hari selama 8–12 minggu.',
+          notes: 'Suplementasi rutin bayi ASI mulai hari pertama. Monitor 25-OHD bila terapi dosis tinggi.',
+        },
+      },
+    ],
+    warnings: [
+      'Hipervitaminosis D: hiperkalsemia, nausea, poliuria, nefrolitiasis (pada dosis berlebihan)',
+      'Terapi dosis tinggi perlu monitoring kadar 25-OHD dan kalsium urin',
+    ],
+    references: ['bnfc2023', 'idai_gizi2011'],
+    verified: true,
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -4145,12 +4772,16 @@ export const DRUG_CATEGORY_LABEL: Record<DrugCategory, string> = {
   antiretroviral: 'Antiretroviral',
   antidotum:      'Antidotum',
   onkologi:       'Onkologi',
+  antihistamin:   'Antihistamin',
+  simtomatik:     'Simtomatik',
+  antihipertensi: 'Antihipertensi',
   lainnya:        'Lainnya',
 };
 
 export const DRUG_CATEGORY_ORDER: DrugCategory[] = [
   'emergensi', 'vasoaktif', 'antikonvulsan', 'sedasi', 'analgesik',
   'bronkodilator', 'kortikosteroid', 'diuretik', 'antiemetik',
+  'antihistamin', 'simtomatik', 'antihipertensi',
   'antibiotik', 'antiviral', 'antijamur', 'antiparasit', 'antiretroviral',
   'antidotum', 'onkologi', 'lainnya',
 ];

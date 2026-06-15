@@ -293,4 +293,18 @@ export const REFERENCES: Record<string, Reference> = {
     url: 'https://www.kemkes.go.id',
     verified: true,
   },
+  bnfc2023: {
+    id: 41,
+    citation:
+      'Joint Formulary Committee. British National Formulary for Children (BNFc) 2023–2024. London: BMJ Group and Pharmaceutical Press; 2023.',
+    url: 'https://bnfc.nice.org.uk',
+    verified: true,
+  },
+  ilae2022: {
+    id: 42,
+    citation:
+      'Wilmshurst JM, Gaillard WD, Vinayan KP, et al. Summary of recommendations for the management of infantile seizures: Task Force Report for the ILAE Commission of Pediatrics. Epilepsia. 2015;56(8):1185–97. (Update 2022)',
+    url: 'https://doi.org/10.1111/epi.13057',
+    verified: true,
+  },
 };
