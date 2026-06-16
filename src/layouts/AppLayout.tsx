@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, ChevronLeft, RotateCcw } from 'lucide-react';
+import { ChevronRight, ChevronLeft, RotateCcw, Menu } from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { BOTTOM_PRIMARY, SHEET_ITEMS, MenuIcon } from './navItems';
 import type { NavItem, SubNavItem } from './navItems';
@@ -20,12 +20,16 @@ export function AppLayout() {
   const title = PAGE_TITLES[pathname] ?? 'PICNIC Helper';
   const isHome = pathname === '/';
 
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const [openSection, setOpenSection] = useState<string | null>(null);
+  const [sidebarExpanded, setSidebarExpanded]     = useState(false);
+  const [moreOpen, setMoreOpen]                   = useState(false);
+  const [openSection, setOpenSection]             = useState<string | null>(null);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  /* Close More panel on navigation */
-  useEffect(() => { setMoreOpen(false); }, [pathname]);
+  /* Close panels on navigation */
+  useEffect(() => {
+    setMoreOpen(false);
+    setMobileSidebarOpen(false);
+  }, [pathname]);
 
   function handleToggleSection(to: string) {
     setOpenSection((prev) => (prev === to ? null : to));
@@ -149,7 +153,22 @@ export function AppLayout() {
           className={`ios-nav md-hidden ${isHome ? 'ios-nav--plain' : ''}`}
           style={{ justifyContent: 'space-between' }}
         >
-          <Brand compact />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              style={{
+                width: 32, height: 32, borderRadius: '50%',
+                border: 'none', cursor: 'pointer',
+                background: 'var(--fill-secondary)',
+                color: 'var(--label-secondary)',
+                display: 'grid', placeItems: 'center',
+              }}
+              aria-label="Buka menu navigasi"
+            >
+              <Menu size={17} strokeWidth={2} />
+            </button>
+            <Brand compact />
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             {!isHome && (
               <span className="ios-nav-title" style={{ marginRight: 4 }}>{title}</span>
@@ -247,6 +266,80 @@ export function AppLayout() {
           {SHEET_ITEMS.map((item) => (
             <MoreGridItem key={item.to} item={item} onNav={() => setMoreOpen(false)} />
           ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          MOBILE: Sidebar drawer (< md)
+      ══════════════════════════════════════════ */}
+      {/* Backdrop */}
+      <div
+        className="md-hidden"
+        onClick={() => setMobileSidebarOpen(false)}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 60,
+          background: 'var(--bg-overlay)',
+          opacity: mobileSidebarOpen ? 1 : 0,
+          pointerEvents: mobileSidebarOpen ? 'auto' : 'none',
+          transition: 'opacity 200ms',
+        }}
+      />
+
+      {/* Drawer panel */}
+      <div
+        className="md-hidden"
+        style={{
+          position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 70,
+          width: 260,
+          background: 'var(--bg-tertiary)',
+          borderRight: '0.5px solid var(--separator)',
+          transform: mobileSidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 280ms var(--ease-out)',
+          boxShadow: 'var(--shadow-2)',
+          display: 'flex', flexDirection: 'column',
+        }}
+      >
+        {/* Drawer header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '16px 14px 12px',
+          borderBottom: '0.5px solid var(--separator)',
+          flexShrink: 0,
+        }}>
+          <Brand />
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            style={{
+              width: 28, height: 28, borderRadius: '50%',
+              border: 'none', cursor: 'pointer',
+              background: 'var(--fill-secondary)',
+              color: 'var(--label-secondary)',
+              display: 'grid', placeItems: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <ChevronLeft size={14} strokeWidth={2} />
+          </button>
+        </div>
+
+        {/* Drawer nav */}
+        <nav style={{ flex: 1, overflowY: 'auto', padding: '8px 8px' }}>
+          {[...BOTTOM_PRIMARY, ...SHEET_ITEMS].map((item) => (
+            <MobileDrawerItem
+              key={item.to}
+              item={item}
+              onNav={() => setMobileSidebarOpen(false)}
+            />
+          ))}
+        </nav>
+
+        {/* Theme toggle */}
+        <div style={{
+          padding: '8px 12px 28px',
+          borderTop: '0.5px solid var(--separator)',
+          display: 'flex', justifyContent: 'flex-end',
+        }}>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -506,6 +599,46 @@ function TabItem({ item }: { item: NavItem }) {
           <span style={{ fontWeight: isActive ? 700 : 500 }}>
             {item.tabLabel ?? item.shortLabel ?? item.label}
           </span>
+        </>
+      )}
+    </NavLink>
+  );
+}
+
+/* ── Mobile drawer item ─────────────────────────────────────────────────── */
+function MobileDrawerItem({ item, onNav }: { item: NavItem; onNav: () => void }) {
+  const Icon = item.icon;
+  return (
+    <NavLink
+      to={item.to}
+      end={item.to === '/'}
+      onClick={onNav}
+      style={({ isActive }) => ({
+        display: 'flex', alignItems: 'center', gap: 12,
+        padding: '8px 10px',
+        borderRadius: 10,
+        marginBottom: 2,
+        background: isActive ? 'var(--accent-tint)' : 'transparent',
+        color: isActive ? 'var(--accent)' : 'var(--label-secondary)',
+        fontWeight: isActive ? 600 : 400,
+        font: 'var(--type-subheadline)',
+        textDecoration: 'none',
+        minHeight: 'var(--hit)',
+        transition: 'background var(--dur-fast)',
+      })}
+    >
+      {({ isActive }) => (
+        <>
+          <span className={item.tint} style={{
+            width: 30, height: 30, borderRadius: '30%', flexShrink: 0,
+            display: 'grid', placeItems: 'center',
+            background: isActive ? 'var(--tint, var(--accent))' : 'var(--fill-secondary)',
+            color: isActive ? '#fff' : 'var(--label-secondary)',
+            transition: 'background var(--dur-fast)',
+          }}>
+            <Icon size={15} strokeWidth={isActive ? 2.25 : 1.75} />
+          </span>
+          {item.label}
         </>
       )}
     </NavLink>

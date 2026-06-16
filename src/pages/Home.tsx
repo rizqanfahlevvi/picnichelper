@@ -7,8 +7,11 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { PatientSummary } from '../components/PatientSummary';
+import { DRUG_LIBRARY, DRUG_CATEGORY_LABEL } from '../data/drugLibrary';
+import { FLUID_LIBRARY, FLUID_CATEGORY_LABEL } from '../data/fluidLibrary';
 
-/* ── Data ─────────────────────────────────────────────────────────────────── */
+/* ── Static data ──────────────────────────────────────────────────────────── */
 
 const STATS = [
   { value: '8',   label: 'Kalkulator', color: 'var(--sys-teal)'   },
@@ -17,14 +20,12 @@ const STATS = [
   { value: '54',  label: 'Referensi',  color: 'var(--sys-green)'  },
 ];
 
-interface QuickItem {
-  to: string; label: string; sub: string; icon: LucideIcon; tintColor: string;
-}
+interface QuickItem { to: string; label: string; sub: string; icon: LucideIcon; tintColor: string; }
 const QUICK_ACCESS: QuickItem[] = [
-  { to: '/kalkulator?c=ett',   label: 'ETT & Intubasi',  sub: 'Ukuran & kedalaman',   icon: Wind,         tintColor: 'var(--sys-teal)'  },
-  { to: '/kalkulator?c=dosis', label: 'Dosis Emergensi', sub: 'Per BB — PALS 2020',   icon: Zap,          tintColor: 'var(--sys-red)'   },
-  { to: '/drugs-fluids',       label: 'Cairan Rumatan',  sub: 'Holliday-Segar 4-2-1', icon: Droplets,     tintColor: 'var(--sys-blue)'  },
-  { to: '/kalkulator?c=agd',   label: 'Gas Darah',       sub: 'Boston Rules · P/F',   icon: FlaskConical, tintColor: 'var(--sys-teal)'  },
+  { to: '/kalkulator?c=ett',   label: 'ETT & Intubasi',  sub: 'Ukuran & kedalaman',   icon: Wind,         tintColor: 'var(--sys-teal)' },
+  { to: '/kalkulator?c=dosis', label: 'Dosis Emergensi', sub: 'Per BB — PALS 2020',   icon: Zap,          tintColor: 'var(--sys-red)'  },
+  { to: '/drugs-fluids',       label: 'Cairan Rumatan',  sub: 'Holliday-Segar 4-2-1', icon: Droplets,     tintColor: 'var(--sys-blue)' },
+  { to: '/kalkulator?c=agd',   label: 'Gas Darah',       sub: 'Boston Rules · P/F',   icon: FlaskConical, tintColor: 'var(--sys-teal)' },
 ];
 
 interface ModuleItem { to: string; icon: LucideIcon; tint: string; label: string; sub: string; }
@@ -37,8 +38,11 @@ const MODULES: ModuleItem[] = [
   { to: '/referensi',    icon: BookMarked, tint: 'tint-theory', label: 'Referensi',      sub: '54 pustaka & sitasi'              },
 ];
 
-interface SearchItem { label: string; sub: string; to: string; category: string; }
-const SEARCH_INDEX: SearchItem[] = [
+/* ── Search index ─────────────────────────────────────────────────────────── */
+
+interface SearchItem { label: string; sub: string; to: string; category: string; aliases?: string[]; }
+
+const BASE_SEARCH: SearchItem[] = [
   { label: 'ETT & Intubasi',     sub: 'Ukuran tube + kedalaman insersi',  to: '/kalkulator?c=ett',        category: 'Kalkulator' },
   { label: 'Dosis Emergensi',    sub: 'Obat resusitasi berbasis berat',   to: '/kalkulator?c=dosis',      category: 'Kalkulator' },
   { label: 'Syringe Pump',       sub: 'Kecepatan infus kontinu',          to: '/kalkulator?c=syringe',    category: 'Kalkulator' },
@@ -60,22 +64,43 @@ const SEARCH_INDEX: SearchItem[] = [
   { label: 'Referensi',          sub: 'Daftar pustaka & sitasi',          to: '/referensi',               category: 'Menu'       },
 ];
 
+/* Build drug + fluid search items at module load time */
+const DRUG_SEARCH: SearchItem[] = DRUG_LIBRARY.map((drug) => ({
+  label:    drug.name,
+  sub:      DRUG_CATEGORY_LABEL[drug.category],
+  to:       '/drugs-fluids',
+  category: 'Obat',
+  aliases:  drug.aliases,
+}));
+
+const FLUID_SEARCH: SearchItem[] = FLUID_LIBRARY.map((fluid) => ({
+  label:    fluid.name,
+  sub:      FLUID_CATEGORY_LABEL[fluid.category],
+  to:       '/drugs-fluids',
+  category: 'Cairan',
+}));
+
+const ALL_SEARCH: SearchItem[] = [...BASE_SEARCH, ...DRUG_SEARCH, ...FLUID_SEARCH];
+
 /* ── Component ────────────────────────────────────────────────────────────── */
 
 export function Home() {
   const navigate = useNavigate();
-  const [query, setQuery]       = useState('');
+  const [query, setQuery]           = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
-  const inputRef    = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const wrapperRef  = useRef<HTMLDivElement>(null);
+  const inputRef   = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const filtered = query.trim()
-    ? SEARCH_INDEX.filter((item) =>
-        item.label.toLowerCase().includes(query.toLowerCase()) ||
-        item.sub.toLowerCase().includes(query.toLowerCase()) ||
-        item.category.toLowerCase().includes(query.toLowerCase())
-      )
+    ? ALL_SEARCH.filter((item) => {
+        const q = query.toLowerCase();
+        return (
+          item.label.toLowerCase().includes(q) ||
+          item.sub.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q) ||
+          (item.aliases?.some((a) => a.toLowerCase().includes(q)) ?? false)
+        );
+      }).slice(0, 10)
     : [];
 
   useEffect(() => {
@@ -100,7 +125,7 @@ export function Home() {
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <div style={{ padding: '32px 20px 20px' }}>
 
-        {/* Badge pill */}
+        {/* Badge pill — normal case, no uppercase */}
         <div style={{
           display: 'inline-flex', alignItems: 'center',
           padding: '4px 12px', borderRadius: 100,
@@ -108,11 +133,10 @@ export function Home() {
           marginBottom: 16,
         }}>
           <span style={{
-            font: 'var(--type-caption-2)', fontWeight: 700,
-            letterSpacing: '0.06em', textTransform: 'uppercase',
+            font: 'var(--type-caption-1)', fontWeight: 600,
             color: 'var(--sys-teal)',
           }}>
-            Ur Pediatric Emergency &amp; Intensive Care Unit Daily Companion
+            Ur Daily Companion in Pediatric Emergency &amp; Intensive Care
           </span>
         </div>
 
@@ -140,7 +164,7 @@ export function Home() {
           font: 'var(--type-body)', color: 'var(--label-secondary)',
           lineHeight: 1.55, maxWidth: 320, marginBottom: 18,
         }}>
-          Alat bantu klinis cepat untuk dokter anak di IGD, ICU, PICU &amp; NICU.
+          Alat bantu klinis cepat untuk kasus IGD, PICU, NICU.
         </p>
 
         {/* LinkedIn / Author */}
@@ -189,7 +213,7 @@ export function Home() {
       </div>
 
       {/* ── Search ────────────────────────────────────────────────────────── */}
-      <div ref={wrapperRef} style={{ padding: '8px 16px 16px', position: 'relative' }}>
+      <div ref={wrapperRef} style={{ padding: '8px 16px 0', position: 'relative' }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
           background: 'var(--fill-secondary)',
@@ -205,7 +229,7 @@ export function Home() {
             onChange={(e) => { setQuery(e.target.value); setSearchOpen(true); }}
             onFocus={() => setSearchOpen(true)}
             onKeyDown={(e) => { if (e.key === 'Escape') { setSearchOpen(false); setQuery(''); } }}
-            placeholder="Cari kalkulator, obat, skoring..."
+            placeholder="Cari kalkulator, obat, cairan, skoring..."
             style={{
               flex: 1, border: 'none', background: 'transparent',
               outline: 'none', font: 'var(--type-body)', color: 'var(--label-primary)',
@@ -216,8 +240,7 @@ export function Home() {
               onClick={() => { setQuery(''); setSearchOpen(false); inputRef.current?.focus(); }}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                color: 'var(--label-tertiary)', display: 'grid', placeItems: 'center',
-                padding: 0,
+                color: 'var(--label-tertiary)', display: 'grid', placeItems: 'center', padding: 0,
               }}
             >
               <X size={15} strokeWidth={2} />
@@ -227,14 +250,14 @@ export function Home() {
 
         {/* Results dropdown */}
         {searchOpen && query && (
-          <div ref={dropdownRef} style={{
-            position: 'absolute', left: 16, right: 16, top: 58, zIndex: 100,
+          <div style={{
+            position: 'absolute', left: 16, right: 16, top: 52, zIndex: 100,
             background: 'var(--bg-elevated)',
             borderRadius: 'var(--r-card)',
             boxShadow: 'var(--shadow-2)',
             border: '0.5px solid var(--separator)',
             overflow: 'hidden',
-            maxHeight: 300, overflowY: 'auto',
+            maxHeight: 320, overflowY: 'auto',
           }}>
             {filtered.length > 0 ? filtered.map((item, i) => (
               <button
@@ -252,7 +275,10 @@ export function Home() {
                 onPointerLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ font: 'var(--type-subheadline)', fontWeight: 500, color: 'var(--label-primary)', flex: 1 }}>
+                  <span style={{
+                    font: 'var(--type-subheadline)', fontWeight: 500,
+                    color: 'var(--label-primary)', flex: 1,
+                  }}>
                     {item.label}
                   </span>
                   <span style={{
@@ -275,6 +301,9 @@ export function Home() {
           </div>
         )}
       </div>
+
+      {/* ── Patient Summary ───────────────────────────────────────────────── */}
+      <PatientSummary />
 
       {/* ── Quick Access ──────────────────────────────────────────────────── */}
       <div className="ios-section"><span className="label">Akses Cepat</span></div>
