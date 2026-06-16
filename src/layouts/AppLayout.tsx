@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, RotateCcw } from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { BOTTOM_PRIMARY, SHEET_ITEMS, MenuIcon } from './navItems';
-import type { NavItem } from './navItems';
+import type { NavItem, SubNavItem } from './navItems';
 
 const PAGE_TITLES: Record<string, string> = {
   '/':             'Home',
@@ -22,10 +22,14 @@ export function AppLayout() {
 
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-
+  const [openSection, setOpenSection] = useState<string | null>(null);
 
   /* Close More panel on navigation */
   useEffect(() => { setMoreOpen(false); }, [pathname]);
+
+  function handleToggleSection(to: string) {
+    setOpenSection((prev) => (prev === to ? null : to));
+  }
 
   return (
     <div style={{ display: 'flex', height: '100%', background: 'var(--bg-secondary)' }}>
@@ -48,20 +52,28 @@ export function AppLayout() {
         <div style={{
           display: 'flex', alignItems: 'center',
           justifyContent: sidebarExpanded ? 'space-between' : 'center',
-          padding: sidebarExpanded ? '16px 12px 12px' : '16px 0 12px',
+          padding: sidebarExpanded ? '0 12px' : '0',
           borderBottom: '0.5px solid var(--separator)',
           flexShrink: 0,
           gap: 8,
-          minHeight: 60,
+          height: 56,
           transition: 'padding 260ms var(--ease-out)',
         }}>
-          {sidebarExpanded && <Brand />}
-          {!sidebarExpanded && (
+          {sidebarExpanded && (
             <div style={{
-              width: 32, height: 32, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 7,
               background: 'var(--sys-teal)',
               display: 'grid', placeItems: 'center',
-              color: '#fff', fontWeight: 900, fontSize: 14,
+              color: '#fff', fontWeight: 900, fontSize: 13,
+              flexShrink: 0,
+            }}>P</div>
+          )}
+          {!sidebarExpanded && (
+            <div style={{
+              width: 28, height: 28, borderRadius: 7,
+              background: 'var(--sys-teal)',
+              display: 'grid', placeItems: 'center',
+              color: '#fff', fontWeight: 900, fontSize: 13,
               flexShrink: 0,
             }}>P</div>
           )}
@@ -88,7 +100,13 @@ export function AppLayout() {
         {/* Sidebar nav */}
         <nav style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 6px' }}>
           {[...BOTTOM_PRIMARY, ...SHEET_ITEMS].map((item) => (
-            <SidebarItem key={item.to} item={item} expanded={sidebarExpanded} />
+            <SidebarItem
+              key={item.to}
+              item={item}
+              expanded={sidebarExpanded}
+              openSection={openSection}
+              onToggleSection={handleToggleSection}
+            />
           ))}
         </nav>
 
@@ -108,7 +126,25 @@ export function AppLayout() {
       ══════════════════════════════════════════ */}
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>
 
-        {/* Top nav bar (mobile only) */}
+        {/* Desktop top bar (≥ md) */}
+        <header className="md-topbar" style={{
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 24px',
+          height: 56,
+          borderBottom: '0.5px solid var(--separator)',
+          background: 'var(--bg-elevated)',
+          flexShrink: 0,
+        }}>
+          <Brand />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Clock />
+            <ThemeToggle />
+          </div>
+        </header>
+
+        {/* Mobile top nav bar */}
         <header
           className={`ios-nav md-hidden ${isHome ? 'ios-nav--plain' : ''}`}
           style={{ justifyContent: 'space-between' }}
@@ -137,11 +173,7 @@ export function AppLayout() {
 
         {/* Scrollable content with fade transition */}
         <main style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', minHeight: 0, overscrollBehaviorY: 'none' }}>
-          <div style={{
-            maxWidth: 640,
-            margin: '0 auto',
-            padding: '0 0 16px',
-          }} className="md-content-pad">
+          <div style={{ margin: '0 auto', padding: '0 0 16px' }} className="md-content-pad">
             <TabFade pathname={pathname} />
           </div>
         </main>
@@ -221,13 +253,36 @@ export function AppLayout() {
       {/* Responsive styles */}
       <style>{`
         @media (min-width: 768px) {
-          .md-sidebar      { display: flex !important; }
-          .md-hidden       { display: none  !important; }
-          .md-content-pad  { padding: 24px 24px 32px !important; }
+          .md-sidebar      { display: flex    !important; }
+          .md-hidden       { display: none    !important; }
+          .md-topbar       { display: flex    !important; }
+          .md-content-pad  { padding: 24px 32px 32px !important; max-width: 960px !important; }
         }
-
       `}</style>
     </div>
+  );
+}
+
+/* ── Clock ───────────────────────────────────────────────────────────────── */
+function Clock() {
+  const fmt = () => new Date().toLocaleTimeString('id-ID', {
+    hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
+  });
+  const [time, setTime] = useState(fmt);
+  useEffect(() => {
+    const id = setInterval(() => setTime(fmt()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <span style={{
+      fontVariantNumeric: 'tabular-nums',
+      font: 'var(--type-body)',
+      color: 'var(--label-secondary)',
+      letterSpacing: '0.02em',
+      fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+    }}>
+      {time}
+    </span>
   );
 }
 
@@ -238,10 +293,8 @@ function TabFade({ pathname }: { pathname: string }) {
 
   useEffect(() => {
     if (pathname === currentPath) return;
-    // Fade out
     setVisible(false);
     const t = setTimeout(() => {
-      // Swap content then fade in
       setCurrentPath(pathname);
       setVisible(true);
     }, 180);
@@ -249,10 +302,7 @@ function TabFade({ pathname }: { pathname: string }) {
   }, [pathname, currentPath]);
 
   return (
-    <div style={{
-      opacity: visible ? 1 : 0,
-      transition: 'opacity 180ms',
-    }}>
+    <div style={{ opacity: visible ? 1 : 0, transition: 'opacity 180ms' }}>
       <Outlet />
     </div>
   );
@@ -274,10 +324,10 @@ function Brand({ compact }: { compact?: boolean }) {
       {!compact && (
         <div style={{ lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden' }}>
           <div style={{ font: 'var(--type-headline)', letterSpacing: '-0.022em', color: 'var(--label-primary)' }}>
-            PICNIC
+            PICNIC Helper
           </div>
           <div style={{ font: 'var(--type-caption-2)', color: 'var(--label-secondary)' }}>
-            ER &amp; Intensive Care
+            Pediatric ER &amp; Intensive Care
           </div>
         </div>
       )}
@@ -291,46 +341,146 @@ function Brand({ compact }: { compact?: boolean }) {
 }
 
 /* ── Sidebar item (desktop) ─────────────────────────────────────────────── */
-function SidebarItem({ item, expanded }: { item: NavItem; expanded: boolean }) {
+const itemBaseStyle = (isActive: boolean, expanded: boolean): React.CSSProperties => ({
+  display: 'flex', alignItems: 'center',
+  gap: expanded ? 10 : 0,
+  justifyContent: expanded ? 'flex-start' : 'center',
+  padding: expanded ? '8px 10px' : '8px 0',
+  borderRadius: 10,
+  minHeight: 'var(--hit)',
+  marginBottom: 2,
+  background: isActive ? 'var(--accent-tint)' : 'transparent',
+  color: isActive ? 'var(--accent)' : 'var(--label-secondary)',
+  fontWeight: isActive ? 600 : 400,
+  font: 'var(--type-subheadline)',
+  textDecoration: 'none',
+  transition: 'background var(--dur-fast), color var(--dur-fast)',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  width: '100%',
+  border: 'none',
+  cursor: 'pointer',
+  textAlign: 'left',
+});
+
+const iconBaseStyle = (isActive: boolean): React.CSSProperties => ({
+  width: 28, height: 28, borderRadius: '30%', flexShrink: 0,
+  display: 'grid', placeItems: 'center',
+  background: isActive ? 'var(--tint, var(--accent))' : 'var(--fill-secondary)',
+  color: isActive ? '#fff' : 'var(--label-secondary)',
+  transition: 'background var(--dur-fast)',
+});
+
+function SidebarItem({ item, expanded, openSection, onToggleSection }: {
+  item: NavItem;
+  expanded: boolean;
+  openSection: string | null;
+  onToggleSection: (to: string) => void;
+}) {
+  const { pathname } = useLocation();
   const Icon = item.icon;
+  const hasSubItems = !!(item.subItems?.length);
+  const isSubOpen = openSection === item.to;
+  const isActive = item.to === '/'
+    ? pathname === '/'
+    : pathname.startsWith(item.to);
+
+  /* With sub-items AND sidebar expanded → accordion toggle button */
+  if (hasSubItems && expanded) {
+    return (
+      <div>
+        <button
+          onClick={() => onToggleSection(item.to)}
+          style={itemBaseStyle(isActive, expanded)}
+        >
+          <span className={item.tint} style={iconBaseStyle(isActive)}>
+            <Icon size={16} strokeWidth={isActive ? 2.25 : 1.75} />
+          </span>
+          <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {item.label}
+          </span>
+          <ChevronRight
+            size={12}
+            strokeWidth={2}
+            style={{
+              flexShrink: 0,
+              marginRight: 2,
+              transform: isSubOpen ? 'rotate(90deg)' : 'none',
+              transition: 'transform 200ms var(--ease-out)',
+            }}
+          />
+        </button>
+
+        {/* Sub-items list */}
+        <div style={{
+          overflow: 'hidden',
+          maxHeight: isSubOpen ? item.subItems!.length * 38 : 0,
+          transition: 'max-height 220ms var(--ease-out)',
+        }}>
+          <div style={{ paddingLeft: 6, paddingBottom: 4 }}>
+            {item.subItems!.map((sub) => (
+              <SubSidebarItem key={sub.id} sub={sub} parentTo={item.to} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* Collapsed or no sub-items → standard NavLink */
   return (
     <NavLink
       to={item.to}
       end={item.to === '/'}
       title={!expanded ? item.label : undefined}
-      style={({ isActive }) => ({
-        display: 'flex', alignItems: 'center',
-        gap: expanded ? 10 : 0,
-        justifyContent: expanded ? 'flex-start' : 'center',
-        padding: expanded ? '8px 10px' : '8px 0',
-        borderRadius: 10,
-        minHeight: 'var(--hit)',
-        marginBottom: 2,
-        background: isActive ? 'var(--accent-tint)' : 'transparent',
-        color: isActive ? 'var(--accent)' : 'var(--label-secondary)',
-        fontWeight: isActive ? 600 : 400,
-        font: 'var(--type-subheadline)',
-        textDecoration: 'none',
-        transition: 'background var(--dur-fast), color var(--dur-fast)',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
+      style={({ isActive: navActive }) => ({
+        ...itemBaseStyle(navActive, expanded),
+        // override width/border/cursor for NavLink (flex child)
+        width: 'auto',
       })}
     >
-      {({ isActive }) => (
+      {({ isActive: navActive }) => (
         <>
-          <span className={item.tint} style={{
-            width: 28, height: 28, borderRadius: '30%', flexShrink: 0,
-            display: 'grid', placeItems: 'center',
-            background: isActive ? 'var(--tint, var(--accent))' : 'var(--fill-secondary)',
-            color: isActive ? '#fff' : 'var(--label-secondary)',
-            transition: 'background var(--dur-fast)',
-          }}>
-            <Icon size={16} strokeWidth={isActive ? 2.25 : 1.75} />
+          <span className={item.tint} style={iconBaseStyle(navActive)}>
+            <Icon size={16} strokeWidth={navActive ? 2.25 : 1.75} />
           </span>
           {expanded && item.label}
         </>
       )}
     </NavLink>
+  );
+}
+
+/* ── Sidebar sub-item ────────────────────────────────────────────────────── */
+function SubSidebarItem({ sub, parentTo }: { sub: SubNavItem; parentTo: string }) {
+  const { pathname, search } = useLocation();
+  const navigate = useNavigate();
+  const Icon = sub.icon;
+  const params = new URLSearchParams(search);
+  const isActive = pathname === parentTo && params.get('c') === sub.id;
+
+  return (
+    <button
+      onClick={() => navigate(`${parentTo}?c=${sub.id}`)}
+      style={{
+        display: 'flex', alignItems: 'center',
+        gap: 8, padding: '6px 10px 6px 6px',
+        borderRadius: 8,
+        minHeight: 34,
+        marginBottom: 1,
+        width: '100%', border: 'none', cursor: 'pointer',
+        textAlign: 'left',
+        background: isActive ? 'var(--accent-tint)' : 'transparent',
+        color: isActive ? 'var(--accent)' : 'var(--label-secondary)',
+        fontWeight: isActive ? 600 : 400,
+        font: 'var(--type-footnote)',
+        transition: 'background var(--dur-fast)',
+        whiteSpace: 'nowrap', overflow: 'hidden',
+      }}
+    >
+      <Icon size={13} strokeWidth={isActive ? 2.25 : 1.75} style={{ flexShrink: 0 }} />
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{sub.label}</span>
+    </button>
   );
 }
 

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Wind, Zap, Droplets, FlaskConical, Beaker, HeartPulse, TestTube2, Scale, ChevronLeft } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { PatientSummary } from '../components/PatientSummary';
@@ -66,7 +67,30 @@ const CALCULATORS: CalcCard[] = [
 ];
 
 export function Kalkulator() {
-  const [active, setActive] = useState<CalcId | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramCalc = searchParams.get('c') as CalcId | null;
+
+  const [active, setActive] = useState<CalcId | null>(() => {
+    const p = searchParams.get('c') as CalcId | null;
+    return p && CALCULATORS.some((c) => c.id === p) ? p : null;
+  });
+
+  /* Sync when URL param changes (e.g. sidebar sub-item click) */
+  useEffect(() => {
+    if (paramCalc && CALCULATORS.some((c) => c.id === paramCalc)) {
+      setActive(paramCalc);
+    }
+  }, [paramCalc]);
+
+  function handleSelect(id: CalcId) {
+    setActive(id);
+    setSearchParams({ c: id }, { replace: true });
+  }
+
+  function handleBack() {
+    setActive(null);
+    setSearchParams({}, { replace: true });
+  }
 
   return (
     <div className="ios-screen pb-6">
@@ -74,7 +98,7 @@ export function Kalkulator() {
         {active ? (
           <>
             <button
-              onClick={() => setActive(null)}
+              onClick={handleBack}
               style={{
                 display: 'flex', alignItems: 'center', gap: 2,
                 background: 'none', border: 'none', cursor: 'pointer',
@@ -97,7 +121,7 @@ export function Kalkulator() {
         /* ── Card grid ── */
         <div style={{ padding: '16px 16px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           {CALCULATORS.map((card) => (
-            <CalcCardButton key={card.id} card={card} onSelect={() => setActive(card.id)} />
+            <CalcCardButton key={card.id} card={card} onSelect={() => handleSelect(card.id)} />
           ))}
         </div>
       ) : (

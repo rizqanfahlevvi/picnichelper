@@ -2,7 +2,14 @@ import type { LucideIcon } from 'lucide-react';
 import {
   Home, Calculator, Syringe, BookOpen,
   BarChart2, Activity, BookMarked, MoreHorizontal,
+  Wind, Zap, Droplets, FlaskConical, Beaker, HeartPulse, TestTube2, Scale,
 } from 'lucide-react';
+
+export interface SubNavItem {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+}
 
 export interface NavItem {
   to: string;
@@ -12,11 +19,28 @@ export interface NavItem {
   icon: LucideIcon;
   tint: string;           // CSS class: tint-resp / tint-fluid / dst
   primaryMobile?: boolean;
+  subItems?: SubNavItem[];
 }
 
 export const NAV_ITEMS: NavItem[] = [
   { to: '/',             label: 'Home',           icon: Home,       tint: 'tint-fluid',  primaryMobile: true },
-  { to: '/kalkulator',   label: 'Kalkulator',     icon: Calculator, tint: 'tint-resp',   primaryMobile: true },
+  {
+    to: '/kalkulator',
+    label: 'Kalkulator',
+    icon: Calculator,
+    tint: 'tint-resp',
+    primaryMobile: true,
+    subItems: [
+      { id: 'ett',        label: 'ETT & Intubasi',     icon: Wind },
+      { id: 'dosis',      label: 'Dosis Emergensi',    icon: Zap },
+      { id: 'syringe',    label: 'Syringe Pump',       icon: Droplets },
+      { id: 'agd',        label: 'Analisis Gas Darah', icon: FlaskConical },
+      { id: 'elektrolit', label: 'Elektrolit',          icon: Beaker },
+      { id: 'bp',         label: 'Tekanan Darah',       icon: HeartPulse },
+      { id: 'renal',      label: 'Kalkulator Renal',    icon: TestTube2 },
+      { id: 'gizi',       label: 'Status Gizi',         icon: Scale },
+    ],
+  },
   { to: '/drugs-fluids', label: 'Drugs & Fluids', shortLabel: 'Drugs & Fluids', tabLabel: 'D & F', icon: Syringe, tint: 'tint-drug', primaryMobile: true },
   { to: '/skoring',      label: 'Skoring',        icon: BarChart2,  tint: 'tint-score',  primaryMobile: true },
   { to: '/teori',        label: 'Teori',          icon: BookOpen,   tint: 'tint-theory' },
